@@ -70,7 +70,7 @@
 		<module>sellgirlPayService</module> -->
 		<module>sellgirlPayMq</module><!---->
 		<!-- <module>sellgirlPayWeb</module> -->
-<!--    <module>sellgirlSpringBootFather</module>-->
+    <module>sellgirlSpringBootFather</module>
 		<module>sellgirlPayHelperSwt</module>
   </modules>
 
