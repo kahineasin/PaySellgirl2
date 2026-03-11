@@ -70,9 +70,10 @@ public class UncheckImportBook extends TestCase {
 		new SGDataHelper(new PFAppConfig());
 	}
 
-	boolean clear=true;
-	boolean printBug=false;
-	boolean printProgress=true;
+	private boolean clear=true;
+	private boolean printBug=false;
+	private boolean printProgress=true;
+	private int maxLen=45110;//暂时的阀值
 	/**
 	 * 从爬取资源导入mysql
 	 */
@@ -92,8 +93,8 @@ public class UncheckImportBook extends TestCase {
 
 //			String bookPath="D:\\cache\\html1\\book_data\\提取示例";
 //			String bookPath="D:\\cache\\html1\\1";
-//			String bookPath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
-			String bookPath="D:\\cache\\html1\\book_data\\bugData";
+			String bookPath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
+//			String bookPath="D:\\cache\\html1\\book_data\\bugData";
 			
 			String outImgPath="D:\\cache\\html1\\bookImg\\cover";
 			String outImgPath2="D:\\cache\\html1\\bookImg\\content";
@@ -105,13 +106,13 @@ public class UncheckImportBook extends TestCase {
 	        File[] files = new File(bookPath).listFiles();
 	        PFSqlInsertCollection insert=null;
 	        PFSqlInsertCollection insert2=null;
-	        int maxLen=45447;//暂时的阀值
 
 			try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
 				dstExec.AutoCloseConn(false);
 
 				if(clear) {
 					dstExec.TruncateTable("sg_book");
+					dstExec.TruncateTable("sg_book_chap");
 				}
 
 
@@ -177,9 +178,6 @@ public class UncheckImportBook extends TestCase {
 
 			        //for(File j:i.listFiles(new ChapFileFilter())) {
 					int idx=0;
-					if(clear) {
-						dstExec.TruncateTable("sg_book_chap");
-					}
 			        while(true) {
 //			        	String chapName=j.getName();
 //			        	String content=SGDataHelper.ReadFileToString2(j);
@@ -358,20 +356,23 @@ public class UncheckImportBook extends TestCase {
 	 * 用对半切法检测是否存在异常字符（注意有时超长截断也会报错提示字符问题）
 	 */
 	public void testContentChar() {
+		int needLen=5;
 		  SGWaiter waiter=new SGWaiter(2000);
 		  
-	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text4.txt";
-//	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text3.txt";
-//	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text5.txt";
-
-	        	File j=new File(p);
-	        	if(!j.exists()) { return;}
+//	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text4.txt";
+////	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text3.txt";
+////	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text5.txt";
+//
+//	        	File j=new File(p);
+//	        	if(!j.exists()) { return;}
+		  
 //	        	String chapName="text"+idx;
 	        	String chapName="testChar";
 	        	long bookId=999;
 
 		        PFSqlInsertCollection insert2=null;	        	
-	        	String content=SGDataHelper.ReadFileToString2(j);
+//	        	String content=SGDataHelper.ReadFileToString2(j);
+	        	String content="";
 				int wordCnt=SGDataHelper.GetWordsCharLength(content);
 	        	
 
@@ -417,10 +418,11 @@ public class UncheckImportBook extends TestCase {
 							if(1>r2) {
 								b=false;
 								int l=i.length();
-								if(20<l) {
+								if(needLen<l) {
 									content+=i;
 									if(waiter.isOK()) {
 										System.out.println("length: " +l);
+										System.out.println("sql:\r\n"+sql2);
 									}
 								}else {
 									System.out.println("------------error content:");
