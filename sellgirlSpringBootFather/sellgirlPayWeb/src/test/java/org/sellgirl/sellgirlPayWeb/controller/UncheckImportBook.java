@@ -70,7 +70,7 @@ public class UncheckImportBook extends TestCase {
 		new SGDataHelper(new PFAppConfig());
 	}
 
-	boolean clear=false;
+	boolean clear=true;
 	boolean printBug=false;
 	boolean printProgress=true;
 	/**
@@ -96,9 +96,11 @@ public class UncheckImportBook extends TestCase {
 			String bookPath="D:\\cache\\html1\\book_data\\bugData";
 			
 			String outImgPath="D:\\cache\\html1\\bookImg\\cover";
+			String outImgPath2="D:\\cache\\html1\\bookImg\\content";
 			
 			
 			SGDirectory.EnsureExists(outImgPath);
+			SGDirectory.EnsureExists(outImgPath2);
 			File root=new File(bookPath);
 	        File[] files = new File(bookPath).listFiles();
 	        PFSqlInsertCollection insert=null;
@@ -205,6 +207,7 @@ public class UncheckImportBook extends TestCase {
 							break;
 						}
 			        	
+						content=content.replaceAll("<img src=\"", "<img src=\"bookImg/content");
 						bookChapCreate model2=new bookChapCreate();
 //						model2.setBook_chap_id(0);
 						model2.setBook_chap_name(chapName);
@@ -246,6 +249,14 @@ public class UncheckImportBook extends TestCase {
 							err++;
 						}
 			        }
+
+			        for(File j:i.listFiles(new ContentImgFilter())) {
+						SGPath.copyFile(
+		        			j,
+		        			new File(Paths.get(outImgPath2, ""+bookId,j.getName()).toUri())
+		        			);	
+			        }
+			        
 			        if(printProgress&&waiter.isOK()) {
 					System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
 			        }
@@ -552,6 +563,14 @@ public class UncheckImportBook extends TestCase {
 		@Override
 		public boolean accept(File dir, String name) {
 			return name.startsWith("text");
+		}
+		
+	}
+	public static class ContentImgFilter implements FilenameFilter{
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.endsWith(".jpg");
 		}
 		
 	}

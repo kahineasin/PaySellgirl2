@@ -1,4 +1,5 @@
 /target/
 .class
 src/main/resources/static/bookImg/cover/
+src/main/resources/static/bookImg/content/
 log/
