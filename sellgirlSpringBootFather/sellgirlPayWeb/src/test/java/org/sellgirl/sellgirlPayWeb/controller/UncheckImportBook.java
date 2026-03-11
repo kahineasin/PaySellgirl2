@@ -206,8 +206,8 @@ public class UncheckImportBook extends TestCase {
 							this.doDeleteByIds(new long[] {bookId});
 							break;
 						}
-			        	
-						content=content.replaceAll("<img src=\"", "<img src=\"bookImg/content");
+
+						content=content.replaceAll("<img src=\"", "<img src=\"bookImg/content/"+bookId+"/");
 						bookChapCreate model2=new bookChapCreate();
 //						model2.setBook_chap_id(0);
 						model2.setBook_chap_name(chapName);
@@ -250,6 +250,7 @@ public class UncheckImportBook extends TestCase {
 						}
 			        }
 
+					SGDirectory.EnsureExists(Paths.get(outImgPath2, ""+bookId).toString());
 			        for(File j:i.listFiles(new ContentImgFilter())) {
 						SGPath.copyFile(
 		        			j,

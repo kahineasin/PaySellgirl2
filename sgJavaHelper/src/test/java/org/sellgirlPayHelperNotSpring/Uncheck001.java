@@ -3125,6 +3125,11 @@ public class Uncheck001 extends TestCase {
 		String s = "{cmonth}aaa{cmonth}";
 		s = s.replace("{cmonth}", "ccc");
 		this.PrintObject(s);
+		
+		String content="aaaa<img src=\"01.jpg\" />bbbb";
+		this.PrintObject(content);
+		content=content.replaceAll("<img src=\"", "<img src=\"bookImg/content/");
+		this.PrintObject(content);
 	}
 
 	public void testReplace2() {
