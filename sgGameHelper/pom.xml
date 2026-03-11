@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.sellgirl</groupId>
+    <artifactId>sgJavaHelperFather</artifactId>
+    <version>0.0.5</version>
+  </parent>
+  <groupId>com.sellgirl</groupId>
+  <artifactId>sgGameHelper</artifactId>
+  <version>0.0.5</version>
+  <name>sgGameHelper</name>
+  
+	<properties>
+		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+			<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> 
+			<java.version>1.8</java.version> <maven.compiler.target>1.8</maven.compiler.target> 
+			<maven.compiler.source>1.8</maven.compiler.source> -->
+
+		<jersey2.version>2.19</jersey2.version>
+		<jaxrs.version>2.0.1</jaxrs.version>
+		<slf4j.version>1.7.30</slf4j.version>
+		<!-- <log4j.version>1.2.17</log4j.version> -->
+		<!--<jackson.version>2.12.7</jackson.version>-->
+		<jackson.version>2.13.5</jackson.version>
+		<!-- <jetty.version>11.0.0</jetty.version> -->
+		<jetty.version>9.4.14.v20181114</jetty.version>
+		<guice.version>4.2.3</guice.version>
+		<apache-httpcore.version>4.4.14</apache-httpcore.version>
+		<apache-httpclient.version>4.5.13</apache-httpclient.version>
+		<apache-httpmime.version>4.5.13</apache-httpmime.version>
+		<apache-commons-lang3.version>3.11</apache-commons-lang3.version>
+		<rabbitmq.version>5.12.0</rabbitmq.version>
+		<redis.version>3.6.0</redis.version>
+		<!--<mysql.driver.version>5.1.34</mysql.driver.version>-->
+		<mysql.driver.version>8.0.23</mysql.driver.version>
+		<mssql-jdbc.version>6.2.2.jre8</mssql-jdbc.version>
+		<!--<mssql-jdbc.version>10.2.0.jre8</mssql-jdbc.version>-->
+		<sqlserver.driver.version>1.3.1</sqlserver.driver.version> <!--1.2.4-->
+		<javax.mail.version>1.6.2</javax.mail.version>
+		<!--<gdx.version>1.12.1</gdx.version>-->
+		<gdx.version>1.14.0</gdx.version>
+		<gdx.controller.version>2.2.4</gdx.controller.version>
+		<gdx-ai.version>1.8.2</gdx-ai.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.badlogicgames.gdx-controllers</groupId>
+			<artifactId>gdx-controllers-core</artifactId>
+			<version>${gdx.controller.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-ai</artifactId>
+			<version>${gdx-ai.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-lwjgl3</artifactId>
+			<version>${gdx.version}</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-platform</artifactId>
+<!--一般java引用没有这一条, 对应gradle这种写法api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"-->
+            <classifier>natives-desktop</classifier>
+            <version>${gdx.version}</version>
+			<scope>test</scope>
+        </dependency>
+		
+<!--这个原生插件好像没有pom版本		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-platform</artifactId>
+			<version>${gdx.version}:native-desktop</version>
+			<scope>provided</scope>
+		</dependency>-->
+<!--	<dependency>
+        <groupId>com.badlogicgames.gdx</groupId>
+        <artifactId>gdx-natives-desktop</artifactId>
+        <version>${gdx.version}</version>
+    </dependency>-->
+    
+    
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgJavaHelper</artifactId>
+			<version>${sgJavaHelper.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+<!--			<version>4.13.2</version>-->
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+	</dependencies>
+</project>

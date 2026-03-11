@@ -1,0 +1,83 @@
+jdbc2:
+    driverClassName: com.mysql.jdbc.Driver
+    password: 123456
+    url: jdbc:mysql://localhost:3306/mch?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8
+    username: root
+jdbc:
+    dbseller:
+        driverClassName: net.sourceforge.jtds.jdbc.Driver
+        password: perfect
+        url: jdbc:jtds:sqlserver://172.18.2.14/dbseller
+        username: sa
+    yjQuery:
+        driverClassName: net.sourceforge.jtds.jdbc.Driver
+        password: perfect
+        url: jdbc:jtds:sqlserver://10.0.0.11:1433/yjquery
+        username: sa
+    balance:
+        driverClassName: net.sourceforge.jtds.jdbc.Driver
+        password: wm828
+        url: jdbc:jtds:sqlserver://172.18.2.132:1433/balance
+        username: sa
+    dbreport:
+        driverClassName: net.sourceforge.jtds.jdbc.Driver
+        password: perfect
+        url: jdbc:jtds:sqlserver://192.168.0.2:1433/dbreport
+        username: sa
+    day:
+        driverClassName: net.sourceforge.jtds.jdbc.Driver
+        password: perfect
+        url: jdbc:jtds:sqlserver://192.168.0.33:1433/balance
+        username: sa
+mybatis:
+    mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
+    typeAliasesPackage: com.sellgirl.*.domain
+server:
+    port: 44303
+    ssl:
+        key-store: classpath:pay_sellgirl_com_keystore.jks
+        key-store-password: sellgirl
+        keyStoreType: JKS
+        key-alias: pay_sellgirl_com
+spring:
+    application:
+        name: sellgirlPayWeb
+    freemarker:
+        allow-request-override: false
+        cache: true
+        charset: UTF-8
+        check-template-location: true
+        content-type: text/html
+        expose-request-attributes: false
+        expose-session-attributes: false
+        expose-spring-macro-helpers: false
+        suffix: .ftl
+        template-loader-path: classpath:/templates/ftl/
+    http:
+        encoding:
+            force: true
+            charset: utf-8
+            enabled: true
+    mvc:
+        async:
+            request-timeout: 20000
+rest:
+    connection:
+        connectionRequestTimeout: 30000
+        connectTimeout: 30000
+        readTimeout: 30000
+pf:
+  appKey: yjquery
+  useLocalData: true 
+  pfDebug: false
+  preventFgs: false 
+  allowAutoLogin: true
+  mq:
+    mqType: RabbitMq
+    queueName: hello
+    groupId: CID_poctest4
+    nameSrvAddr: 10.124.147.11:9876
+    accessKey: 2MKrxgjZz2YYzStM
+    secretKey: uZ3PWjJFfqPskmakjIZVb9gyJXuhvJ
+    topic: poctest4
+    tag: OPEN_CARD/EDIT_CARD

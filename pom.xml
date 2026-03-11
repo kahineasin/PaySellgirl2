@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sellgirl</groupId>
+	<artifactId>sgJavaHelperFather</artifactId>
+	<version>0.0.5</version>
+	<packaging>pom</packaging>
+
+	<name>sgJavaHelperFather</name>
+	<description>receive from unicom</description>
+<!-- 	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.4.RELEASE</version>
+		<version>2.1.5.RELEASE</version>
+		<version>2.1.2.RELEASE</version>
+		<relativePath/>
+
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.2.RELEASE</version>
+		<relativePath /> lookup parent from repository
+	</parent> -->
+
+
+	<properties>
+<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version> -->
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<swt.version>4.2.2</swt.version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<!--<spring-boot.version>2.1.2.RELEASE</spring-boot.version>-->
+		<sgJavaHelper.version>0.0.42</sgJavaHelper.version>
+		<fastjson.version>1.2.83</fastjson.version>
+		<apache-httpclient.version>4.5.13</apache-httpclient.version>
+		<apache-httpmime.version>4.5.13</apache-httpmime.version>
+		<junit.version>4.13.2</junit.version>
+		<rabbitmq.version>5.12.0</rabbitmq.version>
+<!-- 		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+		<mysql.jdbc.version>8.0.13</mysql.jdbc.version>
+		<spark.version>2.2.1</spark.version> <scala.version>2.11</scala.version>
+		<spark.version>3.0.1</spark.version>
+		<scala.version>2.12</scala.version>
+		<spark.version>3.2.0</spark.version>
+		<scala.version>2.11</scala.version>
+		<scala.binary.version>2.11</scala.binary.version>
+		<scala.binary.version>2.12</scala.binary.version>
+		<spark.demo.version>3.2.0-SNAPSHOT</spark.demo.version>
+		<fasterxml.jackson.version>2.6.5</fasterxml.jackson.version>
+		<fasterxml.jackson.version>2.11.2</fasterxml.jackson.version>
+		<fasterxml.jackson.version>2.9.0</fasterxml.jackson.version>
+		<fasterxml.jackson.version>2.10.2</fasterxml.jackson.version>
+		<fasterxml.jackson.version>2.10.0</fasterxml.jackson.version> -->
+	</properties>
+
+	<modules>
+    	<module>sgJavaHelper</module>
+    	<module>sgGameHelper</module>
+<!-- 		<module>sellgirlPayHelper</module> -->
+    	<module>sellgirlPayHelperClickHouse</module>
+		<!-- <module>sellgirlPayHelperMvc</module> -->
+<!-- 		<module>sellgirlPayHelperExport</module>
+		<module>sellgirlPayDomain</module>-->
+<!-- 		<module>sellgirlPayDao</module>
+		<module>sellgirlPayService</module> -->
+		<module>sellgirlPayMq</module><!---->
+		<!-- <module>sellgirlPayWeb</module> -->
+<!--    <module>sellgirlSpringBootFather</module>-->
+		<module>sellgirlPayHelperSwt</module>
+  </modules>
+
+
+	<dependencies>
+<!-- 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		数据库?
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency> -->
+<!-- 		<dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+		</dependency> -->
+		<!-- 单元测试 -->
+<!-- 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency> -->
+	</dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+		<!--		<scope>provided</scope>-->
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${apache-httpclient.version}</version>
+<!--				<scope>provided</scope>-->
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>${apache-httpmime.version}</version><!--4.5.3-->
+<!--				<scope>provided</scope>-->
+			</dependency>
+			<!-- 自己的子项目不要这样管理,似乎会有问题 -->
+<!--	        <dependency>
+	            <groupId>com.sellgirl</groupId>
+	            <artifactId>sgJavaHelper</artifactId>
+	            <version>${sgJavaHelper.version}</version>
+	        </dependency>-->
+        </dependencies>
+    </dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				 <version>2.19.1</version> 
+				<configuration>
+					<!--<skipTests>true</skipTests> -->    <!--默认关掉单元测试 -->
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.yml</include>
+					<include>**/*.yaml</include>
+					<include>**/*.xml</include>
+					<include>**/*.tld</include>
+					<include>**/*.ftl</include>
+					<include>**/*.ico</include>
+					<include>**/*.html</include>
+					<include>**/*/*.html</include>
+					<include>**/*/*/*.html</include>
+					<include>static/js/*/*.js</include>
+					<include>static/js/*.js</include>
+					<include>static/js/*/*.css</include>
+					<include>static/js/*/*/*.gif</include>
+					<include>static/css/*.css</include>
+					<include>static/images/*.png</include>
+					<include>static/js/*/*/*.png</include>
+					<include>serviceReferences/*.wsdl</include>
+					<include>LocalData/Json/*.json</include>
+					<include>**/*.jks</include>
+					<include>**/*.p12</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.tld</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+	</build>	
+	<distributionManagement>
+	<repository>
+	<id>nexus-releases</id>
+	<name>maven-releases</name>
+	<url>http://192.168.0.10:18081/nexus/repository/maven-releases/</url>
+	</repository>
+	<snapshotRepository>
+	<id>nexus-snapshots</id>
+	<name>maven-snapshots</name>
+	<url>http://192.168.0.10:18081/nexus/repository/maven-snapshots/</url>
+	</snapshotRepository>
+	</distributionManagement>
+</project>

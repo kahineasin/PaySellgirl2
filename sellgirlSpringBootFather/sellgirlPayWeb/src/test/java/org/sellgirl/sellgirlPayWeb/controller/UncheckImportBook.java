@@ -1,0 +1,558 @@
+package org.sellgirl.sellgirlPayWeb.controller;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
+
+import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
+import org.sellgirl.sellgirlPayWeb.controller.model.JdbcHelperTest;
+import org.sellgirl.sellgirlPayWeb.controller.model.TestModel001;
+
+import com.alibaba.fastjson.JSON;
+import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
+import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
+import com.sellgirl.sellgirlPayWeb.product.model.bookChapCreate;
+import com.sellgirl.sellgirlPayWeb.product.model.bookCreate;
+import com.sellgirl.sellgirlPayWeb.projHelper.ProjHelper;
+import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
+import com.sellgirl.sgJavaMvcHelper.HtmlHelper;
+import com.sellgirl.sgJavaMvcHelper.PFGrid;
+
+import junit.framework.TestCase;
+
+import com.sellgirl.sgJavaHelper.DirectNode;
+import com.sellgirl.sgJavaHelper.PFCmonth;
+import com.sellgirl.sgJavaHelper.PFDataRow;
+import com.sellgirl.sgJavaHelper.SGDataTable;
+import com.sellgirl.sgJavaHelper.SGDate;
+import com.sellgirl.sgJavaHelper.SGHttpHelper;
+import com.sellgirl.sgJavaHelper.PFFunc3;
+import com.sellgirl.sgJavaHelper.SGRef;
+import com.sellgirl.sgJavaHelper.SGRequestResult;
+import com.sellgirl.sgJavaHelper.SGSpeedCounter;
+import com.sellgirl.sgJavaHelper.SGSqlCommandString;
+import com.sellgirl.sgJavaHelper.PFSqlCommandTimeoutSecond;
+import com.sellgirl.sgJavaHelper.SGSqlFieldInfo;
+import com.sellgirl.sgJavaHelper.config.PFAppConfig;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
+import com.sellgirl.sgJavaHelper.file.SGDirectory;
+import com.sellgirl.sgJavaHelper.file.SGPath;
+import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
+import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
+import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGMySqlExecute;
+import com.sellgirl.sgJavaHelper.sql.SGSqlCreateTableCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
+import com.sellgirl.sgJavaHelper.sql.SGSqlExecuteBase;
+import com.sellgirl.sgJavaHelper.sql.SqlCreateTableItem;
+import com.sellgirl.sgJavaHelper.sql.SqlUpdateItem;
+import com.sellgirl.sgJavaHelper.time.SGWaiter;
+import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
+import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
+import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
+
+@SuppressWarnings("unused")
+public class UncheckImportBook extends TestCase {
+	public static void initPFHelper() {
+		//PFDataHelper.SetConfigMapper(new PFConfigTestMapper());		
+		SGDataHelper.SetConfigMapper(new PFConfigMapper());		
+		new SGDataHelper(new PFAppConfig());
+	}
+
+	boolean clear=false;
+	boolean printBug=false;
+	boolean printProgress=true;
+	/**
+	 * 从爬取资源导入mysql
+	 */
+	public void testImportBook() {
+
+		  SGSpeedCounter speed=null;
+		  SGWaiter waiter=null;
+		  int total=0;
+		
+		int err=0;
+		StringBuilder deny=new StringBuilder(); 
+//		initbook();
+		try {
+//			ISGJdbc srcJdbc = JdbcHelperTest.GetLiGeOrderProdJdbc();
+			ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
+//			ISGJdbc lrJdbc = JdbcHelperTest.GetMySqlTest2Jdbc();
+
+//			String bookPath="D:\\cache\\html1\\book_data\\提取示例";
+//			String bookPath="D:\\cache\\html1\\1";
+//			String bookPath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
+			String bookPath="D:\\cache\\html1\\book_data\\bugData";
+			
+			String outImgPath="D:\\cache\\html1\\bookImg\\cover";
+			
+			
+			SGDirectory.EnsureExists(outImgPath);
+			File root=new File(bookPath);
+	        File[] files = new File(bookPath).listFiles();
+	        PFSqlInsertCollection insert=null;
+	        PFSqlInsertCollection insert2=null;
+	        int maxLen=45447;//暂时的阀值
+
+			try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+				dstExec.AutoCloseConn(false);
+
+				if(clear) {
+					dstExec.TruncateTable("sg_book");
+				}
+
+
+				  if(printProgress) {
+					  speed=new SGSpeedCounter(com.sellgirl.sgJavaHelper.SGDate.Now());
+					  total=files.length;
+					  waiter=new SGWaiter(2000);
+				  }
+				  
+		        for(File i:files) {
+		        	String title=SGDataHelper.ReadFileToString(Paths.get(i.getAbsolutePath(), "title.txt").toString());
+		        	String autor=SGDataHelper.ReadFileToString(Paths.get(i.getAbsolutePath(), "autor.txt").toString());
+		        	List<String> chap=SGDataHelper.ReadFileToLines(Paths.get(i.getAbsolutePath(), "contents.txt").toString());
+					File coverImg=new File(Paths.get(i.getAbsolutePath(), "cover.jpg").toUri());
+		        	
+		        	if(SGDataHelper.StringIsNullOrWhiteSpace(title)) {
+		        		if(printBug) {
+		        		System.out.println("book title none, folder:"+i.getName());
+		        		}
+		        		deny.append(i.getName()+"\r\n");
+		        		continue;
+		        	}
+
+//					String c=new String(new char[] {SGDataHelper.getFirstLetter(title.charAt(0))});
+					String c=ProjHelper.getFirstLetter(title);
+					
+					bookCreate model=new bookCreate();
+					model.setBook_name(title);
+					model.setBook_author(autor);
+					model.setLetter(c);
+					model.setCover(coverImg.exists()?"id":"");
+					model.setCreate_date(SGDate.Now());
+					if(null==insert) {
+						insert=dstExec.getInsertCollection();					
+						insert.InitItemByModel(model);
+					}else {
+						insert.UpdateModelValueAutoConvert(model);
+					}
+
+					SGSqlCommandString sql=new SGSqlCommandString(
+							SGDataHelper.FormatString(
+									"insert into sg_book ({0}) values ({1})",
+									insert.ToKeysSql(),
+									insert.ToValuesSql())
+							);
+					int r=dstExec.ExecuteSqlInt(sql, null, false);
+					if(1>r) {
+						err++;
+		        		continue;
+					}
+//					System.out.println("id:"+r);
+//					System.out.println("id2:"+dstExec.GetLastInsertedId());
+					long bookId=dstExec.GetLastInsertedId();
+
+					//封面，如果路径是用id,那么cover字段留空可以了，否则要反写id到cover,更麻烦
+					if(coverImg.exists()) {
+						SGPath.copyFile(
+		        			coverImg,
+		        			new File(Paths.get(outImgPath, bookId+".jpg").toUri())
+		        			);
+					}
+					//子表				
+
+			        //for(File j:i.listFiles(new ChapFileFilter())) {
+					int idx=0;
+					if(clear) {
+						dstExec.TruncateTable("sg_book_chap");
+					}
+			        while(true) {
+//			        	String chapName=j.getName();
+//			        	String content=SGDataHelper.ReadFileToString2(j);
+			        	idx++;
+			        	String p=Paths.get(i.getAbsolutePath(), "text"+idx+".txt").toString();
+			        	File j=new File(p);
+			        	if(!j.exists()) { break;}
+//			        	String chapName="text"+idx;
+			        	String chapName=chap.get(idx-1);
+			        	
+			        	String content=SGDataHelper.ReadFileToString2(j);
+			        	
+//			        	content=content.replaceAll("\r\n", "aabb"); varchar才要转，TEXT字段格式不需要
+			        	
+
+						int wordCnt=SGDataHelper.GetWordsCharLength(content);
+						if(maxLen<wordCnt) {
+			        		if(printBug) {
+							System.out.println("content len:"+wordCnt+" folder:"+i.getName()+" chapName:"+chapName);
+			        		}
+//							deny.append(i.getName()+"->"+chapName+"\r\n");
+//							continue;
+							deny.append(i.getName()+"-->"+chapName+" ? words over "+maxLen+"\r\n");
+							this.doDeleteByIds(new long[] {bookId});
+							break;
+						}
+			        	
+						bookChapCreate model2=new bookChapCreate();
+//						model2.setBook_chap_id(0);
+						model2.setBook_chap_name(chapName);
+						model2.setBook_id(((Long)bookId).intValue());
+						model2.setContent(content);
+						model2.setCreate_date(SGDate.Now());	
+						if(null==insert2) {
+							insert2=dstExec.getInsertCollection();			
+							insert2.InitItemByModel(model2);
+						}else {
+							insert2.UpdateModelValueAutoConvert(model2);
+						}
+						
+						SGSqlCommandString sql2=new SGSqlCommandString(
+								SGDataHelper.FormatString(
+										"insert into sg_book_chap ({0}) values ({1})",
+										insert2.ToKeysSql(),
+										insert2.ToValuesSql())
+								);
+						try {
+							int r2=dstExec.ExecuteSqlInt(sql2, null, false);
+							if(1>r2) {
+								if(printBug) {
+								System.out.println("content len:"+SGDataHelper.GetWordsCharLength(content)+" folder:"+i.getName()+" chapName:"+chapName);
+								}
+								if(null!=dstExec.GetErrorLine()&&-1<dstExec.GetErrorLine().toString().indexOf("Data truncation")) {
+//									 wordCnt=SGDataHelper.GetWordsCharLength(content);
+									deny.append(i.getName()+"-->"+chapName+" ? words over "+wordCnt+"\r\n");
+									this.doDeleteByIds(new long[] {bookId});
+									break;
+								}else {
+									
+								}
+							}
+						}catch(Exception e) {
+							if(printBug) {
+							System.out.println("content len:"+SGDataHelper.GetWordsCharLength(content));
+							}
+							err++;
+						}
+			        }
+			        if(printProgress&&waiter.isOK()) {
+					System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
+			        }
+		        }
+				
+				
+				dstExec.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				err++;
+			}
+			System.out.println("total err: "+err);
+			if(0<deny.length()) {System.out.println("deny: "+deny);}
+
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(printProgress) {
+			System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
+		}
+	}
+
+	/**
+	 * 按书名删除
+	 */
+	public void testDeleteByNames() {
+		String[] names=new String[] {"二马","今日简史","人间失格","人间烟火"};
+//		int[] ids=new int[names.length];
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
+		int total=0;
+		try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+			dstExec.AutoCloseConn(false);
+			int idx=0;
+			for(String i:names) {
+	
+				SGSqlCommandString sql=new SGSqlCommandString(
+						SGDataHelper.FormatString(
+								"delete from sg_book where book_id={0}",
+								i)
+						);
+				Long r=SGDataHelper.ObjectToLong(dstExec.QuerySingleValue("select book_id from sg_book where book_name='"+i+"' limit 1"));
+				if(null!=r) {
+					doDeleteByIds(new long[] {r});
+				}
+//				ids[idx]=r;
+				idx++;
+			}
+			dstExec.close();
+//			doDeleteByIds(ids);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 根据id删除主表子表（常用于重新导入 有报错的异常数据）
+	 */
+	public void testDeleteByIds() {
+		long[] ids=new long[] {188,224,232,239};
+		doDeleteByIds(ids);
+	}
+	public void doDeleteByIds(long[] ids) {
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
+		int total=0;
+		try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+			dstExec.AutoCloseConn(false);
+			for(long i:ids) {
+	
+				SGSqlCommandString sql=new SGSqlCommandString(
+						SGDataHelper.FormatString(
+								"delete from sg_book where book_id={0}",
+								i)
+						);
+				int r=dstExec.ExecuteSqlInt(sql, null, false);
+				total+=r;
+				SGSqlCommandString sql2=new SGSqlCommandString(
+						SGDataHelper.FormatString(
+								"delete from sg_book_chap where book_id={0}",
+								i)
+						);
+				int r2=dstExec.ExecuteSqlInt(sql2, null, false);
+				total+=r2;
+			}
+			dstExec.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(printProgress) {
+			System.out.println("effected rows:"+total);
+		}
+	}
+	
+	/**
+	 * 用对半切法检测是否存在异常字符（注意有时超长截断也会报错提示字符问题）
+	 */
+	public void testContentChar() {
+		  SGWaiter waiter=new SGWaiter(2000);
+		  
+	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text4.txt";
+//	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text3.txt";
+//	        	String p="D:\\cache\\html1\\book_data\\bugData\\人间烟火\\text5.txt";
+
+	        	File j=new File(p);
+	        	if(!j.exists()) { return;}
+//	        	String chapName="text"+idx;
+	        	String chapName="testChar";
+	        	long bookId=999;
+
+		        PFSqlInsertCollection insert2=null;	        	
+	        	String content=SGDataHelper.ReadFileToString2(j);
+				int wordCnt=SGDataHelper.GetWordsCharLength(content);
+	        	
+
+	    		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
+	    		int total=0;
+
+				bookChapCreate model2=new bookChapCreate();
+//				model2.setBook_chap_id(0);
+				model2.setBook_chap_name(chapName);
+				model2.setBook_id(((Long)bookId).intValue());
+//				model2.setContent(content);
+				model2.setCreate_date(SGDate.Now());
+				
+	    		try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+	    			dstExec.AutoCloseConn(false);
+	    			
+					if(null==insert2) {
+						insert2=dstExec.getInsertCollection();			
+						insert2.InitItemByModel(model2);
+					}else {
+						insert2.UpdateModelValueAutoConvert(model2);
+					}
+					
+	    			while(true) {
+	    				int cnt=content.length();
+	    				int s=cnt/2;
+	    				String content1=content.substring(0,s);
+	    				String content2=content.substring(s);
+	    				content="";
+	    				boolean b=true;
+	    				for(String i:new String[] {content1,content2}) {
+
+	    					model2.setContent(i);
+//	    					model2.setContent(content);
+							insert2.UpdateModelValueAutoConvert(model2);
+							SGSqlCommandString sql2=new SGSqlCommandString(
+									SGDataHelper.FormatString(
+											"insert into sg_book_chap ({0}) values ({1})",
+											insert2.ToKeysSql(),
+											insert2.ToValuesSql())
+									);
+							int r2=dstExec.ExecuteSqlInt(sql2, null, false);
+							if(1>r2) {
+								b=false;
+								int l=i.length();
+								if(20<l) {
+									content+=i;
+									if(waiter.isOK()) {
+										System.out.println("length: " +l);
+									}
+								}else {
+									System.out.println("------------error content:");
+									System.out.println(i);
+					    			dstExec.close();
+					    			doDeleteByIds(new long[] {bookId});
+									return;
+								}
+							}
+	    				}
+	    				if(b) {
+	    					int aa=1;
+	    					System.out.println("切割插入完全没问题，应该就是超长阶段，所以有些字符只有一半所以报错. cnt:"+wordCnt);
+	    					break;
+	    				}
+	    			}
+	    		} catch (Exception e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+	}
+
+    public void testUpdatePs() throws Exception {
+        TimeZone timeZone = TimeZone.getTimeZone("GMT+6");
+        TimeZone.setDefault(timeZone);//怀疑这个时区会影响jdbc的初始化,事实证明不会
+
+		//IPFJdbc dstJdbc=JdbcHelperTest.GetMySqlTest2Jdbc();
+		//IPFJdbc dstJdbc=JdbcHelperTest.GetDayJdbc();
+		ISGJdbc dstJdbc=JdbcHelperTest.GetSgShopJdbc();
+        ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc);
+		//ISqlExecute dstExec = PFSqlExecute.Init(JdbcHelperTest.GetDayJdbc());
+		//ISqlExecute dstExec = PFSqlExecute.Init(JdbcHelperTest.GetDayJdbc2());
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));//怀疑这个时区会影响jdbc的初始化
+        List<String> fieldNames=new ArrayList<String>();
+        fieldNames.add("id");
+        fieldNames.add("col1");
+        fieldNames.add("col2");
+        fieldNames.add("col3");
+//        ResultSetMetaData dstMd = dstExec.GetMetaData("test_tb_07", fieldNames);
+		ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose("test_tb_07", fieldNames);
+        PFSqlInsertCollection insert=dstExec.getInsertCollection(dstMd);
+        insert.Set("id",8);
+        insert.Set("col1",1662717600000L);
+        insert.Set("col2",1662717600000L);
+        insert.Set("col3",1662717600000L);
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));//ok
+        PreparedStatement ps = dstExec.GetPs("test_tb_07", fieldNames, true);//事实证明,获得ps时的时区,会影响后面插入时间的时区
+        //TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+        for (int i = 0; i < dstMd.getColumnCount(); i++) {
+            int mdIdx = i + 1;
+            String colName = dstMd.getColumnLabel(mdIdx);
+            SqlUpdateItem dstInsertI = insert.get(colName);
+            dstExec.updatePs(ps, dstMd, mdIdx, dstInsertI);
+        }
+        ps.addBatch();
+        ps.executeBatch();
+        ps.clearBatch();
+//        LOGGER.info("插入完成");
+    }
+//	public boolean addBook(bookCreate model//,SGRef<String> error
+//			) {
+//		ISGJdbc dstJdbc=JdbcHelperTest.GetSgShopJdbc();
+//		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
+//			myResource.getInsertCollection()
+////			myResource.GetConn().setAutoCommit(false);
+////			myResource.SetInsertOption(a->a.setProcessBatch(50000));
+////			myResource.GetLastInsertedId()
+//			int insertCnt=1;
+//			int[] idx= new int[]{0};
+//			boolean b =
+//					myResource.doInsertList(
+//							Arrays.asList(new String[]{
+//									"user_name",
+//									"pwd",
+//									//"email",
+//									"invitation_code","create_date"}),
+//							"sg_user",
+//							(a, b2, c) -> a < insertCnt,
+//							(a) -> {
+//								Map<String,Object> map=new HashMap<>();
+//								map.put("user_name", model.getUserName());
+//								map.put("pwd", model.getPwd());
+////								map.put("email", "");
+//								map.put("invitation_code", model.getInvitationCode());
+//								map.put("create_date", SGDate.Now());
+//								idx[0]++;
+//								return map;
+//							},
+//							null,
+//							a -> {
+////								// 测试速度
+////								if(null==speed[0]){
+////									speed[0]=new SGSpeedCounter(com.sellgirl.sgJavaHelper.SGDate.Now());
+////									startCnt[0]=a;
+////								}
+////								System.out.println(speed[0].getSpeed(a-startCnt[0],com.sellgirl.sgJavaHelper.SGDate.Now()));
+////								System.out.println("ProcessBatch:"+myResource.GetInsertOption().getProcessBatch());
+//							},
+//							null);
+//			String aa=myResource.GetErrorFullMessage();
+//			error.SetValue(aa);
+//			return b;
+//		} catch (Throwable e) {
+//			error.SetValue(e.toString());
+//			return false;
+//			//throw new RuntimeException(e);
+//		}
+//	}
+	public  void testInitBook() {		
+
+		ISGJdbc jdbc=JdbcHelperTest.GetSgShopJdbc();
+		try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+			
+			bookCreate model=new bookCreate();
+			model.setBook_name("aa6");
+			model.setBook_author("aa");
+			model.setCover("aa");
+			model.setCreate_date(SGDate.Now());
+			
+			PFSqlInsertCollection insert=dstExec.getInsertCollection();
+			
+			insert.InitItemByModel(model);
+			
+			SGSqlCommandString sql=new SGSqlCommandString(
+					SGDataHelper.FormatString(
+							"insert into sg_book ({0}) values ({1})",
+							insert.ToKeysSql(),
+							insert.ToValuesSql())
+					);
+			int r=dstExec.ExecuteSqlInt(sql, null, true);
+			System.out.println("id:"+r);
+			System.out.println("id2:"+dstExec.GetLastInsertedId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static class ChapFileFilter implements FilenameFilter{
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.startsWith("text");
+		}
+		
+	}
+}

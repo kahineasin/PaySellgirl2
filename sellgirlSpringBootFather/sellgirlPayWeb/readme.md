@@ -1,0 +1,67 @@
+# run
+## 运行jar包
+1. 本web项目当前pom是jdk1.8，在jdk17下运行报错：
+Could not initialize class org.codehaus.groovy.vmplugin.v7.Java7
+可以如下方式运行：
+"D:\Program Files\Java\jdk1.8.0_201\bin\java" -jar ./target/sellgirlPayWeb-0.0.4.jar
+或
+"D:\Program Files\Java\jre-1.8\bin\java" -jar ./sellgirlPayWeb-0.0.4.jar
+2. 可能需要复制文件夹lib XmlConfig SystemLocalData LocalData 
+
+# 视图位置
+src\main\resources\templates\...
+1. 之前gamepad的做法是先从“SystemLocalData/Txt/gamepad2.html”读取正文内容，在程序中替换生成字符串，
+2. 然后再把用springView的内置方法把字符串用utext属性放到src\main\resources\templates\的模版内
+
+# 商城
+## 商城功能
+### 产品模块(不需要登陆的主页)
+com.sellgirl.sellgirlPayWeb.product
+### 用户模块(管理登陆)
+com.sellgirl.sellgirlPayWeb.user
+### 其它类
+com.sellgirl.sellgirlPayWeb.shop
+
+## 开发待办
+1. 防爬虫
+3. 整合大数据
+4. 支付（测试中，缺少商户id）
+   二维码页面和订单服务单独拆出一个spring boot api
+
+## 测试地址
+
+# 开发指南
+## 前端post
+
+```
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
+    
+		  $.post("/PostSign",
+		  {
+		    name:"Donald Duck",
+		    city:"Duckburg"
+		  },
+		  function(data,status){
+		    //alert("Data: " + data + "\nStatus: " + status);
+			callback({success:data.success,message:data.msg,signDays:data.data},status);
+		  })
+		  .success(function() { /*alert("second success");*/ })//grid进入
+		  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
+		  .complete(function(XMLHttpRequest, textStatus){})
+		  ;
+```
+## 商品图片
+src/main/resources/static/bookImg/cover/ 这个文件夹的图片不上传到git, 里面的图片名对应mysql的book_id，所以mysql数据不能随便清理，否则图片名对应不上。UncheckImportBook.testImportBook()方法可以把数据导入到book表，同时处理cover图
+
+# 运营指南
+电脑需jre1.8环境,mysql(我装的5.1.46-community)
+
+## 发布
+
+### jar发布方式
+1. 安装mysql后用脚本 sql/sgshop.sql 初始化数据库
+2. cmd命令行运行 "D:\Program Files\Java\jre-1.8\bin\java" -jar ./sellgirlPayWeb-0.0.4.jar
+3. 浏览器访问http://localhost:28303/
+
+## 系统参数
+1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt

@@ -1,0 +1,13 @@
+﻿target/
+/bin/
+bin/
+/.settings/
+.settings/
+.classpath
+/target/
+/sgJavaHelper/log/
+.class
+.idea/
+DeletableLocalData/
+pfHelperFather.iml
+sellgirlPayFather.iml

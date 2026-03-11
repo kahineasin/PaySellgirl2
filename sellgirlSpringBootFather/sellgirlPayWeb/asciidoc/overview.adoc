@@ -1,0 +1,33 @@
+= springboot利用swagger构建api文档
+
+
+[[_overview]]
+== 概览
+简单优雅的restfun风格
+
+
+=== 版本信息
+[%hardbreaks]
+__版本__ : 1.0
+
+
+=== 许可信息
+[%hardbreaks]
+__服务条款__ : http://blog.csdn.net/forezp
+
+
+=== URI scheme
+[%hardbreaks]
+__域名__ : localhost:28303
+__基础路径__ : /
+
+
+=== 标签
+
+* crm-controller : Crm Controller
+* pay-controller : Pay Controller
+* sample-api-controller : Sample Api Controller
+* yj-query-local-controller : YJ Query Local Controller
+
+
+

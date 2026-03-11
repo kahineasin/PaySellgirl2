@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<modelVersion>4.0.0</modelVersion>
+	<!-- <groupId>com.sellgirl</groupId> -->
+	<artifactId>sellgirlPayWeb</artifactId>
+	<!--     <version>0.0.1-SNAPSHOT</version> -->
+	<packaging>jar</packaging>
+	<name>sellgirlPayWeb</name>
+	<description>sellgirlPayWeb</description>
+		<version>0.0.4</version>
+	<!--声明父模块-->
+	<!--     <parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sellgirlPayFather</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent> -->
+	<!-- 	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.4.RELEASE</version>
+		<version>2.1.5.RELEASE</version>
+		<version>2.1.2.RELEASE</version>
+		<relativePath/>
+	</parent> -->
+	<parent>
+		<groupId>com.sellgirl</groupId>
+		<artifactId>sgJavaSpringHelperFather</artifactId>
+		<version>0.0.3</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<properties>
+		<!--       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version> -->
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<swt.version>4.2.2</swt.version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+		<!-- <mysql.jdbc.version>8.0.13</mysql.jdbc.version> -->
+		<!-- <spark.version>2.2.1</spark.version> <scala.version>2.11</scala.version> -->
+		<spark.version>3.0.1</spark.version>
+		<scala.version>2.12</scala.version>
+		<!-- <spark.version>3.2.0</spark.version> -->
+		<!--<scala.version>2.11</scala.version> -->
+		<scala.binary.version>2.11</scala.binary.version>
+
+		<fasterxml.jackson.version>2.10.0</fasterxml.jackson.version>
+		<swagger.version>2.6.1</swagger.version>
+	</properties>
+	<repositories>
+		<!--<repository>
+			<id>pf-maven-public</id>
+			<url>http://develop.perfect99.com:18081/nexus/repository/maven-public/</url>
+		</repository>-->
+		<!-- 		<repository>
+                    <id>maven-eclipse-repo-32-64</id>
+                    <url>https://mvnrepository.com/artifact/org.eclipse.swt.win32/org.eclipse.swt.win32.win32.x86_64</url>
+                </repository>
+                <repository>
+                    <id>maven-eclipse-repo</id>
+                    <url>http://maven-eclipse.github.io/maven</url>
+                </repository>
+                <repository>
+                    <id>central-repository</id>
+                    <url>http://central.maven.org/maven2/</url>
+                </repository>
+                <repository>
+                    <id>545ch4</id>
+                    <url>https://raw.githubusercontent.com/545ch4/maven-eclipse.github.io/master/maven</url>
+                </repository>
+
+                包含jface的第三方仓库
+                <repository>
+                    <id>Jabylon-Plugin-</id>
+                    <url>http://www.jabylon.org/maven/</url>
+                </repository> -->
+
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.3.2</version>
+			
+            <exclusions>
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+            </exclusions> 
+		</dependency>
+		<!--加载固定版本很容易报错，比如v8驱动不支持5.1.46的mysql
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+			<scope>test</scope>
+		</dependency>-->
+		
+<!--		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>provided</scope>
+		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.jtds/jtds -->
+		<dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+			<!-- <version>1.2.4</version> -->
+		</dependency>
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<!-- <version>8.1.0.jre13-preview</version> -->
+			<scope>test</scope>
+		</dependency>
+		<!--<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>6.0</version>
+		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- 引用视图要用到 thymeleaf-->
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- aop拦截等 org.aspectj.lang.JoinPoint -->
+		<!--         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency> -->
+		<!-- url编码等 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<!-- json -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+<!--			<version>1.2.33</version>-->
+		</dependency>
+		<!-- 权限拦截用到 -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<!-- 文档 -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgJavaHelper</artifactId>
+			<version>${sgJavaHelper.version}</version>
+			<!--<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>-->
+		</dependency>
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgJavaSpringHelper</artifactId>
+			<version>${sgJavaSpringHelper.version}</version>
+			<!--<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>-->
+		</dependency>
+		<dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+		<dependency>
+			<groupId>com.github.housepower</groupId>
+			<artifactId>clickhouse-native-jdbc</artifactId>
+			<version>1.7-stable</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ru.yandex.clickhouse</groupId>
+			<artifactId>clickhouse-jdbc</artifactId>
+			<version>0.1.54</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgJavaClickHouseHelper</artifactId>
+			<version>${sgJavaClickHouseHelper.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-simple</artifactId>
+				</exclusion>
+			</exclusions>
+
+		</dependency>
+		<!-- PFHelperMvc -->
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgJavaMvcHelper</artifactId>
+			<version>${sgJavaMvcHelper.version}</version>
+		</dependency>
+		<!--web模块 引入entity模块-->
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sellgirlPayDomain</artifactId>
+			<version>${sellgirlPayDomain.version}</version>
+		</dependency>
+		<!--web模块 引入service模块-->
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sellgirlPayService</artifactId>
+			<version>${sellgirlPayService.version}</version>
+		</dependency>
+		<!--web模块 引入dao模块-->
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sellgirlPayDao</artifactId>
+			<version>${sellgirlPayDao.version}</version>
+		</dependency>
+		<!--web模块 引入mq模块-->
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sellgirlPayMq</artifactId>
+			<version>${sellgirlPayMq.version}</version>
+		</dependency>
+		<!--                 <dependency>
+                <groupId>io.github.swagger2markup</groupId>
+                <artifactId>swagger2markup</artifactId>
+                <version>1.3.3</version>
+            </dependency> -->
+<!--		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.6.0</version>
+		</dependency>-->
+		<!-- https://blog.csdn.net/qq_30059235/article/details/106690848 -->
+		<!--         <dependency>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup</artifactId>
+            <version>1.3.3</version>
+            <scope>test</scope>
+        </dependency> -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-core</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+		<!-- CMYK -->
+		<!--<dependency>
+			<groupId>javax.media.jai</groupId>
+			<artifactId>com.springsource.javax.media.jai.codec</artifactId>
+			<version>1.1.3</version>
+		</dependency>-->
+		<!--<dependency>
+			<groupId>javax.media.jai</groupId>
+			<artifactId>jaicodec</artifactId>
+			<version>1.1.3</version>
+		</dependency>-->
+		
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt</artifactId>
+    <version>0.9.1</version>
+</dependency>
+<dependency>
+    <groupId>com.github.wechatpay-apiv3</groupId>
+    <artifactId>wechatpay-java</artifactId>
+    <version>0.2.11</version>  <!-- 使用最新稳定版 -->
+</dependency>
+<dependency>
+    <groupId>com.belerweb</groupId>
+    <artifactId>pinyin4j</artifactId>
+    <version>2.5.1</version>
+</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- 指定该Main Class为全局的唯一入口 -->
+					<mainClass>com.sellgirl.sellgirlPayWeb.SellgirlPayWebApplication</mainClass>
+					<layout>ZIP</layout>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal> <!--可以把依赖的包都打包到生成的Jar包中-->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--                <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.6</version>
+                <configuration>
+                    <sourceDirectory>asciidoc</sourceDirectory>
+                    <outputDirectory>src/main/resources/document</outputDirectory>
+                    <headerFooter>true</headerFooter>
+                    <doctype>book</doctype>
+                    <backend>html</backend>
+                    <sourceHighlighter>coderay</sourceHighlighter>
+                    <attributes>
+                        <toc>left</toc>
+                        <toclevels>3</toclevels>
+                        <sectnums>true</sectnums>
+                    </attributes>
+                </configuration>
+            </plugin> -->
+		</plugins>
+	</build>
+</project>

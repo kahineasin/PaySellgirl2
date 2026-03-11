@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>设置电脑桌面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+</head>
+<body>
+    <div id="container">
+        <form action="/postchangepcdeskimg" method="post" >
+            <div id="bd">
+                <div class="login">
+                    <div class="login-input">
+                        <p class="user ue-clear">
+                            <label>图片</label>
+						<select name="imgPath"  id="imgPath" class="form-control">
+							<option th:each="map:${imgList}" th:text="${map.key}" th:value="${map.value}" th:selected="${Model eq map.value}">
+	    					</option>
+						</select>
+                        </p>
+                    </div>
+                    <p th:if="err!=null" style="color:red;text-align:center">
+                              [[${err}]]  
+                    </p>
+                    <div class="login-btn ue-clear">
+                        <input type="submit" class="btn" value="保存设置" style="border:none;cursor:pointer"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" th:src="@{/js/jq/jquery-2.1.4.js}" ></script>
+
+</body>
+</html>

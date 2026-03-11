@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+<!--   <parent>
+    <groupId>com.sellgirl</groupId>
+    <artifactId>sellgirlPayFather</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent> -->
+  
+<!-- 	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.4.RELEASE</version>
+		<version>2.1.5.RELEASE</version>
+		<version>2.1.2.RELEASE</version>
+		<relativePath/>
+
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.2.RELEASE</version>
+		<relativePath /> lookup parent from repository
+	</parent> -->
+	 <parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sgJavaSpringHelperFather</artifactId>
+        <version>0.0.3</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent> 
+  <!-- <groupId>com.sellgirl</groupId> -->
+  <artifactId>sgJavaMvcHelper</artifactId>
+<!--   <version>0.0.1-SNAPSHOT</version> -->
+  <name>sgJavaMvcHelper</name>
+       <!-- <version>0.0.1</version> -->
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- <pfHelper.version>0.0.3</pfHelper.version>-->
+  </properties>
+  <dependencies>      
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- 数据库? -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+  <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+<!--       <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+          <version>2.5</version>
+          <scope>provided</scope>
+      </dependency> -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+		<!-- PFHelper -->
+        <dependency>
+            <groupId>com.sellgirl</groupId>
+            <artifactId>sgJavaHelper</artifactId>
+            <version>${sgJavaHelper.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+<!--			<version>1.2.33</version>-->
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+                <version>3.4</version>
+                <scope>provided</scope>
+        </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+<!--       <version>3.8.1</version> -->
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+	<build>
+		<plugins>	
+		<!-- 这个插件可以打成-sources.jar包，这个包可以便于查看源代码-->		
+			<plugin>
+  				<groupId>org.apache.maven.plugins</groupId>
+  				<artifactId>maven-source-plugin</artifactId>
+<!--   				<version>3.0.0</version> -->
+  				<executions>
+					<execution>
+						<id>attach-sources</id>
+				  		<phase>verify</phase>
+				  		<goals>
+							<goal>jar-no-fork</goal>
+			  			</goals>
+			  		</execution>
+				</executions>
+  			</plugin>
+	  </plugins>
+</build>
+</project>

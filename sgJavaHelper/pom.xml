@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.sellgirl</groupId>
+		<artifactId>sgJavaHelperFather</artifactId>
+		<version>0.0.5</version>
+	</parent>
+	<!--<groupId>pf.java</groupId> -->
+	<groupId>com.sellgirl</groupId>
+	<artifactId>sgJavaHelper</artifactId>
+	<version>0.0.42</version>
+	<name>sgJavaHelper</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+			<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> 
+			<java.version>1.8</java.version> <maven.compiler.target>1.8</maven.compiler.target> 
+			<maven.compiler.source>1.8</maven.compiler.source> -->
+
+		<jersey2.version>2.19</jersey2.version>
+		<jaxrs.version>2.0.1</jaxrs.version>
+		<slf4j.version>1.7.30</slf4j.version>
+		<!-- <log4j.version>1.2.17</log4j.version> -->
+		<!--<jackson.version>2.12.7</jackson.version>-->
+		<jackson.version>2.13.5</jackson.version>
+		<!-- <jetty.version>11.0.0</jetty.version> -->
+		<jetty.version>9.4.14.v20181114</jetty.version>
+		<guice.version>4.2.3</guice.version>
+		<apache-httpcore.version>4.4.14</apache-httpcore.version>
+		<apache-httpclient.version>4.5.13</apache-httpclient.version>
+		<apache-httpmime.version>4.5.13</apache-httpmime.version>
+		<apache-commons-lang3.version>3.11</apache-commons-lang3.version>
+		<rabbitmq.version>5.12.0</rabbitmq.version>
+		<redis.version>3.6.0</redis.version>
+		<!--<mysql.driver.version>5.1.34</mysql.driver.version>-->
+		<mysql.driver.version>8.0.23</mysql.driver.version>
+		<mssql-jdbc.version>6.2.2.jre8</mssql-jdbc.version>
+		<!--<mssql-jdbc.version>10.2.0.jre8</mssql-jdbc.version>-->
+		<sqlserver.driver.version>1.3.1</sqlserver.driver.version> <!--1.2.4-->
+		<javax.mail.version>1.6.2</javax.mail.version>
+	</properties>
+	<dependencies>
+		<!--<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+<!--			<version>4.13.2</version>-->
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!--<dependency>
+		  <groupId>org.kie.modules</groupId>
+		  <artifactId>org-junit</artifactId>
+		  <version>6.5.0.Final</version>
+		  <type>pom</type>
+		</dependency>-->
+		<!-- PFHelper要用到的 -->
+		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<!-- <dependency> <groupId>dom4j</groupId> <artifactId>dom4j</artifactId> 
+			</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+			<!--<scope>compile</scope>-->
+			<!--<scope>provided</scope>-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+<!--			<version>1.2.33</version>-->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+                <version>3.4</version>
+                <scope>provided</scope>
+        </dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+<!--			<version>${apache-httpclient.version}</version>-->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${apache-httpmime.version}</version><!--4.5.3-->
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
+<!--		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>${rabbitmq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+			<version>4.2.0</version>
+			<scope>provided</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>com.aliyun.openservices</groupId>
+			<artifactId>ons-client</artifactId>
+			<!-- <version>1.8.4.Final</version> -->
+			<version>1.7.9.Final</version>
+		</dependency>
+<!--		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1</version>			
+			<scope>provided</scope>
+		</dependency>-->
+<!--		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>-->
+		<dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javax.mail.version}</version>
+			<scope>provided</scope>
+        </dependency>
+        <!-- 注意,此版本很低,引用了javax.mail:mail:1.4.5,很容易跟android的email库冲突-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.microsoft.sqlserver</groupId> <artifactId>mssql-jdbc</artifactId> 
+			<version>8.1.0.jre13-preview</version> <version>6.2.2.jre8</version> <scope>test</scope> 
+			</dependency> -->
+		<!-- <dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>6.0</version>
+		</dependency>-->
+		<!-- 注意 clickhouse部分已经单独移到 pfHelperClickHouse 项目了 <dependency> <groupId>ru.yandex.clickhouse</groupId> 
+			<artifactId>clickhouse-jdbc</artifactId> <version>0.1.54</version> </dependency> -->
+		<!--<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.driver.version}</version>
+		</dependency>-->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${redis.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- sqlserver -->
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.jtds/jtds -->
+		<!-- <dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+			<version>${sqlserver.driver.version}</version>
+			<scope>test</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>${mssql-jdbc.version}</version>
+			<!--<scope>test</scope>-->
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>6.0</version>
+			<scope>test</scope>
+		</dependency>-->
+		<!--<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>jdbc</artifactId>
+			<version>6.1</version>
+			<scope>test</scope>
+		</dependency>-->
+		<!--<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc42</artifactId>
+			<version>6.0</version>
+			<scope>system</scope>
+			<systemPath>D:\eclipse_workspace_sellgirlPay\sellgirlPay\PaySellgirl\sellgirlPayHelperNotSpring\lib\sqljdbc42.jar</systemPath>
+		</dependency>-->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency>
+<!--		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>1.11.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-tools</artifactId>
+			<version>1.11.1</version>
+		</dependency>-->
+			<!--org.jyaml停产-->
+<!--		<dependency>
+			<groupId>org.jyaml</groupId>
+			<artifactId>jyaml</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-yaml</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-properties</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- 这个插件可以打成-sources.jar包，这个包可以便于查看源代码 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+<!--			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>1.11.1</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/src/test/avro/</sourceDirectory>
+							<outputDirectory>${project.basedir}/src/test/java/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>-->
+<!--			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>-->
+		</plugins>
+	</build>
+	<distributionManagement>
+
+		<!-- <repository> <id>nexus-releases</id> <name>maven-releases</name> <url>http://192.168.0.10:18081/nexus/repository/maven-releases/</url> 
+			</repository> -->
+		<repository>
+
+			<id>nexus-releases</id>
+
+			<name>maven-releases</name>
+
+			<url>http://develop.perfect99.com:18081/nexus/repository/maven-releases/</url>
+
+		</repository>
+
+		<!-- <snapshotRepository> <id>nexus-snapshots</id> <name>maven-snapshots</name> 
+			<url>http://192.168.0.10:18081/nexus/repository/maven-snapshots/</url> </snapshotRepository> -->
+		<snapshotRepository>
+
+			<id>nexus-snapshots</id>
+
+			<name>maven-snapshots</name>
+
+			<url>http://develop.perfect99.com:18081/nexus/repository/maven-snapshots/</url>
+
+		</snapshotRepository>
+
+	</distributionManagement>
+</project>

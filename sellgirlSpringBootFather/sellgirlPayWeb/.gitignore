@@ -1,0 +1,4 @@
+/target/
+.class
+src/main/resources/static/bookImg/cover/
+log/

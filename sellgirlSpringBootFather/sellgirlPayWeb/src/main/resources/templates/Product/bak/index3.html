@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子书库 · 首页</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar { background-color: #2c3e50; }
+        .letter-section { margin-bottom: 2.5rem; }
+        .letter-title { font-size: 2rem; font-weight: 600; border-bottom: 3px solid #3498db; padding-bottom: 0.3rem; margin-bottom: 1.2rem; }
+        .book-card { transition: transform 0.2s; }
+        .book-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            aspect-ratio: 3/4;
+        }
+        /*小图标的样式*/
+        .letter-group h2 {
+            border-bottom: 2px solid #0d6efd;
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+        }
+        .book-cover {
+		    width: 100%;
+		    height: auto;
+		    max-height: 150px;
+		    object-fit: cover;  /* 保证图片按比例填充，避免变形 */
+		    border-radius: 4px;
+		}
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" id="brandLink">📚 电子书库</a>
+            <div class="d-flex align-items-center gap-2">
+                <!-- 切换按钮容器 -->
+                <div id="switchBtnContainer" style="display: none;"></div>
+                <form class="d-flex" action="ebook-search.html" method="get">
+                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="搜索书名/作者" required>
+                    <button class="btn btn-outline-light btn-sm" type="submit">搜索</button>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="userInfo"></div>
+            </div>
+        </div>
+    </nav>
+
+    <script src="common.js"></script>
+    <!--<script src="data-books.js"></script>-->
+    <script>
+    	//---------------------------小图标版本-----------------------------
+        // 用户信息渲染
+        (function() {
+            const user = getCurrentUser();
+            const userInfoDiv = document.getElementById('userInfo');
+            const brandLink = document.getElementById('brandLink');
+            if (user) {
+                if (user.role === 'resource') {
+                    brandLink.href = 'resource-index.html';
+                    brandLink.textContent = '🎬 资源走廊';
+                } else {
+                    brandLink.href = 'index.html';
+                    brandLink.textContent = '📚 电子书库';
+                }
+                userInfoDiv.innerHTML = `
+                    <span class="text-light me-2">👤 ${user.username}</span>
+                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
+                    <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
+                `;
+            } else {
+                brandLink.href = 'index.html';
+                brandLink.textContent = '📚 电子书库';
+                userInfoDiv.innerHTML = `
+                    <a href="login.html" class="btn btn-sm btn-outline-light me-2">登录</a>
+                    <a href="register.html" class="btn btn-sm btn-outline-light">注册</a>
+                `;
+            }
+        })();
+
+        // 切换按钮逻辑
+        (function() {
+            const user = getCurrentUser();
+            const switchBtnContainer = document.getElementById('switchBtnContainer');
+            if (user && user.role === 'resource') {
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage.startsWith('resource-')) {
+                    switchBtnContainer.innerHTML = `<a href="index.html" class="btn btn-sm btn-outline-light me-2">📚 电子书库</a>`;
+                } else {
+                    switchBtnContainer.innerHTML = `<a href="resource-index.html" class="btn btn-sm btn-outline-light me-2">🎬 资源走廊</a>`;
+                }
+                switchBtnContainer.style.display = 'inline-block';
+            } else {
+                switchBtnContainer.style.display = 'none';
+            }
+        })();
+    </script>
+
+    <div class="container my-4">
+        <h1 class="mb-4">📖 书籍目录 · 按首字母分组</h1>
+        <div id="book-list-container"></div>
+    </div>
+    <!-- 加载 spinner (初始隐藏) -->
+    <div id="loading-spinner" class="text-center my-3" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">正在加载更多电子书...</span>
+        </div>
+        <p class="text-muted mt-2">正在载入下一组书籍……</p>
+    </div>
+
+    <!-- 全部加载完毕后显示的小提示（可选，动态显示） -->
+    <div id="all-loaded-message" class="text-center text-success my-3" style="display: none;">
+        <span>✨ 您已浏览完所有分类 ✨</span>
+    </div>
+
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        (function() {
+            // const groups = {};
+            // books.forEach(book => {
+            //     const letter = book.firstLetter || '#';
+            //     if (!groups[letter]) groups[letter] = [];
+            //     groups[letter].push(book);
+            // });
+            // const sortedLetters = Object.keys(groups).sort((a, b) => {
+            //     if (a === '#') return 1;
+            //     if (b === '#') return -1;
+            //     return a.localeCompare(b);
+            // });
+            const container = document.getElementById('book-list-container');
+            container.innerHTML = '';
+            
+            
+            //------------------异步方式-------------------
+            
+            // ---------- 配置数据 ----------
+            // 字母表 A ~ Z
+            const ALL_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            const TOTAL_LETTERS = ALL_LETTERS.length;
+
+            // 已加载字母的数量 (索引从0开始，初始加载 A 和 B，所以 loadedCount = 2)
+            let loadedCount = 0;            
+
+            // 防止重复加载的锁
+            let isLoading = false;           
+
+            // DOM 元素
+            //const container = document.getElementById('bookContainer');
+            const spinner = document.getElementById('loading-spinner');
+            const allLoadedMsg = document.getElementById('all-loaded-message');
+
+            // ---------- 辅助函数：生成某个字母的随机书籍数据 ----------
+            function generateBooksForLetter(letter) {
+                // 随机 5 ~ 12 本，让每组高度自然变化，更接近真实场景
+                const count = Math.floor(Math.random() * 8) + 5; // 5~12本
+                const books = [];
+                for (let i = 1; i <= count; i++) {
+                    books.push({
+                        title: `${letter} 系列 · 第 ${i} 卷`,
+                        // 可以扩展封面颜色或图标，此处用统一的📘，也可以加一点变化
+                        icon: '📘'
+                    });
+                }
+                return books;
+            }
+            // ---------- 核心函数：创建某个字母分组的 DOM 结构 (同步构建) ----------
+            function createLetterGroup(letter, books) {
+                // 外层 section，代表一个字母分类
+                const section = document.createElement('section');
+                section.className = 'letter-group mb-5';  // mb-5 增加下边距
+
+                // 标题行：显示字母和书籍数量
+                const header = document.createElement('h2');
+                header.textContent = `${letter}  ·  ${books.length} 本电子书`;
+                section.appendChild(header);
+
+                // Bootstrap 栅格行
+                const row = document.createElement('div');
+                row.className = 'row g-3';  // g-3 为列之间增加间距
+
+                // 遍历书籍，创建封面卡片
+                books.forEach(book => {
+                    const col = document.createElement('div');
+                    // 响应式尺寸：超小屏2列，小屏3列，中屏4列，大屏6列，超大屏可能更多，这里灵活调整
+                    col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+
+                    const card = document.createElement('div');
+                    card.className = 'card h-100 border-0 book-card';
+
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'card-body';
+
+
+                    const iconSpan = book.icon==null||''==book.icon
+                    ?document.createElement('div')
+                    :document.createElement('img');
+					if(book.icon==null||''==book.icon){
+	                    //// 图标模拟封面 (可以用emoji，也可以换成bootstrap icon，但为了纯净css就不引入额外库)
+	                    //const iconSpan = document.createElement('div');
+	                    iconSpan.className = 'book-icon';
+	                    iconSpan.textContent = '📘';   // 书本emoji
+                    }else{
+	                    //// 创建卡片时
+						//const iconSpan = document.createElement('img');
+						iconSpan.src = book.icon;
+						iconSpan.alt = book.title;
+						iconSpan.className = 'book-cover img-fluid';
+					}
+                    // 书名
+                    const titleP = document.createElement('p');
+                    titleP.className = 'card-text small mt-2 mb-0 text-truncate'; // 超长省略
+                    titleP.textContent = book.title;
+
+                    cardBody.appendChild(iconSpan);
+                    cardBody.appendChild(titleP);
+                    card.appendChild(cardBody);
+                    col.appendChild(card);
+                    row.appendChild(col);
+                });
+
+                section.appendChild(row);
+                return section;
+            }
+
+            
+            // ---------- 同步追加一个字母分组 (用于初始加载A和B) ----------
+            function mapDomainToModel(d){
+            	const books=[];
+                        d.forEach(book=>{
+                            books.push({
+                                title:book.book_name,
+                                author:book.book_author,
+                                //icon:book.cover==null||''==book.cover?'📘':book.cover
+                                icon:book.cover
+                            });
+                        });
+                return books;
+            }
+            function appendLetterSync(letter) {
+                const books = generateBooksForLetter(letter);
+                const group = createLetterGroup(letter, books);
+                container.appendChild(group);
+            }
+
+            function appendLetterSync2(letter,books) {
+                const group = createLetterGroup(letter, books);
+                container.appendChild(group);
+            }
+
+            // ---------- 异步模拟“从服务器”获取并追加一个字母分组 ----------
+            function fetchAndAppendLetter(letter) {
+                return new Promise((resolve) => {
+                    // 模拟网络延迟 500ms ~ 900ms，让加载效果可见
+                    const delay = Math.random() * 400 + 500; // 500~900ms
+                    setTimeout(() => {
+                        const books = generateBooksForLetter(letter);
+                        const group = createLetterGroup(letter, books);
+                        container.appendChild(group);
+                        resolve();
+                    }, delay);
+                });
+            }
+
+            // ---------- 加载下一个字母 (由滚动触发) ----------
+            function loadNextLetter() {
+                // 如果已经在加载 或 已经加载完所有字母，则直接返回
+                if (isLoading) return;
+                if (loadedCount >= TOTAL_LETTERS) return;
+
+                const nextIndex = loadedCount;          // 下一个字母的索引 (0-based)
+                const nextLetter = ALL_LETTERS[nextIndex];
+
+                // 上锁，显示spinner
+                isLoading = true;
+                spinner.style.display = 'block';
+                allLoadedMsg.style.display = 'none';    // 万一之前显示了，先隐藏
+
+                // // 异步加载
+                // fetchAndAppendLetter(nextLetter)
+                //     .then(() => {
+                //         // 加载完成：已加载计数+1，解锁，隐藏spinner
+                //         loadedCount++;
+                //         isLoading = false;
+                //         spinner.style.display = 'none';
+
+                //         // 如果已经全部加载完毕，显示一条提示
+                //         if (loadedCount >= TOTAL_LETTERS) {
+                //             allLoadedMsg.style.display = 'block';
+                //             // 可选：移除滚动监听，不再做无用计算 (但保留也无大碍)
+                //         } else {
+                //             // 加载完一个字母后，立即检查一下滚动条位置，如果依然接近底部则继续加载下一个
+                //             // (这样当用户一口气滚到底部时，可以连续加载多个字母，直到填满屏幕或全部加载)
+                //             checkScrollAndLoad();
+                //         }
+                //     })
+                //     .catch(err => {
+                //         console.warn('加载出错, 但演示中忽略', err);
+                //         // 出错时也要解锁，否则会卡死
+                //         isLoading = false;
+                //         spinner.style.display = 'none';
+                //     });
+
+                	$.post("/PostBook",
+                    {
+                        letter:nextLetter
+                    },
+                    function(data,status){
+                        //alert("Data: " + data + "\nStatus: " + status);
+                        // callback({success:data.success,message:data.msg,signDays:data.data},status);
+
+                        //// const books = generateBooksForLetter(letter);
+                        //if('X'==nextLetter){
+                        //    debugger;
+                        //}
+                        //const books = [];
+                        //data.data.forEach(book=>{
+                        //    books.push({
+                        //        title:book.book_name,
+                        //        author:book.book_author,
+                        //        icon:book.cover==null||''==book.cover?'📘':book.cover
+                        //    });
+                        //});
+                        const books=mapDomainToModel(data.data);
+                        // const group = createLetterGroup(letter, books);
+                        const group = createLetterGroup(nextLetter, books);
+                        container.appendChild(group);
+                        
+                        // 加载完成：已加载计数+1，解锁，隐藏spinner
+                        loadedCount++;
+                        isLoading = false;
+                        spinner.style.display = 'none';
+
+                        // 如果已经全部加载完毕，显示一条提示
+                        if (loadedCount >= TOTAL_LETTERS) {
+                            allLoadedMsg.style.display = 'block';
+                            // 可选：移除滚动监听，不再做无用计算 (但保留也无大碍)
+                        } else {
+                            // 加载完一个字母后，立即检查一下滚动条位置，如果依然接近底部则继续加载下一个
+                            // (这样当用户一口气滚到底部时，可以连续加载多个字母，直到填满屏幕或全部加载)
+                            checkScrollAndLoad();
+                        }
+                    })
+                    .success(function() { /*alert("second success");*/ })//grid进入
+                    .error(function() {                         
+                        console.warn('加载出错, 但演示中忽略', err);
+                        // 出错时也要解锁，否则会卡死
+                        isLoading = false;
+                        spinner.style.display = 'none';
+                    })//tree进入
+                    .complete(function(XMLHttpRequest, textStatus){})
+                    ;
+            }
+
+            // ---------- 检查滚动位置，决定是否需要加载更多 ----------
+            function checkScrollAndLoad() {
+                // 锁或已加载完则不再触发
+                if (isLoading) return;
+                if (loadedCount >= TOTAL_LETTERS) return;
+
+                // 计算滚动相关数值
+                const scrollY = window.scrollY;                      // 已滚动距离
+                const windowHeight = window.innerHeight;              // 视口高度
+                const docHeight = document.documentElement.scrollHeight; // 文档总高度
+
+                // 阈值：距离底部 300px 时触发加载 (可根据感觉微调)
+                const threshold = 300;
+
+                // 判断是否接近底部
+                if (windowHeight + scrollY >= docHeight - threshold) {
+                    loadNextLetter();
+                }
+            }
+
+            // ---------- 滚动事件节流 (使用 requestAnimationFrame) ----------
+            function scrollHandler() {
+                requestAnimationFrame(checkScrollAndLoad);
+            }
+
+            // ---------- 初始化页面：加载A和B，然后绑定滚动事件，并首次检查 ----------
+            function init() {
+                //// 同步加载前两个字母 A 和 B (索引0和1)
+                //appendLetterSync('A');
+                //loadedCount++;  // 现在 loadedCount = 1
+                //appendLetterSync('B');
+                //loadedCount++;  // loadedCount = 2
+                const aBook=[[${book}]];
+                appendLetterSync2('A',mapDomainToModel(aBook));
+                loadedCount++;  // 现在 loadedCount = 1
+
+                // 绑定滚动监听
+                window.addEventListener('scroll', scrollHandler);
+
+                // 首次检查滚动位置：如果页面初始内容不足一屏（可能性较小，但为了健壮性）
+                // 自动触发加载C，直到撑满一屏或全部加载完。保证用户一定能看到滚动加载效果。
+                checkScrollAndLoad();
+
+                // 额外：为了防止某些浏览器在load事件之前高度计算不准确，可以再延迟检查一次
+                setTimeout(checkScrollAndLoad, 200);
+            }
+
+            // 一切从入口开始
+            init();
+
+        })();
+    </script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

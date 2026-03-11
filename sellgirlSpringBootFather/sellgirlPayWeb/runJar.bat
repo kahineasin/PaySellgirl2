@@ -1,0 +1,1 @@
+start cmd /k "java -jar target/sellgirlPayWeb-0.0.4.jar"

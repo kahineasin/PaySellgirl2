@@ -1,0 +1,145 @@
+
+[[_definitions]]
+== 定义
+
+[[_b625f4346778c80cf8ae850ae7caa95a]]
+=== AbstractApiResult«object»
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**code** +
+__可选__|**样例** : `0`|integer (int32)
+|**data** +
+__可选__|**样例** : `"object"`|object
+|**msg** +
+__可选__|**样例** : `"string"`|string
+|**success** +
+__可选__|**样例** : `true`|boolean
+|===
+
+
+[[_hyzlchange]]
+=== HyzlChange
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**cdate** +
+__可选__|**样例** : `"string"`|string (date-time)
+|**hybh** +
+__可选__|**样例** : `"string"`|string
+|**hyxm** +
+__可选__|**样例** : `"string"`|string
+|**id** +
+__可选__|**样例** : `0`|integer (int32)
+|**sex** +
+__可选__|**样例** : `"string"`|string
+|**sfzh** +
+__可选__|**样例** : `"string"`|string
+|**type** +
+__可选__|**样例** : `0`|integer (int32)
+|===
+
+
+[[_fc0af4e2c84f496bec9d189418f57c9b]]
+=== PFJsonDataLocalT«object»
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**Data** +
+__可选__|**样例** : `"object"`|object
+|**Result** +
+__可选__|**样例** : `true`|boolean
+|===
+
+
+[[_resultmodel]]
+=== ResultModel
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**message** +
+__可选__|**样例** : `"string"`|string
+|**success** +
+__可选__|**样例** : `true`|boolean
+|===
+
+
+[[_salesday]]
+=== SalesDay
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**CDay** +
+__可选__|**样例** : `"string"`|string (date-time)
+|**FgsName** +
+__可选__|**样例** : `"string"`|string
+|**FgsNo** +
+__可选__|**样例** : `"string"`|string
+|**InvTypeName** +
+__可选__|**样例** : `"string"`|string
+|**InvTypeNo** +
+__可选__|**样例** : `"string"`|string
+|**SalesDayId** +
+__可选__|**样例** : `"string"`|string
+|**SfName** +
+__可选__|**样例** : `"string"`|string
+|**SfNo** +
+__可选__|**样例** : `"string"`|string
+|**TotalMoney** +
+__可选__|**样例** : `0.0`|number
+|**TotalPv** +
+__可选__|**样例** : `0`|integer (int32)
+|**cday** +
+__可选__|**样例** : `"string"`|string (date-time)
+|**fgsName** +
+__可选__|**样例** : `"string"`|string
+|**fgsNo** +
+__可选__|**样例** : `"string"`|string
+|**invTypeName** +
+__可选__|**样例** : `"string"`|string
+|**invTypeNo** +
+__可选__|**样例** : `"string"`|string
+|**salesDayId** +
+__可选__|**样例** : `"string"`|string
+|**sfName** +
+__可选__|**样例** : `"string"`|string
+|**sfNo** +
+__可选__|**样例** : `"string"`|string
+|**totalMoney** +
+__可选__|**样例** : `0.0`|number
+|**totalPv** +
+__可选__|**样例** : `0`|integer (int32)
+|===
+
+
+[[_usersmodify]]
+=== UsersModify
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**alertContent** +
+__可选__|**样例** : `"string"`|string
+|**modificationTime** +
+__可选__|**样例** : `"string"`|string (date-time)
+|**modifier** +
+__可选__|**样例** : `"string"`|string
+|**sellerno** +
+__可选__|**样例** : `"string"`|string
+|**sex** +
+__可选__|**样例** : `"string"`|string
+|**sfz** +
+__可选__|**样例** : `"string"`|string
+|**userid** +
+__可选__|**样例** : `"string"`|string
+|**username** +
+__可选__|**样例** : `"string"`|string
+|===
+
+
+

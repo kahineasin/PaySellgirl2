@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <!--   <parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sellgirlPayFather</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </parent> -->
+
+    <!-- 	<parent>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>2.0.4.RELEASE</version>
+            <version>2.1.5.RELEASE</version>
+            <version>2.1.2.RELEASE</version>
+            <relativePath/>
+
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>2.1.2.RELEASE</version>
+            <relativePath /> lookup parent from repository
+        </parent> -->
+    <!--	 <parent>
+            <groupId>pf.java</groupId>
+            <artifactId>pfHelperSpringBootFather</artifactId>
+            <version>0.0.2</version>
+            <relativePath>../pom.xml</relativePath>
+        </parent>-->
+    <parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sgJavaHelperFather</artifactId>
+        <version>0.0.5</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <groupId>com.sellgirl</groupId>
+    <artifactId>sellgirlPayHelperExport</artifactId>
+    <version>0.0.3</version>
+    <!--   <version>0.0.1-SNAPSHOT</version> -->
+    <name>sellgirlPayHelperExport</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--<pfHelperNotSpring.version>0.0.5</pfHelperNotSpring.version>-->
+        <!--<pfHelper.version>0.0.3</pfHelper.version>-->
+        <pfHelperClickHouse.version>0.0.4</pfHelperClickHouse.version>
+    </properties>
+    <dependencies>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+<!--			<version>${apache-httpclient.version}</version>-->
+			<scope>test</scope>
+		</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<!--<version>${apache-httpmime.version}</version>--><!--4.5.3-->
+				<scope>test</scope>
+			</dependency>
+        <!-- PFHelper -->
+        <!--        <dependency>
+                    <groupId>pf.java</groupId>
+                    <artifactId>pfHelper</artifactId>
+                    <version>${pfHelper.version}</version>
+                </dependency>-->
+        <dependency>
+            <groupId>com.sellgirl</groupId>
+            <artifactId>sgJavaHelper</artifactId>
+            <version>${sgJavaHelper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sellgirl</groupId>
+            <artifactId>sgHelperClickHouse</artifactId>
+            <version>${pfHelperClickHouse.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+<!--            <version>3.8.1</version>-->
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,1 @@
+mvn install:install-file -DgroupId=pf.java -DartifactId=pfHelper -Dversion=0.0.1-SNAPSHOT -Dfile=target/pfHelper-0.0.1-SNAPSHOT.jar -Dpackaging=jar -DgeneratePom=true

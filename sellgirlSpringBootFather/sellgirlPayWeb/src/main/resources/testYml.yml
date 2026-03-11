@@ -1,0 +1,80 @@
+yjQuery:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    password: perfect
+    url: jdbc:jtds:sqlserver://10.0.0.11:1433/yjquery
+    username: sa
+day:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    password: perfect
+    url: jdbc:jtds:sqlserver://192.168.0.33:1433/balance
+    username: sa
+    ip: 192.168.0.33:1433
+    dbName: balance
+bonus:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    password: wm@perfect30
+    url: jdbc:jtds:sqlserver://192.168.0.30:1433/bonus
+    username: sa
+    ip: 192.168.0.30:1433
+    dbName: bonus
+bonus33:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    password: perfect
+    url: jdbc:jtds:sqlserver://192.168.0.33:1433/bonus{ym}
+    username: sa
+    ip: 192.168.0.33:1433
+    dbName: bonus{ym}
+clickHouseSale:
+    driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+    password: perfect@ClickHouse2020
+    url: jdbc:clickhouse://172.16.1.250:8123/default
+    username: default
+tidbSale:
+    driverClassName: com.mysql.jdbc.Driver
+    password: perfectTIDB
+    url: jdbc:mysql://172.16.1.246:10010/sale?rewriteBatchedStatements=true
+    username: root
+yunXiShop:
+    driverClassName: com.mysql.jdbc.Driver
+    password: Ng7_x3_yjK
+    url: jdbc:mysql://${YUNXISHOP_DB_IP:}/prod_trade
+    username: prod_trade_ro
+    driverVersion: 5.1.34
+liGeShop:
+    driverClassName: com.mysql.jdbc.Driver
+    password: perfectMALL
+    url: jdbc:mysql://cloud.perfect99.com:10129/mall_center_store?useUnicode=true&characterEncoding=utf8
+    username: root
+liGeMember:
+    driverClassName: com.mysql.jdbc.Driver
+    password: perfectMALL
+    url: jdbc:mysql://cloud.perfect99.com:10125/mall_center_member
+    username: root
+liGeProd:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    password: lige@2020_lige%2020
+    url: jdbc:mysql://${LIGE_PROD_DB_IP:}/mall_center_product
+    username: perfectmall
+liGeProdSettlement:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    password: GVVY9Llnb2rB4nof
+    url: jdbc:mysql://rm-wz9hxnle13v3t5z64.mysql.rds.aliyuncs.com/settlement
+    username: temp
+    driverVersion: 8.0.23
+bonusTest:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    password: perfect
+    url: jdbc:jtds:sqlserver://192.168.0.29:1433/bonus
+    username: sa
+    ip: 192.168.0.29
+    dbName: bonus
+clickHouseShopData:
+    driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+    password: perfect@ClickHouse
+    url: jdbc:clickhouse://${USER_PROFILE_DB_IP:}/shop_data
+    username: local
+userProfile:
+    driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+    password: perfect@ClickHouse
+    url: jdbc:clickhouse://${USER_PROFILE_DB_IP:}/user_profile
+    username: local

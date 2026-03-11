@@ -1,0 +1,9 @@
+-- select 'aaa' as col1
+-- select 222 as col1
+
+select o.* from mall_center_order.order_order o
+where 
+ -- id>1270744013518581520
+ -- and
+ o.order_month = '{ym}'
+ and order_status in (2,3,99)   and del = 0

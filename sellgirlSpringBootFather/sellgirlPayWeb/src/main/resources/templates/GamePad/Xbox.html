@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${Model.gameName}"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+</head>
+<body>
+	<table style="width:100%;" cellpadding="2" cellspacing="0" border="1" bordercolor="#000000">
+		<tbody>
+			<tr>
+				<td colspan="3">
+					ZL:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getZL())}">(!!防御)</span>
+				</td>
+				<td>
+					<br />
+				</td>
+				<td colspan="3">
+					ZR:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getZR())}" ></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					L:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getL())}" ></span>
+				</td>
+				<td>
+					<br />
+				</td>
+				<td colspan="3">R:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getR())}" ></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3"><span>LS:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getLS())}"></span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td style="background-color:#FFE500;">
+					<span>Y:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getY())}" ></span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+			</tr>
+			<tr>
+				<td>
+</td>
+				<td style="background-color:#cccccc;">
+					<span>^:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getUP())}" ></span></span><br />
+				
+				</td>
+				<td>
+</td>
+				<td>
+					<br />
+				</td>
+				<td style="background-color:#337FE5;">
+					<span>&nbsp;X:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getX())}">(!!攻击)</span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td style="background-color:#E53333;">
+					<span>&nbsp;B:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getB())}" ></span></span><br />
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color:#cccccc;">
+					<span>&lt;:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getLEFT())}" ></span></span><br />
+				</td>
+				<td style="background-color:#cccccc;">
+					<span>&nbsp;+</span><br />
+				</td>
+				<td style="background-color:#cccccc;">
+					<span>&gt;:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getRIGHT())}" ></span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td style="background-color:#009900;">
+					<span>A:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getA())}"></span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br />
+				</td>
+				<td style="background-color:#cccccc;">
+					<span>v:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getDOWN())}" ></span></span><br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td>
+					<br />
+				</td>
+				<td  colspan="3">
+					<span>RS:<span th:text="${T(com.sellgirl.sellgirlPayWeb.model.GamePadSetting).GetBtnText(Model.getRS())}"></span></span><br />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

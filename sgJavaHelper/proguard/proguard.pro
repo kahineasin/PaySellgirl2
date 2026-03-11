@@ -1,0 +1,20 @@
+-injars       ../target/sgJavaHelper-0.0.42.jar
+-outjars      ../target/sgJavaHelper-fusion.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/resources.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/rt.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/jsse.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/jce.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/charsets.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/ext/dnsns.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/ext/localedata.jar  
+-libraryjars  D:/Program Files/Java/jdk1.8.0_201/jre/lib/ext/sunjce_provider.jar  
+-dontwarn
+-keepattributes *Annotation*
+-keepattributes Signature
+-printmapping proguard.map  
+-overloadaggressively  
+-repackageclasses ''  
+-allowaccessmodification  
+-keep public class * {
+    public protected *;
+}

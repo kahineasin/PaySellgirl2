@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果 · 电子书库</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar { background-color: #2c3e50; }
+        .result-item { background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; transition: background 0.1s; }
+        .result-item:hover { background: #e9ecef; }
+        .result-link { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 1rem; }
+        .result-cover { width: 60px; height: 80px; object-fit: cover; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" id="brandLink">📚 电子书库</a>
+            <div class="d-flex align-items-center gap-2">
+                <div id="switchBtnContainer" style="display: none;"></div>
+                <form class="d-flex" action="ebook-search.html" method="get">
+                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="搜索..." required>
+                    <button class="btn btn-outline-light btn-sm" type="submit">搜索</button>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="userInfo"></div>
+            </div>
+        </div>
+    </nav>
+
+    <script src="common.js"></script>
+    <script src="data-books.js"></script>
+    <script>
+        (function() {
+            const user = getCurrentUser();
+            const userInfoDiv = document.getElementById('userInfo');
+            const brandLink = document.getElementById('brandLink');
+            if (user) {
+                if (user.role === 'resource') {
+                    brandLink.href = 'resource-index.html';
+                    brandLink.textContent = '🎬 资源走廊';
+                } else {
+                    brandLink.href = 'index.html';
+                    brandLink.textContent = '📚 电子书库';
+                }
+                userInfoDiv.innerHTML = `
+                    <span class="text-light me-2">👤 ${user.username}</span>
+                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
+                    <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
+                `;
+            } else {
+                brandLink.href = 'index.html';
+                brandLink.textContent = '📚 电子书库';
+                userInfoDiv.innerHTML = `
+                    <a href="login.html" class="btn btn-sm btn-outline-light me-2">登录</a>
+                    <a href="register.html" class="btn btn-sm btn-outline-light">注册</a>
+                `;
+            }
+        })();
+
+        (function() {
+            const user = getCurrentUser();
+            const switchBtnContainer = document.getElementById('switchBtnContainer');
+            if (user && user.role === 'resource') {
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage.startsWith('resource-')) {
+                    switchBtnContainer.innerHTML = `<a href="index.html" class="btn btn-sm btn-outline-light me-2">📚 电子书库</a>`;
+                } else {
+                    switchBtnContainer.innerHTML = `<a href="resource-index.html" class="btn btn-sm btn-outline-light me-2">🎬 资源走廊</a>`;
+                }
+                switchBtnContainer.style.display = 'inline-block';
+            } else {
+                switchBtnContainer.style.display = 'none';
+            }
+        })();
+    </script>
+
+    <div class="container my-4">
+        <h1 class="mb-4" id="search-title">🔍 搜索中...</h1>
+        <div id="search-results"></div>
+        <div id="empty-result" class="alert alert-info d-none">未找到匹配的书籍</div>
+        <a href="index.html" class="btn btn-outline-secondary mt-3">← 返回首页</a>
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get('q') || '';
+            const titleEl = document.getElementById('search-title');
+            const resultsDiv = document.getElementById('search-results');
+            const emptyDiv = document.getElementById('empty-result');
+
+            if (!query.trim()) {
+                titleEl.textContent = '请输入搜索关键词';
+                emptyDiv.classList.remove('d-none');
+                emptyDiv.textContent = '请在搜索框中输入内容';
+                return;
+            }
+
+            titleEl.textContent = `🔍 搜索：“${query}”`;
+
+            //const lowerQuery = query.toLowerCase();
+            //const matched = books.filter(book => 
+            //    book.title.toLowerCase().includes(lowerQuery) || 
+            //    book.author.toLowerCase().includes(lowerQuery)
+            //);
+            
+            function mapDomainToModel(d){
+            	const books=[];
+                        d.forEach(book=>{
+                            books.push({
+                                id:book.book_id,
+                                title:book.book_name,
+                                author:book.book_author,
+                                //icon:book.cover==null||''==book.cover?'📘':book.cover
+                                cover:book.cover
+                            });
+                        });
+                return books;
+            }
+            const books=[[${Model}]];
+			const matched = mapDomainToModel(books);
+
+            if (matched.length === 0) {
+                emptyDiv.classList.remove('d-none');
+                resultsDiv.innerHTML = '';
+                return;
+            }
+
+            emptyDiv.classList.add('d-none');
+            matched.forEach(book => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <a href="book.html?id=${book.id}" class="result-link">
+                        <img src="${book.cover}" class="result-cover" alt="${book.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                        <div>
+                            <h5>${book.title}</h5>
+                            <p class="text-secondary mb-0">
+                                <a href="author.html?name=${encodeURIComponent(book.author)}" 
+                                   onclick="event.stopPropagation();" 
+                                   style="color: #6c757d; text-decoration: underline; text-underline-offset: 2px;">
+                                    ${book.author}
+                                </a>
+                            </p>
+                        </div>
+                    </a>
+                `;
+                resultsDiv.appendChild(item);
+            });
+        })();
+    </script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

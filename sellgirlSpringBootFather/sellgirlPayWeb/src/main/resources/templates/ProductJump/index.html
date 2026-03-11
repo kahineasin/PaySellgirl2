@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登入中...</title>
+</head>
+<body>
+    <script  type="text/javascript" th:inline="javascript">
+            const username=[[${username}]];
+			const isInvited=[[${isInvited}]];
+            const url=[[${url}]];
+            const role=[[${role}]];
+            //alert(isInvited);
+            //alert(url);
+            //return;
+            //const role = (inviteCode === SECRET_INVITE_CODE) ? 'resource' : 'normal';
+            //const role =isInvited ? 'resource' : 'normal';
+
+            const newUser = { username,  role, favorites: [] };
+            //users.push(newUser);
+            //localStorage.setItem('users', JSON.stringify(users));
+
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+            //if (role === 'resource') {
+            //    window.location.href = 'resource-index.html';
+            //} else {
+            //    window.location.href = 'index.html';
+            //}
+             window.location.href=url;
+            
+        //localStorage.removeItem('currentUser');
+        //window.location.href = 'index.html';
+        //window.location.href = '/index.html';
+        //window.location.href = 'User/LogoutSSO';
+        
+    </script>
+</body>
+</html>

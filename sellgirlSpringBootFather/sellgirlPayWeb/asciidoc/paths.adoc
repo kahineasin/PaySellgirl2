@@ -1,0 +1,711 @@
+
+[[_paths]]
+== 资源
+
+[[_crm-controller_resource]]
+=== Crm-controller
+Crm Controller
+
+
+[[_addhyzlchangeusingpost]]
+==== AddHyzlChange
+....
+POST /crm1/addhyzlchange
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Body**|**hyzlChange** +
+__必填__|hyzlChange|<<_hyzlchange,HyzlChange>>
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_resultmodel,ResultModel>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/crm1/addhyzlchange
+----
+
+
+====== 请求 body
+[source,json]
+----
+{
+  "cdate" : "string",
+  "hybh" : "string",
+  "hyxm" : "string",
+  "id" : 0,
+  "sex" : "string",
+  "sfzh" : "string",
+  "type" : 0
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "message" : "string",
+  "success" : true
+}
+----
+
+
+[[_getsalesdayusingget]]
+==== GetSalesDay
+....
+GET /crm1/getsalesday
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**sfNo** +
+__可选__|sfNo|string
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|< <<_salesday,SalesDay>> > array
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/crm1/getsalesday
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "sfNo" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+[ {
+  "CDay" : "string",
+  "FgsName" : "string",
+  "FgsNo" : "string",
+  "InvTypeName" : "string",
+  "InvTypeNo" : "string",
+  "SalesDayId" : "string",
+  "SfName" : "string",
+  "SfNo" : "string",
+  "TotalMoney" : 0.0,
+  "TotalPv" : 0,
+  "cday" : "string",
+  "fgsName" : "string",
+  "fgsNo" : "string",
+  "invTypeName" : "string",
+  "invTypeNo" : "string",
+  "salesDayId" : "string",
+  "sfName" : "string",
+  "sfNo" : "string",
+  "totalMoney" : 0.0,
+  "totalPv" : 0
+} ]
+----
+
+
+[[_getusersmodifyusingget]]
+==== GetUsersModify
+....
+GET /crm1/getusersmodify
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**userid** +
+__可选__|userid|string
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|< <<_usersmodify,UsersModify>> > array
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/crm1/getusersmodify
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "userid" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+[ {
+  "alertContent" : "string",
+  "modificationTime" : "string",
+  "modifier" : "string",
+  "sellerno" : "string",
+  "sex" : "string",
+  "sfz" : "string",
+  "userid" : "string",
+  "username" : "string"
+} ]
+----
+
+
+[[_pay-controller_resource]]
+=== Pay-controller
+Pay Controller
+
+
+[[_checkapiarrayusingpost]]
+==== CheckApiArray
+....
+POST /pay/checkapiarray
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**a** +
+__必填__|a|< string > array(multi)
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_b625f4346778c80cf8ae850ae7caa95a,AbstractApiResult«object»>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/pay/checkapiarray
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "a" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string",
+  "success" : true
+}
+----
+
+
+[[_checkapibodyarrayusingpost]]
+==== CheckApiBodyArray
+....
+POST /pay/checkapibodyarray
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Body**|**a** +
+__必填__|a|< string > array
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_b625f4346778c80cf8ae850ae7caa95a,AbstractApiResult«object»>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/pay/checkapibodyarray
+----
+
+
+====== 请求 body
+[source,json]
+----
+[ "string" ]
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string",
+  "success" : true
+}
+----
+
+
+[[_checkapiparamtypeusingget]]
+==== CheckApiParamType
+....
+GET /pay/checkapiparamtype
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**date** +
+__必填__|date|string (date-time)
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_b625f4346778c80cf8ae850ae7caa95a,AbstractApiResult«object»>>
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/pay/checkapiparamtype
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "date" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string",
+  "success" : true
+}
+----
+
+
+[[_sellgirlpayusingget]]
+==== SellgirlPay
+....
+GET /pay/sellgirlpay
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**code** +
+__可选__|code|string
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_b625f4346778c80cf8ae850ae7caa95a,AbstractApiResult«object»>>
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/pay/sellgirlpay
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "code" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string",
+  "success" : true
+}
+----
+
+
+[[_sample-api-controller_resource]]
+=== Sample-api-controller
+Sample Api Controller
+
+
+[[_sellgirlpayusingpost]]
+==== SellgirlPay
+....
+POST /sample/eval
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Query**|**code** +
+__可选__|code|string
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_b625f4346778c80cf8ae850ae7caa95a,AbstractApiResult«object»>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/sample/eval
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "code" : "string"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string",
+  "success" : true
+}
+----
+
+
+[[_yj-query-local-controller_resource]]
+=== Yj-query-local-controller
+YJ Query Local Controller
+
+
+[[_getsfofallfgsusingpost]]
+==== GetSfOfAllFgs
+....
+POST /Bonus/Home/GetSfOfAllFgs
+....
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_fc0af4e2c84f496bec9d189418f57c9b,PFJsonDataLocalT«object»>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/Bonus/Home/GetSfOfAllFgs
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "Data" : "object",
+  "Result" : true
+}
+----
+
+
+[[_getmonthusingpost]]
+==== GetMonth
+....
+POST /Bonus/PerformanceAnalysis/GetMonth
+....
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**200**|OK|<<_fc0af4e2c84f496bec9d189418f57c9b,PFJsonDataLocalT«object»>>
+|**201**|Created|无内容
+|**401**|Unauthorized|无内容
+|**403**|Forbidden|无内容
+|**404**|Not Found|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/Bonus/PerformanceAnalysis/GetMonth
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "Data" : "object",
+  "Result" : true
+}
+----
+
+
+

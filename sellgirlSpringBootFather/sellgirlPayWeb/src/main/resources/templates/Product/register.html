@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册 · 电子书库</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+</head>
+<body class="bg-light">
+    <div class="container" style="max-width: 400px; margin-top: 80px;">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">注册</h3>
+                <form id="registerForm" action="/AddUser" method="POST" >
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="username" required name="username" th:value="${username}" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-control" id="password" required name="password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">邀请码（选填）</label>
+                        <input type="text" class="form-control" id="inviteCode" placeholder="如有邀请码请填写" name="inviteCode">
+                        <div class="form-text">填写指定邀请码可访问资源站</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">注册</button>
+                </form>
+                <div class="mt-3 text-center">
+                    <a href="login.html">已有账号？去登录</a>
+                </div>
+                <div id="errorMsg" class="text-danger mt-2 text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--<script src="/sg/js/jq/jquery-2.1.4.js"></script>-->
+    <script>
+        const SECRET_INVITE_CODE = 'RESOURCE2025';
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            //e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const inviteCode = document.getElementById('inviteCode').value.trim();
+			//alert('aaa');
+			//debugger;
+            if (!username || !password) {
+                document.getElementById('errorMsg').textContent = '用户名和密码不能为空';
+            	e.preventDefault();
+                return;
+            }
+                    
+//  $.post("demo_test_post.asp",
+//  {
+//    username:username,
+//    password:password,
+//    inviteCode:inviteCode
+//  },
+//  function(data,status){
+//    alert("Data: " + data + "\nStatus: " + status);
+//  })
+//  .success(function() { alert("second success"); })//grid进入
+//  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
+//  .complete(function(XMLHttpRequest, textStatus){})
+//  ;
+//            	e.preventDefault();
+              
+			return;
+			
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(u => u.username === username)) {
+                document.getElementById('errorMsg').textContent = '用户名已存在';
+                return;
+            }
+
+            const role = (inviteCode === SECRET_INVITE_CODE) ? 'resource' : 'normal';
+
+            const newUser = { username, password, role, favorites: [] };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+            if (role === 'resource') {
+                window.location.href = 'resource-index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+<!--   <parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sellgirlPayFather</artifactId> 
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+  </parent> -->
+	<parent>
+        <groupId>com.sellgirl</groupId>
+        <artifactId>sgJavaHelperFather</artifactId>
+        <version>0.0.5</version>
+	</parent>
+  <!-- <groupId>com.sellgirl</groupId> -->
+  <artifactId>sellgirlPayMq</artifactId>
+  <!-- <version>0.0.1-SNAPSHOT</version> -->
+  <name>sellgirlPayMq</name>
+  
+    <properties>
+		<!--<pfHelperNotSpring.version>0.0.23</pfHelperNotSpring.version>-->
+		<sgJavaHelper.version>0.0.42</sgJavaHelper.version>
+		<rabbitmq.version>5.12.0</rabbitmq.version>
+		<rocketmq.version>4.2.0</rocketmq.version>
+    </properties>
+  <dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- PFHelper -->
+<!--         <dependency>
+            <groupId>com.sellgirl</groupId>
+            <artifactId>sellgirlPayHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency> -->
+<!--         <dependency>
+            <groupId>pf.java</groupId>
+            <artifactId>pfHelper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency> -->
+	<dependency>
+	<groupId>com.sellgirl</groupId>
+            <artifactId>sgJavaHelper</artifactId>
+            <version>${sgJavaHelper.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>${rabbitmq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-client</artifactId>
+			<version>${rocketmq.version}</version>
+			<scope>provided</scope>
+		</dependency>
+        
+        <dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+  </dependencies>
+</project>
