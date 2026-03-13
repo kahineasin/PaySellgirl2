@@ -64,8 +64,8 @@
 <!-- 		<module>sellgirlPayHelper</module> -->
     	<module>sellgirlPayHelperClickHouse</module>
 		<!-- <module>sellgirlPayHelperMvc</module> -->
-<!-- 		<module>sellgirlPayHelperExport</module>
-		<module>sellgirlPayDomain</module>-->
+ 		<module>sellgirlPayHelperExport</module>
+		<!--<module>sellgirlPayDomain</module>-->
 <!-- 		<module>sellgirlPayDao</module>
 		<module>sellgirlPayService</module> -->
 		<module>sellgirlPayMq</module><!---->
