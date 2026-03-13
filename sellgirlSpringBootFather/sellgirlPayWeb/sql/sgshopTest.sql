@@ -33,6 +33,7 @@ select  * from sg_book  where  `book_id`=10 limit 1;
     select * from sg_book limit 20
   delete from sgshop.sg_book where book_name='人间烟火'
   select * from sgshop.sg_book_chap where book_id=999 -- 224
+  select count(*) from sgshop.sg_book_chap
   delete from sgshop.sg_book_chap where book_id=999
   
   select a.book_name,b.* from sg_book a
