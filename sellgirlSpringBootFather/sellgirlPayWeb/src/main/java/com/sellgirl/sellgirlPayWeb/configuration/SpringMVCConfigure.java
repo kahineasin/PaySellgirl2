@@ -2,8 +2,10 @@ package com.sellgirl.sellgirlPayWeb.configuration;
 
 import com.perfect.demo.interceptor.AuthorizeInterceptor;
 import com.perfect.demo.interceptor.PFDayUrlInterceptor;
+import com.sellgirl.sellgirlPayWeb.shop.AntiSpiderInterceptor;
 import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 /*import com.perfect.logistics.configuration.pojo.DeftConfig;
 import com.perfect.logistics.configuration.pojo.ErrorPageConfig;
 import com.perfect.logistics.initialize.WebInitializeService;
@@ -31,6 +33,8 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
     @Autowired(required = false)
     private WebInitializeService webInitializeService;*/implements WebMvcConfigurer {
 
+    @Autowired
+    private AntiSpiderInterceptor antiSpiderInterceptor;
 
 
     @Bean
@@ -56,6 +60,7 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
 //        //error.addPathPatterns("/**");
 ////        List<HandlerInterceptor> intercepter = webInitializeService.initWebMVCInterceptor();
         List<HandlerInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(antiSpiderInterceptor);
         interceptors.add(new AuthorizeInterceptor());
         interceptors.add(new PFDayUrlInterceptor());
         interceptors.add(new ResourceInterceptor());
@@ -66,7 +71,10 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
 //            addInterceptor.excludePathPatterns("/static/**");
             addInterceptor.excludePathPatterns(
             		"/static/**",
-            		"/assets/**","/.well-known/**","/common.js","/data-books.js"
+            		"/assets/**","/.well-known/**",
+            		"/sg/js/**",
+            		"/common.js","/data-books.js","/product/common2.js",
+            		"/bookImg/**","/error"
             		);
             // 拦截配置
             addInterceptor.addPathPatterns("/**");

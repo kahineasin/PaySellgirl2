@@ -1,5 +1,8 @@
 package com.sellgirl.sgJavaHelper;
 
+//import com.sellgirl.sgJavaSpringHelper.Cache;
+//import com.sellgirl.sgJavaSpringHelper.CacheManager;
+
 //import javax.cache.Cache;
 //import javax.cache.CacheManager;
 //import javax.cache.Caching;
@@ -8,13 +11,13 @@ package com.sellgirl.sgJavaHelper;
 
 
 
-public class PFCaching {
+public class SGCaching {
 
     //private static readonly String appKey = ConfigurationManager.AppSettings["AppKey"];
 //    @Autowired
 //    private static PFAppConfig _appConfig;
 //	private static Cache<String, Object> _cache;
-//	public PFCaching() {
+//	public SGCaching() {
 //
 //        CachingProvider cachingProvider = Caching.getCachingProvider();
 //        
@@ -36,6 +39,12 @@ public class PFCaching {
 //        //return HttpContext.Current.Cache.Get(appKey + key);
     }
 
+    /**
+     * 推荐自己掌控超时时间
+     * @param key
+     * @param value
+     */
+    @Deprecated
     public static void Set(String key, Object value)//, CacheDependency dependency)
     {
 
@@ -52,7 +61,22 @@ public class PFCaching {
             //HttpRuntime.Cache.Insert(appKey + key, value, dependency, DateTime.Now.AddDays(1), TimeSpan.Zero, CacheItemPriority.High, null);
         }
     }
+    public static void Set(String key, Object value,int second)//, CacheDependency dependency)
+    {
 
+        if (value == null)//value为null时，Cache.Insert会报错
+        {
+            Remove(key);
+        }
+        else
+        {
+            long nowDt = System.currentTimeMillis(); //系统当前的毫秒数 
+        	CacheManager.putCache(key, new Cache(key,value,(second*1000)+nowDt,false));//一天过期
+        	//_cache.put(key, value);
+            
+            //HttpRuntime.Cache.Insert(appKey + key, value, dependency, DateTime.Now.AddDays(1), TimeSpan.Zero, CacheItemPriority.High, null);
+        }
+    }
     public static void Remove(String key)
     {
     	CacheManager.clearOnly(key);

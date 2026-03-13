@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSON;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
-import com.sellgirl.sgJavaSpringHelper.PFCaching;
+import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 //import com.sellgirl.sgJavaSpringHelper.PFJsonData;

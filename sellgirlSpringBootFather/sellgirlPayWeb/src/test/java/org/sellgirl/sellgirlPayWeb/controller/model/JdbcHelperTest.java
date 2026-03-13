@@ -375,6 +375,23 @@ public class JdbcHelperTest {
 		srcJdbc.setDbName("sgshop");
 		return srcJdbc;
 	}
+
+	public static PFJdbcBase GetSgShop2Jdbc() {
+
+		PFJdbcBase srcJdbc = new PFJdbc();
+		srcJdbc.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		srcJdbc.setPassword("axDvgYjIlk1!");
+		srcJdbc.setUsername("youruser");
+		srcJdbc.setUrl("jdbc:mysql://156.224.19.162:3306/sgshop?useSSL=false&allowPublicKeyRetrieval=true");
+		//srcJdbc.setSqlType("Tidb");
+		srcJdbc.setDbaMobile("15907xxx");
+		srcJdbc.setDbaName("吴肖均");
+		srcJdbc.setDbaEmail("sasha@sellgirl.com");
+		 srcJdbc.setDriverVersion("8.0.23");
+		srcJdbc.setIp("156.224.19.162:3306");
+		srcJdbc.setDbName("sgshop");
+		return srcJdbc;
+	}
 	public static ISGJdbc GetLiGeSaleJdbc() {
 
 		ISGJdbc srcJdbc = new PFJdbc();

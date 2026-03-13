@@ -118,6 +118,13 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
 			int r=dstExec.ExecuteSqlInt(sql, null, true);
 			System.out.println("id2:"+dstExec.GetLastInsertedId());
 ```
+### 复制表，备份表(支持大数据，很推荐)
+```
+//例子 UncheckImportBook.testBulkCopy
+ResultSet srcDr = srcExec.GetHugeDataReader("select * from sg_book");
+dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
+```
+
 ## 写日志
 1. 实现ISGLog 
 

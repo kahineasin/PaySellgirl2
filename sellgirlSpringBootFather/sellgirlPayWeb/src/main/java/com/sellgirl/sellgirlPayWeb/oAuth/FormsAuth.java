@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.FuncAuthorityClass;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 //import com.sellgirl.sgJavaSpringHelper.JwtHelper;
-import com.sellgirl.sgJavaSpringHelper.PFCaching;
+import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.SGRef;
 //import com.sellgirl.sgJavaSpringHelper.config.PFCookieUtils;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
@@ -328,11 +328,11 @@ public class FormsAuth {
 //        	Map<String, List<String>> otherAuthority = new HashMap<String, List<String>>();
 //        	SGRef<Map<String, List<String>>> rOtherAuthority=new SGRef<Map<String, List<String>>>();
 //        	Map<String, FuncAuthorityClass> authority = SGDataHelper.GetFuncAuthorityClass(actions,rOtherAuthority);
-//            PFCaching.Set(loginName + "_FuncAuthorities", authority);
-//            PFCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
+//            SGCaching.Set(loginName + "_FuncAuthorities", authority);
+//            SGCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
 //        }
 
-        PFCaching.Set(loginName, exData);
+        SGCaching.Set(loginName, exData);
 
     }
 
@@ -385,11 +385,11 @@ public class FormsAuth {
 ////        	Map<String, List<String>> otherAuthority = new HashMap<String, List<String>>();
 ////        	SGRef<Map<String, List<String>>> rOtherAuthority=new SGRef<Map<String, List<String>>>();
 ////        	Map<String, FuncAuthorityClass> authority = SGDataHelper.GetFuncAuthorityClass(actions,rOtherAuthority);
-////            PFCaching.Set(loginName + "_FuncAuthorities", authority);
-////            PFCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
+////            SGCaching.Set(loginName + "_FuncAuthorities", authority);
+////            SGCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
 ////        }
 //
-//        PFCaching.Set(loginName, exData);
+//        SGCaching.Set(loginName, exData);
 //
 //    }
     
@@ -462,7 +462,7 @@ public class FormsAuth {
             String userCode = GetUserData().UserCode;
             if (!SGDataHelper.StringIsNullOrWhiteSpace(userCode))
             {
-                Object data = PFCaching.Get(userCode);//应避免把数据保存在key=null的cache中
+                Object data = SGCaching.Get(userCode);//应避免把数据保存在key=null的cache中
                 if(data!=null) {
                     UserData = cl.cast(data) ;	
                 }
@@ -499,7 +499,7 @@ public class FormsAuth {
 //        String jdk7CodeName = cache.get("JDK1.7");
         
         
-        Object funcAuthorities=PFCaching.Get(userId + "_FuncAuthorities");
+        Object funcAuthorities=SGCaching.Get(userId + "_FuncAuthorities");
         if(funcAuthorities==null) {return null;}
         //return (Map<String, FuncAuthorityClass>)funcAuthorities;
         return SGDataHelper.ObjectAs(funcAuthorities);
@@ -507,14 +507,14 @@ public class FormsAuth {
     public static Map<String, List<String>> GetOtherFuncAuthorities()
     {
     	String userId = GetUserData().UserCode;
-        Object funcAuthorities =PFCaching.Get(userId + "_OtherFuncAuthorities") ;
+        Object funcAuthorities =SGCaching.Get(userId + "_OtherFuncAuthorities") ;
         if(funcAuthorities==null) {return null;}
         return SGDataHelper.ObjectAs(funcAuthorities);
     }
     public static void AddFuncAuthorities(String key, FuncAuthorityClass authority)
     {
     	String userId = GetUserData().UserCode;
-        Object funcAuthoritiesObj = PFCaching.Get(userId + "_FuncAuthorities")  ;
+        Object funcAuthoritiesObj = SGCaching.Get(userId + "_FuncAuthorities")  ;
         Map<String, FuncAuthorityClass> funcAuthorities=null;
         if(funcAuthoritiesObj!=null) {
         	 //funcAuthorities = (Map<String, FuncAuthorityClass>)funcAuthoritiesObj; 

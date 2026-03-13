@@ -364,6 +364,16 @@
     <artifactId>pinyin4j</artifactId>
     <version>2.5.1</version>
 </dependency>
+
+<!-- Caffeine 缓存 -->
+<!--<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>
@@ -403,4 +413,26 @@
             </plugin> -->
 		</plugins>
 	</build>
+	
+       <!-- 其他配置 -->
+       
+       <!-- 默认 profile 不执行任何排除，所有资源都保留 -->
+       <profiles>
+           <profile>
+			<!--这样打包时使用此配置：mvn clean package -Pprod-build 注意这个配置移到sgJavaSpringHelperFather会变无效-->
+               <id>prod-build</id>
+               <build>
+                   <resources>
+                       <resource>
+                           <directory>src/main/resources</directory>
+                           <excludes>
+                               <!-- 在生产打包时排除 application-prod.yml -->
+                               <exclude>application-prod.yml</exclude>
+                               <exclude>application.yml</exclude>
+                           </excludes>
+                       </resource>
+                   </resources>
+               </build>
+           </profile>
+       </profiles>
 </project>

@@ -51,7 +51,8 @@ import org.springframework.context.annotation.ComponentScan;
 //		"com.sellgirl.sellgirlPayWeb.pay",
 		
 		"com.sellgirl.sgJavaMvcHelper.config",
-		"com.sellgirl.sellgirlPayWeb.oAuth"
+		"com.sellgirl.sellgirlPayWeb.oAuth",
+		"com.sellgirl.sellgirlPayWeb.shop"
 		})
 public class SellgirlPayWebApplication {
 

@@ -1586,8 +1586,10 @@ public class SGDataHelper {
 	 * 获得运行路径如
 	 * D:\eclipse_workspace_sellgirlPay\sellgirlPay\PaySellgirl\sellgirlPayHelper
 	 * 
+	 * 此版本在linux上有 root/ 错误目录的问题 sgJavaHelper.GetBaseDirectoryAbsolutePath 是修正
 	 * @return
 	 */
+	@Deprecated
 	public static String GetBaseDirectory() {
 		if (_baseDirectory != null) {
 			return _baseDirectory;
@@ -1616,6 +1618,12 @@ public class SGDataHelper {
 			if (r.charAt(r.length() - 1) == '/') {
 				r = r.substring(0, r.length() - 1);
 			}
+			
+//			/*ubuntu的root目录好像比较特别，和/home /user，这里会 返回 root/myapp/shop 这个路径打开文件会报错
+//			应该把 root/xx替换为 ~*/
+//			if(r.startsWith("root/")) {
+//				r="/"+r;
+//			}
 			return r;
 //			return path.toString().replace(Paths.get("target","classes").toString(), "").replace(Paths.get("target","test-classes").toString(), "")// 测试项目的编译目录
 //			;
@@ -5757,6 +5765,8 @@ public class SGDataHelper {
 		SaveStringToFile(s, filePath);
 	}
 
+	//移动sgJavaHelper
+	@Deprecated
 	public enum LocalDataType {
 		/**
 		 * 系统需要使用的本地数据,不可删除,如sql脚本之类(开发环境直接覆盖服务器的文件) 运行系统必需,永远不可清空

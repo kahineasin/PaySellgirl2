@@ -31,6 +31,8 @@ com.sellgirl.sellgirlPayWeb.shop
 ## 测试地址
 
 # 开发指南
+## 打包
+mvn clean package -Pprod-build  //这样可以排除yml,yml放在jar的同级目录
 ## 前端post
 
 ```
@@ -54,14 +56,24 @@ com.sellgirl.sellgirlPayWeb.shop
 src/main/resources/static/bookImg/cover/ 这个文件夹的图片不上传到git, 里面的图片名对应mysql的book_id，所以mysql数据不能随便清理，否则图片名对应不上。UncheckImportBook.testImportBook()方法可以把数据导入到book表，同时处理cover图
 
 # 运营指南
-电脑需jre1.8环境,mysql(我装的5.1.46-community)
+电脑需jre1.8环境,
+mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 
 ## 发布
+建议服务器环境：Ubtuntu 22.04 LTS jdk1.8
 
 ### jar发布方式
 1. 安装mysql后用脚本 sql/sgshop.sql 初始化数据库
-2. cmd命令行运行 "D:\Program Files\Java\jre-1.8\bin\java" -jar ./sellgirlPayWeb-0.0.4.jar
-3. 浏览器访问http://localhost:28303/
+2. 把网站图片复制到jar包同级目录下的 static/bookImg/**.jpg
+3. cmd命令行运行 "D:\Program Files\Java\jre-1.8\bin\java" -jar ./sellgirlPayWeb-0.0.4.jar
+4. 浏览器访问http://localhost:28303/
 
+### 云ubuntu
+1. scp -r D:\cache\html1\shop root@你的服务器IP:~/myapp
+2. ssh root@你的服务器IP
+3. cd ~/myapp/shop
+4. screen -S myapp
+5. java -jar sellgirlPayWeb-0.0.4.jar
+6. 访问 http://156.224.19.162:28303/
 ## 系统参数
 1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt

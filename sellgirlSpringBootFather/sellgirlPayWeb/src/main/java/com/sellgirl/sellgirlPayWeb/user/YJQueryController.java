@@ -16,7 +16,7 @@ import com.sellgirl.sgJavaHelper.FuncAuthorityClass;
 //import com.sellgirl.sgJavaSpringHelper.HtmlHelper;
 //import com.sellgirl.sgJavaSpringHelper.HtmlHelperT;
 //import com.sellgirl.sgJavaSpringHelper.PFBaseWebController;
-import com.sellgirl.sgJavaSpringHelper.PFCaching;
+import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 
 /**
@@ -85,7 +85,7 @@ public abstract class YJQueryController extends PFBaseWebController {
 	}
 	public  void SetSystemUser(SystemUser systemUser) {
       if (!SGDataHelper.StringIsNullOrWhiteSpace(GetUserId())) {
-          PFCaching.Set(GetUserId(), systemUser); 
+          SGCaching.Set(GetUserId(), systemUser); 
           }
 	}
 //    /// <summary>
@@ -261,7 +261,7 @@ public abstract class YJQueryController extends PFBaseWebController {
     public void SetFuncAuthorities(Map<String, FuncAuthorityClass> value) {
     	String UserId=GetUserId();
         if (!SGDataHelper.StringIsNullOrWhiteSpace(GetUserId())) {
-        	PFCaching.Set(UserId + "_FuncAuthorities", value);
+        	SGCaching.Set(UserId + "_FuncAuthorities", value);
         }
 	}
 
@@ -273,7 +273,7 @@ public abstract class YJQueryController extends PFBaseWebController {
     	String UserId=GetUserId();
         if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId))
         {
-            PFCaching.Set(UserId + "_OtherFuncAuthorities", value);
+            SGCaching.Set(UserId + "_OtherFuncAuthorities", value);
         }
 	}
 //    public Dictionary<String, FuncAuthority> FuncAuthorities//因为FuncAuthority引用关系,不能移去FormsAuth

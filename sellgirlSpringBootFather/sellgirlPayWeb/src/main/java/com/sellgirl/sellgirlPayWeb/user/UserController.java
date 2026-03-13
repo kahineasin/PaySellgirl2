@@ -1,5 +1,6 @@
 package com.sellgirl.sellgirlPayWeb.user;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
-import com.sellgirl.sgJavaSpringHelper.PFCaching;
+import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 //import com.sellgirl.sgJavaSpringHelper.PFJsonData;
@@ -500,7 +501,7 @@ extends YJQueryController
 //        String UserId=GetUserId();
 //        if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId))
 //        {
-//            PFCaching.Remove(UserId);
+//            SGCaching.Remove(UserId);
 //            //Sf = null;
 //            //SfName = null;
 //            //Fgs = null;
@@ -573,7 +574,7 @@ extends YJQueryController
     {
       String UserId=GetUserId();
       if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId)) {
-  		PFCaching.Remove(UserId);
+  		SGCaching.Remove(UserId);
   		FormsAuth.SingOut();
       }
 	  	ModelAndView result=new ModelAndView();
@@ -629,8 +630,20 @@ extends YJQueryController
 //	@CrossOrigin
     public ModelAndView AddUser(String username,String password,String inviteCode)
 //    public ModelAndView AddUser(@Valid @RequestBody UserCreateDto m, BindingResult bindingResult)
-    {
-		String x=SGDataHelper.ReadLocalTxt("shop/inviteCode.txt", LocalDataType.System).trim();
+    {		
+		String filePath = Paths.get(com.sellgirl.sgJavaHelper.config.SGDataHelper.GetBaseDirectory(), 
+				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System.toString() + "LocalData", "Txt", "shop/inviteCode.txt")
+	.toString();
+//		String filePath2 = Paths.get(SGDataHelper.GetBaseDirectory(), LocalDataType.System.toString() + "LocalData", "Txt", "shop","inviteCode.txt")
+//	.toString();
+		System.out.println("---------1----------");
+		System.out.println(filePath);
+//		System.out.println("---------2----------");
+//		System.out.println(filePath2);
+		//linux路径报错 todo
+		String x=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","inviteCode.txt").toString(), 
+				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System).trim();
+//		String x=SGDataHelper.ReadFileToString(filePath2).trim();
 		if(null!=inviteCode&&!x.equals(inviteCode)) {
 			inviteCode=null;
 		}
@@ -644,6 +657,10 @@ extends YJQueryController
 //		model.setPwd(m.getPassword());
 //		model.setInvitationCode(m.getInviteCode());
 		SGRef<String> error=new SGRef<String>();
+		if(null!=userService.getUser(username)) {
+			ViewData.put("username", "用户名重复，注册失败");
+	    	  return View("Product/register");
+		}
 		if(userService.addUser(model,error)) {
 
 			ModelAndView r= DoLogin(username, password);
@@ -723,10 +740,10 @@ extends YJQueryController
     public ModelAndView LoginUser(String username,String password//,String inviteCode
     		)
     {
-		String x=SGDataHelper.ReadLocalTxt("shop/inviteCode.txt", LocalDataType.System).trim();
-//		if(null!=inviteCode&&!x.equals(inviteCode)) {
-//			inviteCode=null;
-//		}
+//		String x=SGDataHelper.ReadLocalTxt("shop/inviteCode.txt", LocalDataType.System).trim();
+////		if(null!=inviteCode&&!x.equals(inviteCode)) {
+////			inviteCode=null;
+////		}
 		
 //		UserCreate model=new UserCreate();
 ////		String username=m.getUsername();String password=m.getPassword();String inviteCode=m.getInviteCode();

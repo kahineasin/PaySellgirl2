@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
-import com.sellgirl.sgJavaSpringHelper.PFCaching;
+import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 //import com.sellgirl.sgJavaSpringHelper.PFJsonData;
@@ -104,7 +104,7 @@ public class UserApiController extends  YJQueryController
 	@CrossOrigin
     public AbstractApiResult<?> AddCache(String v)
     {
-        PFCaching.Set("aa", v);
+        SGCaching.Set("aa", v,10);
 		return AbstractApiResult.success("success");
     }
 
@@ -113,7 +113,7 @@ public class UserApiController extends  YJQueryController
 	@CrossOrigin
     public AbstractApiResult<?> GetCache()
     {
-        Object data = PFCaching.Get("aa");
+        Object data = SGCaching.Get("aa");
 		return AbstractApiResult.success(data);
     }
 

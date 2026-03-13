@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class UncheckImportBook extends TestCase {
 		new SGDataHelper(new PFAppConfig());
 	}
 
-	private boolean clear=true;
+	private boolean clear=false;
 	private boolean printBug=false;
 	private boolean printProgress=true;
 	private int maxLen=45110;//暂时的阀值
@@ -93,8 +94,8 @@ public class UncheckImportBook extends TestCase {
 
 //			String bookPath="D:\\cache\\html1\\book_data\\提取示例";
 //			String bookPath="D:\\cache\\html1\\1";
-			String bookPath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
-//			String bookPath="D:\\cache\\html1\\book_data\\bugData";
+//			String bookPath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
+			String bookPath="D:\\cache\\html1\\book_data\\bugData";
 			
 			String outImgPath="D:\\cache\\html1\\bookImg\\cover";
 			String outImgPath2="D:\\cache\\html1\\bookImg\\content";
@@ -202,6 +203,10 @@ public class UncheckImportBook extends TestCase {
 //							continue;
 							deny.append(i.getName()+"-->"+chapName+" ? words over "+maxLen+"\r\n");
 							this.doDeleteByIds(new long[] {bookId});
+							File copedCover=new File(Paths.get(outImgPath, bookId+".jpg").toUri());
+							if(copedCover.exists()) {copedCover.delete();}
+							File copedImg=new File(Paths.get(outImgPath2, ""+bookId).toUri());
+							if(copedImg.exists()) {copedImg.delete();}
 							break;
 						}
 
@@ -234,11 +239,15 @@ public class UncheckImportBook extends TestCase {
 								if(null!=dstExec.GetErrorLine()&&-1<dstExec.GetErrorLine().toString().indexOf("Data truncation")) {
 //									 wordCnt=SGDataHelper.GetWordsCharLength(content);
 									deny.append(i.getName()+"-->"+chapName+" ? words over "+wordCnt+"\r\n");
-									this.doDeleteByIds(new long[] {bookId});
 									break;
 								}else {
 									
 								}
+								this.doDeleteByIds(new long[] {bookId});
+								File copedCover=new File(Paths.get(outImgPath, bookId+".jpg").toUri());
+								if(copedCover.exists()) {copedCover.delete();}
+								File copedImg=new File(Paths.get(outImgPath2, ""+bookId).toUri());
+								if(copedImg.exists()) {copedImg.delete();}
 							}
 						}catch(Exception e) {
 							if(printBug) {
@@ -285,7 +294,8 @@ public class UncheckImportBook extends TestCase {
 	 * 按书名删除
 	 */
 	public void testDeleteByNames() {
-		String[] names=new String[] {"二马","今日简史","人间失格","人间烟火"};
+//		String[] names=new String[] {"二马","今日简史","人间失格","人间烟火"};
+		String[] names=new String[] {"复活"};
 //		int[] ids=new int[names.length];
 		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
 		int total=0;
@@ -445,6 +455,121 @@ public class UncheckImportBook extends TestCase {
 	    		}
 	}
 
+	public void testCreateShopTable() {
+
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShop2Jdbc();
+		try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+			dstExec.AutoCloseConn(false);
+			boolean b=dstExec.OpenConn();
+			System.out.println("conn:"+b);
+			if(b) {
+				String text=SGDataHelper.ReadFileToString2(new File("D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\sql\\sgshop.sql"));
+				SGSqlCommandString sql=new SGSqlCommandString(text.split(";"));
+				int r=dstExec.ExecuteSqlInt(sql, null, false);
+				
+				System.out.println("create table:"+r);
+			}
+			
+			dstExec.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void testBulkCopy() {
+//		System.out.print("    SELECT  \r\n" + 
+//				"     ORDINAL_POSITION fieldIdx,\r\n" + 
+//				"      COLUMN_NAME fieldName, -- 列名,  \r\n" + 
+//				"      if(COLUMN_KEY='PRI',b'1',b'0')  isPrimaryKey,\r\n" + 
+//				"       COLUMN_TYPE 数据类型,  \r\n" + 
+//				"        DATA_TYPE fieldType, -- 字段类型,  \r\n" + 
+//				"      CHARACTER_MAXIMUM_LENGTH fieldSqlLength, -- 长度,  \r\n" + 
+//				"      -- IS_NULLABLE 是否为空,  \r\n" + 
+//				"      if(IS_NULLABLE='YES',b'0',b'1')  isRequired,\r\n" + 
+//				"      COLUMN_DEFAULT defaultValue, -- 默认值,  \r\n" + 
+//				"      COLUMN_COMMENT columnDescription -- 备注   \r\n" + 
+//				"    FROM  \r\n" + 
+//				"     INFORMATION_SCHEMA.COLUMNS  \r\n" + 
+//				"    where  \r\n" + 
+//				"    -- developerclub为数据库名称，到时候只需要修改成你要导出表结构的数据库即可  \r\n" + 
+//				"    -- table_schema ='cbbk'  \r\n" + 
+//				"    -- AND  \r\n" + 
+//				"    -- article为表名，到时候换成你要导出的表的名称  \r\n" + 
+//				"    -- 如果不写的话，默认会查询出所有表中的数据，这样可能就分不清到底哪些字段是哪张表中的了，所以还是建议写上要导出的名名称  \r\n" + 
+//				"    table_name  = '{0}' ");
+		
+		initPFHelper();
+		// bulk到ClickHouse
+		ISGJdbc srcJdbc = JdbcHelperTest.GetSgShopJdbc();
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShop2Jdbc();
+		ISqlExecute srcExec = null;
+		try {
+			srcExec = SGSqlExecute.Init(srcJdbc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ISqlExecute dstExec = null;
+		try {
+			dstExec = SGSqlExecute.Init(dstJdbc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String dstTableName="sg_book";
+		// 使用NString前
+		ResultSet srcDr = srcExec.GetHugeDataReader("select * from sg_book");
+		// ResultSet srcDr = srcExec.GetDataReader("select 1 as c1,1 as c2,cast((CASE 1
+		// WHEN 1 THEN 200 WHEN 2 THEN 800 ELSE NULL END) as DECIMAL) as c8");//这样ok
+
+//		//dstExec.Delete("test1", null);
+//		dstExec.HugeDelete(dstTableName, where -> {
+////  		where.Add("data_date",PFDate.Now().ToCalendar());
+//		// where.Add("data_date",PFDate.Now().GetDayStart().ToCalendar());
+//		//where.Add("data_date", transfer.getPFCmonth().ToDateTime());
+//	});
+		//dstExec.HugeInsertReader(null, srcDr,dstTableName, null, null, null);//这样可以，但50000一批时会卡住
+		dstExec.HugeBulkReader(null, srcDr,dstTableName, null, null, null);
+
+	}
+
+	public void testBulkChap() {
+		
+		initPFHelper();
+		
+		ISGJdbc srcJdbc = JdbcHelperTest.GetSgShopJdbc();
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShop2Jdbc();
+		ISqlExecute srcExec = null;
+		try {
+			srcExec = SGSqlExecute.Init(srcJdbc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ISqlExecute dstExec = null;
+		try {
+			dstExec = SGSqlExecute.Init(dstJdbc);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String dstTableName="sg_book_chap";
+		// 使用NString前
+		ResultSet srcDr = srcExec.GetHugeDataReader("select * from sg_book_chap");
+		// ResultSet srcDr = srcExec.GetDataReader("select 1 as c1,1 as c2,cast((CASE 1
+		// WHEN 1 THEN 200 WHEN 2 THEN 800 ELSE NULL END) as DECIMAL) as c8");//这样ok
+
+//		//dstExec.Delete("test1", null);
+//		dstExec.HugeDelete(dstTableName, where -> {
+////  		where.Add("data_date",PFDate.Now().ToCalendar());
+//		// where.Add("data_date",PFDate.Now().GetDayStart().ToCalendar());
+//		//where.Add("data_date", transfer.getPFCmonth().ToDateTime());
+//	});
+		//dstExec.HugeInsertReader(null, srcDr,dstTableName, null, null, null);//这样可以，但50000一批时会卡住
+		dstExec.HugeBulkReader(null, srcDr,dstTableName, null, null, null);
+
+	}
     public void testUpdatePs() throws Exception {
         TimeZone timeZone = TimeZone.getTimeZone("GMT+6");
         TimeZone.setDefault(timeZone);//怀疑这个时区会影响jdbc的初始化,事实证明不会

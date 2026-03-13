@@ -53,10 +53,8 @@ mybatis:
     mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
     typeAliasesPackage: com.sellgirl.*.domain
 server:
-    port: 28303
+    port: 80
 spring:
-    profiles: 
-        active: prod
     application:
         name: sellgirlPayWeb
     freemarker:
