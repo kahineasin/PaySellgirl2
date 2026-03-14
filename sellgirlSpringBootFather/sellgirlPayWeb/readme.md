@@ -69,7 +69,7 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 4. 浏览器访问http://localhost:28303/
 
 ### 云ubuntu
-1. scp -r D:\cache\html1\shop root@你的服务器IP:~/myapp
+1. scp -r D:\cache\html1\shop root@你的服务器IP:~/myapp/
 2. ssh root@你的服务器IP
 3. cd ~/myapp/shop
 4. screen -S myapp

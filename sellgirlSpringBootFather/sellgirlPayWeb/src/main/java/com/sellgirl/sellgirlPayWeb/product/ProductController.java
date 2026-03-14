@@ -121,7 +121,7 @@ extends PFBaseWebController
 		book book=bookService.GetOneBook(id);
 		bookChapQuery q=new bookChapQuery();
 		q.setBook_id(id);
-		List<bookChap> chap=bookService.GetbookChapList(q);
+		List<bookChap> chap=bookService.GetbookChapList(q,false);
 		ViewData.put("chap", chap);		
   	  return View(book,"Product/book");
     }

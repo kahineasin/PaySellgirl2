@@ -165,7 +165,7 @@ SqlString = SGDataHelper.FormatString(
           /**
           * 查询章节
           */
-          public SGDataTable GetbookChap(bookChapQuery q)
+          public SGDataTable GetbookChap(bookChapQuery q,boolean content)
           {
               
   		    ISGJdbc jdbc=JdbcHelper.GetShop();
@@ -175,10 +175,11 @@ SqlString = SGDataHelper.FormatString(
   			query.Add("book_id", q.getBook_id());
 
               SqlString = SGDataHelper.FormatString( 
-  "select * from sg_book_chap " +
+  "select {1} from sg_book_chap " +
   "{0} " 
   , 
-              query.ToSql()
+              query.ToSql(),
+              content?"*":"book_chap_id,book_chap_name, book_id"
           );
   		        return sql.GetDataTable(SqlString,null);
   		    } catch (Throwable e) {
@@ -234,10 +235,10 @@ SqlString = SGDataHelper.FormatString(
       /**
        * 查询章节
        */
-      public List<bookChap> GetbookChapList(bookChapQuery q)
+      public List<bookChap> GetbookChapList(bookChapQuery q,boolean content)
       {
           List<bookChap> list = new ArrayList<bookChap>();
-          SGDataTable result = GetbookChap(q);
+          SGDataTable result = GetbookChap(q, content);
           if (result != null && !result.IsEmpty())
           {
               list = result.ToList(bookChap.class,null);
