@@ -46,6 +46,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
+import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 //import com.sellgirl.sellgirlPayWeb.service.BalanceService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
@@ -117,18 +118,49 @@ public class UserApiController extends  YJQueryController
 		return AbstractApiResult.success(data);
     }
 
+//	//此版本需要登录再签到
+//	@PostMapping(value = { "/PostSign" })
+//    public AbstractApiResult<?> PostSign()
+//    {
+//		SystemUser user=GetSystemUser();
+//		if(userService.signDay(user.UserCode)) {
+//			user.signDay++;
+//			user.lastSign=SGDate.Now();
+//			this.SetSystemUser(user);
+//			
+////			HashMap<String,Object> r=new HashMap<String,Object>();
+////			r.put("success", true);
+//			return AbstractApiResult.success(user.signDay);
+//		}else {
+//			return AbstractApiResult.error("签到失败");
+//		}
+//    }
+//	//此版本利用前端登录信息签到. 因为同一页面的收藏功能也是前端缓存保存的
 	@PostMapping(value = { "/PostSign" })
-    public AbstractApiResult<?> PostSign()
+    @SGAllowAnonymous
+    public AbstractApiResult<?> PostSign(String username)
     {
-		SystemUser user=GetSystemUser();
-		if(userService.signDay(user.UserCode)) {
-			user.signDay++;
-			user.lastSign=SGDate.Now();
-			this.SetSystemUser(user);
+		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
+			return AbstractApiResult.error("签到失败,用户名为空");
+		}
+//		SGRef<Integer> days=new SGRef<Integer>(); 
+		SGRef<User> u=new SGRef<User>(); 
+		if( userService.signDay(username,u)) {
+			SystemUser user=GetSystemUser();
+			if(null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName)
+				&&username.equals(user.UserName)
+					) {
+				//如果已经登录，使同步
+				user.lastSign=u.GetValue().getLastSign();
+				user.signDay=u.GetValue().getSignDay();
+				this.SetSystemUser(user);
+			}
+//			user.signDay++;
+//			user.lastSign=SGDate.Now();
 			
 //			HashMap<String,Object> r=new HashMap<String,Object>();
 //			r.put("success", true);
-			return AbstractApiResult.success(user.signDay);
+			return AbstractApiResult.success(u.GetValue().getSignDay());
 		}else {
 			return AbstractApiResult.error("签到失败");
 		}

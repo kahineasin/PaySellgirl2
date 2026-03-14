@@ -846,6 +846,7 @@ extends YJQueryController
 ////  	result.addObject("Model",model);
 //  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
   	SystemUser user=GetSystemUser();
+  	result.addObject("logged", null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName));
   	result.addObject("signDay", user.signDay);
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());

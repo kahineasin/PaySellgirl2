@@ -103,10 +103,15 @@
             // 签到功能
             const signStatus = getSignStatus();
             //benjamin
-            signStatus.signedToday=[[${signedToday}]];
+            const serverLogged=[[${logged}]];
+            if(serverLogged){
+            	signStatus.signedToday=[[${signedToday}]];
+            }
             const signBtn = document.getElementById('signBtn');
             const signDaysSpan = document.getElementById('signDays');
-            //signDaysSpan.textContent = signStatus.signDays;
+            if(!serverLogged){
+            	signDaysSpan.textContent = signStatus.signDays;
+            }
             if (signStatus.signedToday) {
                 signBtn.disabled = true;
                 signBtn.textContent = '今日已签到';
@@ -116,15 +121,26 @@
             }
 
             if (signBtn) {
+				let signing=false;
                 signBtn.addEventListener('click', function() {
+                	if(signing){return;}
+                	signing=true;
                     const result = signIn(
+                    	//user.username,
+                    	user,
                     	function(result){                    	
 		                    if (result.success) {
 		                        alert('签到成功！连续签到 ' + result.signDays + ' 天');
-		                        location.reload();
+		                        //location.reload();
+				                signBtn.disabled = true;
+				                signBtn.textContent = '今日已签到';
+				                signDaysSpan.textContent = result.signDays;
+				                //user.lastSignDate=getTodayStr();
+				                //user.signDays=result.signDays;
 		                    } else {
 		                        alert(result.message);
 		                    }
+		                    signing=false;
                     	}
                     );
                 });

@@ -151,11 +151,15 @@ public class UserService
 	 * @param userName
 	 * @return
 	 */
-	public boolean signDay(String userName) {
-		User user=getUser(userName);
-		if(null==user) {return false;}
+	public boolean signDay(String userName
+//			,SGRef<Integer> days
+			,SGRef<User> user
+			) {
+//		User user=getUser(userName);
+//		if(null==user) {return false;}
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
+			myResource.AutoCloseConn(false);
 			SGSqlWhereCollection query =myResource.getWhereCollection();
 //			PFSqlInsertCollection insert =myResource.getInsertCollection();
 //			PFSqlUpdateCollection update =myResource.getUpdateCollection(myResource.GetMetaData(userName, null));
@@ -168,8 +172,16 @@ public class UserService
             		        query.ToSql(),
             		        SGDate.Now().toString()
             		    );
-            boolean r= myResource.ExecuteSql(new SGSqlCommandString(SqlString));
-            return r;
+            int r= myResource.ExecuteSqlInt(new SGSqlCommandString(SqlString), null, false);
+            if(0<r) {            	
+//            	days.SetValue(user.getSignDay()+1);
+            	user.SetValue(getUser(userName));
+            	myResource.close();
+            	return true;
+            }else {
+            	myResource.close();
+                return false;
+            }
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}
