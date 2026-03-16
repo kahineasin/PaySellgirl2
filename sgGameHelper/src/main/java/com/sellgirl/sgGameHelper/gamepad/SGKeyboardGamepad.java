@@ -103,15 +103,24 @@ public class SGKeyboardGamepad implements ISGPS5Gamepad{
 	}
 	
 	public float axisLeftX() {
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {return -1f;}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {return 1f;}
-		return 0;
+//		if(Gdx.input.isKeyPressed(Keys.LEFT)) {return -1f;}
+//		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {return 1f;}
+//		return 0;
+		//格斗的方向抵消原则
+		float r=0;
+		if(Gdx.input.isKeyPressed(Keys.LEFT)) {r=r-1f;}
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {r=r+1f;}
+		return r;
 	}
 
 	public float axisLeftY() {
-		if(Gdx.input.isKeyPressed(Keys.UP)) {return -1f;}
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) {return 1f;}
-		return 0;
+//		if(Gdx.input.isKeyPressed(Keys.UP)) {return -1f;}
+//		if(Gdx.input.isKeyPressed(Keys.DOWN)) {return 1f;}
+//		return 0;
+		float r=0;
+		if(Gdx.input.isKeyPressed(Keys.UP)) {r=r-1f;}
+		if(Gdx.input.isKeyPressed(Keys.DOWN)) {r=r+1f;}
+		return r;
 	}
 
 	public float axisRightX() {
