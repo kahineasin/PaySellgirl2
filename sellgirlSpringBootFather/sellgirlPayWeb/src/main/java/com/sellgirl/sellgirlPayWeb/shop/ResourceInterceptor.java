@@ -29,6 +29,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.lang.annotation.Annotation;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -59,6 +61,21 @@ public class ResourceInterceptor implements HandlerInterceptor {
         }     
         return false;
 	}
+	
+//	public static boolean hasAttr(HandlerMethod handlerMethod,Class cls) {
+////      HandlerMethod handlerMethod = (HandlerMethod) handler;
+//      // 获取方法上的注解
+//		Annotation allowAll = handlerMethod.getMethod().getAnnotation(cls);
+//      // 如果方法上的注解为空 则获取类的注解
+//      if (allowAll == null) {
+//          allowAll = handlerMethod.getMethod().getDeclaringClass().getAnnotation(cls);
+//      }
+//
+//      if (allowAll != null){
+//      	return true;
+//      }     
+//      return false;
+//	}
     /**
      * 控制器方法被调用之前
      * @param httpServletRequest

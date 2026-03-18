@@ -78,9 +78,12 @@
                 brandLink.href = 'index.html';
                 brandLink.textContent = '📚 电子书库';
             }
+			
+            const isVip=[[${isVip}]];
+            const vipName=isVip||user.isVip?(user.username+'(vip)'):user.username;
 
             userInfoDiv.innerHTML = `
-                <span class="text-light me-2">👤 ${user.username}</span>
+                <span class="text-light me-2">👤 ${vipName}</span>
                 <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
                 <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                 <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
@@ -103,6 +106,7 @@
             // 签到功能
             const signStatus = getSignStatus();
             //benjamin
+            
             const serverLogged=[[${logged}]];
             if(serverLogged){
             	signStatus.signedToday=[[${signedToday}]];

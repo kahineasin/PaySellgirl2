@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>开通VIP · 电子书库</title>
+    <title>扫码支付 · 电子书库</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
     <style>
         body { background: #f8f9fa; }
         .navbar { background-color: #2c3e50; }
-        .card { border-radius: 1rem; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .price { font-size: 2rem; font-weight: bold; color: #e67e22; }
+        .qrcode { max-width: 250px; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -19,10 +17,6 @@
             <a class="navbar-brand" href="index.html" id="brandLink">📚 电子书库</a>
             <div class="d-flex align-items-center gap-2">
                 <div id="switchBtnContainer" style="display: none;"></div>
-                <form class="d-flex" action="ebook-search.html" method="get">
-                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="搜索..." required>
-                    <button class="btn btn-outline-light btn-sm" type="submit">搜索</button>
-                </form>
                 <div class="d-flex align-items-center gap-2" id="userInfo"></div>
             </div>
         </div>
@@ -52,7 +46,6 @@
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;
 
-                // 切换按钮
                 if (user.role === 'resource') {
                     const currentPage = window.location.pathname.split('/').pop();
                     if (currentPage.startsWith('resource-')) {
@@ -76,61 +69,70 @@
         })();
     </script>
 
-    <div class="container my-5">
-        <h1 class="text-center mb-5" id="pageTitle">选择VIP套餐</h1>
-        <div class="row g-4" id="plansContainer"></div>
-        <div class="text-center mt-4">
-            <a href="javascript:history.back()" class="btn btn-outline-secondary">返回</a>
-        </div>
+    <div class="container my-5 text-center">
+        <h2 class="mb-4">此页面显示支付结果</h2>
+        <!--<div class="qrcode">
+            <img src="assets/images/qrcode-placeholder.jpg" class="img-fluid" alt="支付二维码（模拟）" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+        </div>-->
+        <p class="mt-3">应付金额：<strong id="amount" th:text="${amount}" ></strong> 元</p>
+        <!--<p class="text-muted">（此为模拟页面，点击下方按钮模拟支付成功）</p>-->
+        <button id="paySuccessBtn" class="btn btn-success btn-lg mt-3">等待支付...</button>
+        <br>
+        <a href="vip.html" class="btn btn-outline-secondary mt-3">重新选择套餐</a>
     </div>
 
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
     <script type="text/javascript" th:inline="javascript">
+        let pollInterval = null;
         (function() {
         	//benjamin
-        	const generatePayFailed=[[${generatePayFailed}]];
-        	const generatePayMsg=[[${generatePayMsg}]];
-        	if(generatePayFailed){
-        		alert(generatePayMsg);
+        	const paidSuccess=[[${paidSuccess}]];
+        	const outTradeNo=[[${outTradeNo}]];
+        	
+        function startPolling(outTradeNo) {
+            pollInterval = setInterval(function() {
+                $.get('/api/pay3/status/' + outTradeNo, function(data) {
+                    if (data.status === 1) {
+                        $('#paySuccessBtn').text('支付成功！').addClass('paid');
+                        clearInterval(pollInterval);
+                alert('支付成功！您已成为VIP会员。');
+                window.location.href = '/profile.html';
+                    } else if (data.status === 0) {
+                        $('#paySuccessBtn').text('等待支付...');
+                    } else if (data.status === 2) {
+                        $('#paySuccessBtn').text('订单已取消');
+                    }  else {
+                        $('#paySuccessBtn').text('订单不存在');
+                        clearInterval(pollInterval);
+                    }
+                });
+            }, 2000); // 每2秒查询一次
+        }
+        
+        	if(paidSuccess){
+                alert('支付成功！您已成为VIP会员。');
+                window.location.href = '/profile.html';
+                return;
+        	}else if(null!=outTradeNo){        	
+                        // 开始轮询支付状态
+                        startPolling(outTradeNo);
         	}
         
-            const user = getCurrentUser();
-            const role = user ? user.role : 'normal';
+            //const urlParams = new URLSearchParams(location.search);
+            //const amount = urlParams.get('amount') || '0';
+            //document.getElementById('amount').textContent = amount;
 
-            const pageTitle = document.getElementById('pageTitle');
-            const container = document.getElementById('plansContainer');
-
-            let plans = [];
-            if (role === 'resource') {
-                pageTitle.textContent = '资源站VIP套餐';
-                //30,300
-                plans = [
-                    { name: '月度会员', price: 30, unit: '月', desc: ['所有资源无限下载', '高速网盘链接', '去广告'], link: '/pay3payPage?plan=resource_monthly&amount=0.01' },
-                    { name: '年度会员', price: 300, unit: '年', desc: ['月度会员全部权益', '额外赠送2个月', '专属客服'], link: '/pay3payPage?plan=resource_yearly&amount=300' }
-                ];
-            } else {
-                pageTitle.textContent = '电子书库VIP套餐';
-                //15,150
-                plans = [
-                    { name: '月度会员', price: 15, unit: '月', desc: ['所有电子书免费阅读', '新书抢先看', '去广告'], link: '/pay3payPage?plan=ebook_monthly&amount=0.01' },
-                    { name: '年度会员', price: 150, unit: '年', desc: ['月度会员全部权益', '额外赠送3个月', '专属客服'], link: '/pay3payPage?plan=ebook_yearly&amount=0.01' }
-                ];
-            }
-
-            container.innerHTML = plans.map(p => `
-                <div class="col-md-6">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <h3 class="card-title">${p.name}</h3>
-                            <p class="price">¥${p.price}<span style="font-size: 1rem; color: #6c757d;">/${p.unit}</span></p>
-                            <ul class="list-unstyled mt-3">
-                                ${p.desc.map(d => `<li>✓ ${d}</li>`).join('')}
-                            </ul>
-                            <a href="${p.link}" class="btn btn-warning btn-lg mt-3">立即开通</a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            //document.getElementById('paySuccessBtn').addEventListener('click', function() {
+            //    alert('支付成功！您已成为VIP会员。');
+            //    window.location.href = 'profile.html';
+            //});
         })();
+        // 页面卸载时停止轮询
+        window.onbeforeunload = function() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+            }
+        };
     </script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

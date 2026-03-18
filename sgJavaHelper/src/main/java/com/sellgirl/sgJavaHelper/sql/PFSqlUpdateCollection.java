@@ -99,7 +99,9 @@ public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateC
     @Override
     public  void Set(String key, Object value)
     {
-        if (PrimaryFields.containsKey(key))
+        if (
+        		null!=PrimaryFields//20260318
+        		&&PrimaryFields.containsKey(key))
         {
         	SGDataHelper.ListFirst(_where, a->a.Key.equals(key)).Value=value;
 //            _where.First(a => a.Key == key).Value = value;

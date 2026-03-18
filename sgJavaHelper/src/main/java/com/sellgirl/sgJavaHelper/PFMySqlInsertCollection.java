@@ -1,11 +1,11 @@
 package com.sellgirl.sgJavaHelper;
 
-import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 
 /*
  * ClickHouse也用这个
  */
-public class PFMySqlInsertCollection extends PFSqlInsertCollection {
+public class PFMySqlInsertCollection extends SGSqlInsertCollection {
 /**
 	 * 
 	 */

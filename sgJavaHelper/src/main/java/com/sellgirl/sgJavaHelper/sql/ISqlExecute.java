@@ -92,8 +92,8 @@ public interface ISqlExecute extends AutoCloseable{
 	) throws SQLException;
     
     SGSqlWhereCollection getWhereCollection();
-	PFSqlInsertCollection getInsertCollection();
-    PFSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd);
+	SGSqlInsertCollection getInsertCollection();
+    SGSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd);
     PFSqlUpdateCollection getUpdateCollection(ResultSetMetaData dstMd);
     /**
      * 已插入的行数，便于知道sql有没有超出limit的范围
@@ -162,9 +162,13 @@ public interface ISqlExecute extends AutoCloseable{
 	SGDataTable GetDataTable(String sql, PFSqlParameter[] p, boolean autoClose);
 	SGDataTable GetOneRow (String tableName, Consumer<SGSqlWhereCollection> whereAction);
 	 Object QuerySingleValue(String sqlval);
+	 /**
+	  * 查询某行的某个字段
+	  */
+	 Object QuerySingleValue(String tableName,String fleld, Consumer<SGSqlWhereCollection> whereAction);
 	 
 	<T> List<T> QueryList(Class<T> tClass,String sql);
-	<T> Boolean HugeBulkList(PFSqlInsertCollection dstInsert, List<T> list,
+	<T> Boolean HugeBulkList(SGSqlInsertCollection dstInsert, List<T> list,
 			//Class<T> tClass, 
 			String tableName,
 			// Consumer<BatchInsertOption> insertOptionAction,
@@ -183,7 +187,7 @@ public interface ISqlExecute extends AutoCloseable{
 	 * @param stopAction
 	 * @return
 	 */
-	Boolean HugeInsertReader(PFSqlInsertCollection dstInsert,
+	Boolean HugeInsertReader(SGSqlInsertCollection dstInsert,
 		    ResultSet rdr, String tableName,
 		    //Consumer<BatchInsertOption> insertOptionAction,// = null,
 		    Consumer<BaseSqlUpdateCollection> rowAction,// = null,
@@ -207,7 +211,7 @@ public interface ISqlExecute extends AutoCloseable{
 	 * @param stopAction
 	 * @return
 	 */
-     Boolean HugeBulkReader(PFSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
+     Boolean HugeBulkReader(SGSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
     			//Consumer<BatchInsertOption> insertOptionAction,
     			//Consumer<BaseSqlUpdateCollection> rowAction,
     			SGAction<BaseSqlUpdateCollection,Integer,Object> rowAction,

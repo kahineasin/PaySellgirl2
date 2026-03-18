@@ -16,6 +16,7 @@ import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.SGRef;
 //import com.sellgirl.sgJavaSpringHelper.config.PFCookieUtils;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
+import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
 //import org.springframework.cache.annotation.Caching;
 //import javax.cache.CacheProvider;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
@@ -129,10 +130,10 @@ public class FormsAuth {
 	 * @return
 	 */
     public static BaseReturnInfoDto LoginCheckWebApi(String userno, String password) {
-    	if(SGDataHelper.UseLocalData()) {
-//    		return JSON.parseObject(SGDataHelper.ReadLocalJson("LoginCheck.json"), BaseReturnInfoDto.class);
-    		return JSON.parseObject(SGDataHelper.ReadLocalJsonFromClassSource("LoginCheck.json"), BaseReturnInfoDto.class);
-    	}
+//    	if(SGDataHelper.UseLocalData()) {
+////    		return JSON.parseObject(SGDataHelper.ReadLocalJson("LoginCheck.json"), BaseReturnInfoDto.class);
+//    		return JSON.parseObject(SGDataHelper.ReadLocalJsonFromClassSource("LoginCheck.json"), BaseReturnInfoDto.class);
+//    	}
 //        //chen chao系统的登陆
 //        JSONObject jsonObject = new JSONObject();
 //        jsonObject.put("loginNo", userno);
@@ -185,6 +186,10 @@ public class FormsAuth {
 //    }
 
 	public static User checkUser(String userName,String pwd,boolean checkPwd) {
+//    	if(SGDataHelper.UseLocalData()) {
+////    		return JSON.parseObject(SGDataHelper.ReadLocalJson("LoginCheck.json"), BaseReturnInfoDto.class);
+//    		return JSON.parseObject(SGDataHelper.ReadLocalJsonFromClassSource("LoginCheck.json"), User.class);
+//    	}
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
 			SGSqlWhereCollection query =myResource.getWhereCollection();
@@ -202,11 +207,15 @@ public class FormsAuth {
             SGDataTable dt= myResource.GetDataTable(SqlString,null);
             if(null!=dt&&!dt.IsEmpty()) {
             	List<User> list= dt.ToList(User.class, (obj,row,c)->{
+            		obj.setUserId(com.sellgirl.sgJavaHelper.config.SGDataHelper.ObjectToLong(row.getColumn("user_id")) );
             		obj.setUserName(row.getStringColumn("user_name"));
             		obj.setInvitationCode(row.getStringColumn("invitation_code"));
             		obj.setSignDay(SGDataHelper.ObjectToInt(row.getColumn("sign_day")));
             		obj.setLastSign(com.sellgirl.sgJavaHelper.config.SGDataHelper.ObjectToSGDate(row.getColumn("last_sign")));
             	});
+//            	com.sellgirl.sgJavaHelper.config.SGDataHelper.WriteLocalTxt(
+//            			JSON.toJSONString(list.get(0)), 
+//            			"LocalSysUser.json",com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.Deletable);            	
             	return list.get(0);
             }else {
             	return null;

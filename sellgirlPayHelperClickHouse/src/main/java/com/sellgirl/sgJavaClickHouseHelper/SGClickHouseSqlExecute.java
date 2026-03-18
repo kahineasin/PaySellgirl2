@@ -633,7 +633,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 		return ExecuteSqlInt(sqlstr, null) > 0;
 	}
 
-	public Boolean HugeInsertReader(PFSqlInsertCollection insert, ResultSet rdr, String tableName,
+	public Boolean HugeInsertReader(SGSqlInsertCollection insert, ResultSet rdr, String tableName,
 			// Consumer<BatchInsertOption> insertOptionAction,// = null,
 			Consumer<BaseSqlUpdateCollection> rowAction, // = null,
 			Consumer<Integer> sqlRowsCopiedAction, // = null,
@@ -924,7 +924,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 //	}
 
 	public PreparedStatement insertIntoCachedRowSet(PreparedStatement crs, ResultSetMetaData md,
-			PFSqlInsertCollection dstInsert
+			SGSqlInsertCollection dstInsert
 	// ,Map<String,Integer> srcColumnType
 	// ,Map<String,Integer> dstColumnType
 	) throws SQLException {
@@ -1007,7 +1007,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 		return crs;
 	}
 
-	private Boolean DoBulkReader(PFSqlInsertCollection insert,
+	private Boolean DoBulkReader(SGSqlInsertCollection insert,
 			// CachedRowSetImpl crs,
 			// ResultSet crs,
 			PreparedStatement crs, String tableName, Boolean transferOneByOne// 只有当一条一条导入时,bulk的错误才能确定是insert里的值
@@ -1024,7 +1024,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 	}
 
 	@Override
-	public Boolean HugeBulkReader(PFSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
+	public Boolean HugeBulkReader(SGSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
 			//Consumer<BaseSqlUpdateCollection> rowAction,
 			SGAction<BaseSqlUpdateCollection,Integer,Object> rowAction,
 			Consumer<Integer> sqlRowsCopiedAction,
@@ -1270,8 +1270,8 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 		return r;
 	}
 	@Override
-	public PFSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd) {
-		PFSqlInsertCollection dstInsert = getInsertCollection();
+	public SGSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd) {
+		SGSqlInsertCollection dstInsert = getInsertCollection();
 
 		// 注意这里的insert的valueType应该是目标表的类型(但转换为PFType的
 		try {

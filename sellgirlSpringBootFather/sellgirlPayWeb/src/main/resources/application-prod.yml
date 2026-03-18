@@ -135,3 +135,6 @@ caffeine:
   device-block:
     maximum-size: 20000
     expire-after-write: 30m
+zpay:
+  notifyUrl: bdhome.xyz/api/pay3/notify
+  returnUrl: bdhome.xyz/pay3paid.html

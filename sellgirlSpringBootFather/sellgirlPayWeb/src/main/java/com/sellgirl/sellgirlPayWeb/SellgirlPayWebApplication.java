@@ -43,8 +43,10 @@ import org.springframework.context.annotation.ComponentScan;
 		"com.sellgirl.sellgirlPayWeb.controller",
 		
 		"com.sellgirl.sellgirlPayWeb.user.service",
+//		"com.sellgirl.sellgirlPayWeb.pay.service",
 		"com.sellgirl.sellgirlPayWeb.product",
 		"com.sellgirl.sellgirlPayWeb.user",
+		"com.sellgirl.sellgirlPayWeb.pay",
 		
 //		"com.sellgirl.sellgirlPayWeb.pay.config",
 //		"com.sellgirl.sellgirlPayWeb.pay.service",

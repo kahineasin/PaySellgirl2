@@ -8,6 +8,7 @@ import com.perfect.demo.utils.CUrlencode;
 import com.perfect.demo.utils.HMAC_SHA1;
 import com.perfect.demo.utils.HttpUtils;
 import com.sellgirl.sellgirlPayWeb.configuration.pojo.RetCode;
+import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;*/
 import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +65,14 @@ public class AuthorizeInterceptor implements HandlerInterceptor {
             if(!request.getRequestURI().startsWith("/crm/")){
                 return true;
             }
+
+//        	if(null!=handler&&handler instanceof HandlerMethod) {
+//        		HandlerMethod method=(HandlerMethod)handler;
+//        		if(ResourceInterceptor.isAllowAll(method)) {
+//        			return true;
+//        		}
+//        	}
+        	
             if((boolean)this.authorize(request)){
                 return true;
             }

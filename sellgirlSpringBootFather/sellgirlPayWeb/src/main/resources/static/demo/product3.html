@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情 - 微信扫码支付</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; text-align: center; }
+        .product { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+        .qrcode { margin: 30px 0; display: flex; justify-content: center; }
+        #qrCanvas { width: 200px; height: 200px; }
+        .status { font-size: 16px; color: #666; }
+        .paid { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="product">
+        <h2>测试商品</h2>
+        <p>商品描述：Spring Boot 实战教程</p >
+        <p>价格：¥1.00</p >
+        <button id="payBtn">微信支付</button>
+    </div>
+
+    <div id="qrcodeContainer" style="display: none;">
+        <h3>请使用手机微信扫码支付</h3>
+        <div class="qrcode">
+            <canvas id="qrCanvas"></canvas>
+        </div>
+        <p class="status" id="payStatus">等待扫码...</p >
+    </div>
+
+    <script>
+        let outTradeNo = null;
+        let pollInterval = null;
+
+        $('#payBtn').click(function() {
+            // 调用后端创建订单接口
+            window.location.href='/pay3/payPage?plan=ebook_monthly&amount=0.01';
+            return;
+            $.ajax({
+                url: '/api/pay/native',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    description: 'Spring Boot 实战教程',
+                    totalFee: 100  // 1元 = 100分
+                }),
+                success: function(res) {
+                    if (res.success) {
+                    	window.location.href='/pay2/';
+                        outTradeNo = res.outTradeNo;
+                        // 显示二维码区域
+                        $('#qrcodeContainer').show();
+                        // 生成二维码
+                        generateQRCode(res.codeUrl);
+                        // 开始轮询支付状态
+                        startPolling(outTradeNo);
+                    } else {
+                        alert('创建订单失败');
+                    }
+                },
+                error: function() {
+                    alert('网络错误');
+                }
+            });
+        });
+
+        function generateQRCode(text) {
+            const canvas = document.getElementById('qrCanvas');
+            QRCode.toCanvas(canvas, text, { width: 200 }, function(error) {
+                if (error) console.error(error);
+            });
+        }
+
+        function startPolling(outTradeNo) {
+            pollInterval = setInterval(function() {
+                $.get('/api/pay/status/' + outTradeNo, function(data) {
+                    if (data.status === 1) {
+                        $('#payStatus').text('支付成功！').addClass('paid');
+                        clearInterval(pollInterval);
+                    } else if (data.status === 0) {
+                        $('#payStatus').text('等待支付...');
+                    } else {
+                        $('#payStatus').text('订单不存在');
+                        clearInterval(pollInterval);
+                    }
+                });
+            }, 2000); // 每2秒查询一次
+        }
+
+        // 页面卸载时停止轮询
+        window.onbeforeunload = function() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+            }
+        };
+    </script>
+</body>
+</html>

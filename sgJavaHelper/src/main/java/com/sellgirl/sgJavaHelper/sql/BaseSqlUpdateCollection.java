@@ -582,7 +582,9 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
         if (isNumber) {
             return SGDataHelper.FormatString(" {0} ", val);
         }
-        if ("bool".equals(typeString)) {
+        if ("bool".equals(typeString)
+        		||SGSqlFieldTypeEnum.Bool==dstPFType//mysql 中tinyint(1) 插入 'true' 报错，所以加此条件 --benjamin 20260319
+        		) {
             return SGDataHelper.FormatString(" {0} ", SGDataHelper.ObjectToBool0(val) == true ? 1 : 0);
         }
 //        if (val instanceof List)//支持String[]的成员

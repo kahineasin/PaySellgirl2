@@ -52,6 +52,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
+import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreateModel;
@@ -584,9 +585,13 @@ extends YJQueryController
 
 	@SGAllowAnonymous
 	@GetMapping(value = { "/login.html" })
-    public ModelAndView Login()
+    public ModelAndView Login(String return_to)
     {
 	  	ModelAndView result=new ModelAndView();
+	    result.addObject("return_to",return_to);
+//	    result.addObject("postAction",SGDataHelper.StringIsNullOrWhiteSpace(return_to)
+//	    		?"/LoginUser":("/LoginUser?return_to="+return_to)
+//	    		);
 	  	result.setViewName("Product/login");
 	  	return result;
     }
@@ -663,7 +668,7 @@ extends YJQueryController
 		}
 		if(userService.addUser(model,error)) {
 
-			ModelAndView r= DoLogin(username, password);
+			ModelAndView r= DoLogin(username, password,null);
 			if(null!=r) {
 				return r;
 			}
@@ -737,7 +742,9 @@ extends YJQueryController
 //	@GetMapping(value = { "/AddUser" })
 	@PostMapping(value = { "/LoginUser" })
 //	@CrossOrigin
-    public ModelAndView LoginUser(String username,String password//,String inviteCode
+    public ModelAndView LoginUser(String username,String password
+    		,String return_to
+    		//,String inviteCode
     		)
     {
 //		String x=SGDataHelper.ReadLocalTxt("shop/inviteCode.txt", LocalDataType.System).trim();
@@ -757,7 +764,7 @@ extends YJQueryController
 		
 		//if(userService.addUser(model,error)) {
 		
-			ModelAndView r= DoLogin(username, password);
+			ModelAndView r= DoLogin(username, password,return_to);
 			if(null!=r) {
 				return r;
 			}
@@ -804,7 +811,7 @@ extends YJQueryController
   	  return View("Product/login");
     }
 	
-	private ModelAndView DoLogin(String username,String password) {
+	private ModelAndView DoLogin(String username,String password,String return_to) {
 
   		BaseReturnInfoDto userSSO = FormsAuth.LoginCheckWebApi(username, password);
   		if(userSSO.isIsSuccess()) {
@@ -814,21 +821,38 @@ extends YJQueryController
 
   	        int effectiveHours = 1;//登陆1小时
   	        User user = FormsAuth.checkUser(username,null,false);
+  	      userData.UserCode=String.valueOf(user.getUserId());
+  	      
   	        SystemUser sysUser = new SystemUser();
-  	    	sysUser.UserCode=user.getUserName();
+//  	    	sysUser.UserCode=user.getUserName();
+  	    	sysUser.UserCode=userData.UserCode;
   	    	sysUser.UserName=user.getUserName();
 //  	    	sysUser.Email=user.getEmail();
   	    	sysUser.isInvited=!SGDataHelper.StringIsNullOrWhiteSpace(user.getInvitationCode());
   	    	sysUser.signDay=user.getSignDay();
   	    	sysUser.lastSign=user.getLastSign();
+  	    	SGDate now= SGDate.Now();
+  	    	if(
+  	    			(user.isVip1()&&null!=user.getVip1_expire()&&0>now.compareTo(user.getVip1_expire()))
+  	    			||(user.isVip2()&&null!=user.getVip2_expire()&&0>now.compareTo(user.getVip2_expire()))
+  	    			) {
+  	    		sysUser.isVip=true;
+  	    	}
   	        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
 	        	ViewData.put("username",username);
 	        	ViewData.put("isInvited",sysUser.isInvited);
-  	        if(sysUser.isInvited) {
+	        	
+	        if(!SGDataHelper.StringIsNullOrWhiteSpace(return_to)) {
+	        	String urlDecode=SGDataHelper.getURLDecoderString(return_to);
+	        	return this.RedirectToUrl(urlDecode);
+	        }
+	        else if(sysUser.isInvited) {
+  	        	ViewData.put("isVip",sysUser.isVip);
   	        	ViewData.put("role","resource");
   	        	ViewData.put("url","/resource-index.html");
 	  	    	  return View("ProductJump/index");
   	        }else {
+  	        	ViewData.put("isVip",sysUser.isVip);
   	        	ViewData.put("role","normal");	  	        	
   	        	ViewData.put("url","/");
   	    	  return View("ProductJump/index");
@@ -850,7 +874,7 @@ extends YJQueryController
   	result.addObject("signDay", user.signDay);
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());
-  	
+  	result.addObject("isVip", user.isVip);
   	result.setViewName("Product/profile");
   	return result;
     }
@@ -868,13 +892,21 @@ extends YJQueryController
   	return result;
     }
 
-	public enum PayPlan{
-		resource_monthly,
-		resource_yearly,
-		ebook_monthly,
-		ebook_yearly
-	}
+//	public enum PayPlan{
+//		resource_monthly,
+//		resource_yearly,
+//		ebook_monthly,
+//		ebook_yearly
+//	}
+//	
+	/**
+	 * 改用 Pay3Controller.PaidReturn
+	 * @param plan
+	 * @param amount
+	 * @return
+	 */
 	@GetMapping(value = { "/pay.html" })
+	@SGAllowAnonymous
     public ModelAndView Pay(PayPlan plan,Integer amount)
     {
 //  	  return View(new LoginerBase(),"Product/register");

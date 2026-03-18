@@ -11,7 +11,6 @@ import com.sellgirl.sgJavaHelper.config.SGDataHelper;
  *
  */
 public class SystemUser {
-
     public String UserCode;
 
     public String UserName;
@@ -19,6 +18,7 @@ public class SystemUser {
     public boolean isInvited=false;
     public int signDay;
     public SGDate lastSign;
+    public boolean isVip=false;
     /**
      * 
      */

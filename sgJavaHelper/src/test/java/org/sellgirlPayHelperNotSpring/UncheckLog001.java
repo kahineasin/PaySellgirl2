@@ -43,7 +43,7 @@ import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlCreateTableCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
-import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlTransferItem;
 import com.sellgirl.sgJavaHelper.sql.PFTidbSqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SqlCreateTableItem;

@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
-public class PFSqlInsertCollection extends BaseSqlUpdateCollection {
+public class SGSqlInsertCollection extends BaseSqlUpdateCollection {
 
 //	@Override
 //	protected PFSqlType sqlType() {
@@ -17,11 +17,11 @@ public class PFSqlInsertCollection extends BaseSqlUpdateCollection {
 	 */
 	private static final long serialVersionUID = -3924459189626116895L;
 	//private IList<String> _updateFields;
-    public PFSqlInsertCollection()
+    public SGSqlInsertCollection()
     {
     	super();
     }
-    public PFSqlInsertCollection(Object model,  String... names
+    public SGSqlInsertCollection(Object model,  String... names
         )
     {
     	super(model, names);

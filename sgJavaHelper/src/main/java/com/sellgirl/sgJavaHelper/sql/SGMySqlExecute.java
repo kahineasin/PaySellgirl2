@@ -735,7 +735,7 @@ public class SGMySqlExecute extends SGSqlExecuteBase {// PFSqlExecute {
 //	return null;
 //}
     @Override
-    public Boolean HugeBulkReader(PFSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
+    public Boolean HugeBulkReader(SGSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
                                   // Consumer<BatchInsertOption> insertOptionAction,
                                   //Consumer<BaseSqlUpdateCollection> rowAction,
                                   SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction, Predicate<Boolean> stopAction) {
@@ -1196,4 +1196,5 @@ public class SGMySqlExecute extends SGSqlExecuteBase {// PFSqlExecute {
         return GetDataTable(
                 SGDataHelper.FormatString("select * from {0} {1} limit 1", tableName, where == null ? "" : where.ToSql()));
     }
+
 }

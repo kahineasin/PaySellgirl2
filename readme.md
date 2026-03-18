@@ -124,6 +124,45 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
 ResultSet srcDr = srcExec.GetHugeDataReader("select * from sg_book");
 dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 ```
+### 修改表
+```
+		ISGJdbc jdbc=JdbcHelper.GetShop();
+		try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+			dstExec.AutoCloseConn(false);
+            List<String> srcFieldNames = new ArrayList<String>();
+            srcFieldNames.add("vip_order_id");
+            srcFieldNames.add("status");
+            ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose("sg_vip_order", srcFieldNames);
+
+            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+
+            
+            String[] mArray = new String[] {"status"};
+            String[] primaryKeys = new String[] {"vip_order_id"};
+            update.UpdateFields(mArray);
+            update.PrimaryKeyFields(false, primaryKeys);
+
+            update.Set("vip_order_id", id);
+            update.Set("status", com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus.已支付.ordinal());
+            
+			
+			SGSqlCommandString sql=new SGSqlCommandString(
+					SGDataHelper.FormatString(
+							" update sg_vip_order set  {0} {1} limit 1",
+							update.ToSetSql(),
+			                update.ToWhereSql()
+					));
+			dstExec.close();
+			int r=dstExec.ExecuteSqlInt(sql, null, true);
+			dstExec.close();
+			if(0<r) {
+				return dstExec.GetLastInsertedId();
+			}
+			//System.out.println("id2:"+dstExec.GetLastInsertedId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+```
 
 ## 写日志
 1. 实现ISGLog 

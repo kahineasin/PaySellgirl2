@@ -3,6 +3,7 @@ package com.sellgirl.sellgirlPayWeb.configuration;
 import com.perfect.demo.interceptor.AuthorizeInterceptor;
 import com.perfect.demo.interceptor.PFDayUrlInterceptor;
 import com.sellgirl.sellgirlPayWeb.shop.AntiSpiderInterceptor;
+import com.sellgirl.sellgirlPayWeb.shop.LoginInterceptor;
 import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
 ////        List<HandlerInterceptor> intercepter = webInitializeService.initWebMVCInterceptor();
         List<HandlerInterceptor> interceptors = new ArrayList<>();
         interceptors.add(antiSpiderInterceptor);
+        interceptors.add(new LoginInterceptor());
         interceptors.add(new AuthorizeInterceptor());
         interceptors.add(new PFDayUrlInterceptor());
         interceptors.add(new ResourceInterceptor());
@@ -73,7 +75,8 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
             		"/static/**",
             		"/assets/**","/.well-known/**",
             		"/sg/js/**",
-            		"/common.js","/data-books.js","/product/common2.js",
+            		"/demo/**",
+            		"/common.js","/data-books.js","/data-resources.js","/product/common2.js",
             		"/bookImg/**","/error"
             		);
             // 拦截配置

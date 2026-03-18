@@ -84,15 +84,8 @@
         </div>
     </div>
 
-    <script type="text/javascript" th:inline="javascript">
+    <script>
         (function() {
-        	//benjamin
-        	const generatePayFailed=[[${generatePayFailed}]];
-        	const generatePayMsg=[[${generatePayMsg}]];
-        	if(generatePayFailed){
-        		alert(generatePayMsg);
-        	}
-        
             const user = getCurrentUser();
             const role = user ? user.role : 'normal';
 
@@ -102,17 +95,15 @@
             let plans = [];
             if (role === 'resource') {
                 pageTitle.textContent = '资源站VIP套餐';
-                //30,300
                 plans = [
-                    { name: '月度会员', price: 30, unit: '月', desc: ['所有资源无限下载', '高速网盘链接', '去广告'], link: '/pay3payPage?plan=resource_monthly&amount=0.01' },
-                    { name: '年度会员', price: 300, unit: '年', desc: ['月度会员全部权益', '额外赠送2个月', '专属客服'], link: '/pay3payPage?plan=resource_yearly&amount=300' }
+                    { name: '月度会员', price: 30, unit: '月', desc: ['所有资源无限下载', '高速网盘链接', '去广告'], link: 'pay.html?plan=resource_monthly&amount=30' },
+                    { name: '年度会员', price: 300, unit: '年', desc: ['月度会员全部权益', '额外赠送2个月', '专属客服'], link: 'pay.html?plan=resource_yearly&amount=300' }
                 ];
             } else {
                 pageTitle.textContent = '电子书库VIP套餐';
-                //15,150
                 plans = [
-                    { name: '月度会员', price: 15, unit: '月', desc: ['所有电子书免费阅读', '新书抢先看', '去广告'], link: '/pay3payPage?plan=ebook_monthly&amount=0.01' },
-                    { name: '年度会员', price: 150, unit: '年', desc: ['月度会员全部权益', '额外赠送3个月', '专属客服'], link: '/pay3payPage?plan=ebook_yearly&amount=0.01' }
+                    { name: '月度会员', price: 15, unit: '月', desc: ['所有电子书免费阅读', '新书抢先看', '去广告'], link: 'pay.html?plan=ebook_monthly&amount=15' },
+                    { name: '年度会员', price: 150, unit: '年', desc: ['月度会员全部权益', '额外赠送3个月', '专属客服'], link: 'pay.html?plan=ebook_yearly&amount=150' }
                 ];
             }
 

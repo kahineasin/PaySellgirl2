@@ -51,7 +51,7 @@ import com.sellgirl.sgJavaHelper.file.SGDirectory;
 import com.sellgirl.sgJavaHelper.file.SGPath;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
-import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 import com.sellgirl.sgJavaHelper.sql.SGMySqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlCreateTableCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
@@ -105,8 +105,8 @@ public class UncheckImportBook extends TestCase {
 			SGDirectory.EnsureExists(outImgPath2);
 			File root=new File(bookPath);
 	        File[] files = new File(bookPath).listFiles();
-	        PFSqlInsertCollection insert=null;
-	        PFSqlInsertCollection insert2=null;
+	        SGSqlInsertCollection insert=null;
+	        SGSqlInsertCollection insert2=null;
 
 			try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
 				dstExec.AutoCloseConn(false);
@@ -380,7 +380,7 @@ public class UncheckImportBook extends TestCase {
 	        	String chapName="testChar";
 	        	long bookId=999;
 
-		        PFSqlInsertCollection insert2=null;	        	
+		        SGSqlInsertCollection insert2=null;	        	
 //	        	String content=SGDataHelper.ReadFileToString2(j);
 	        	String content="";
 				int wordCnt=SGDataHelper.GetWordsCharLength(content);
@@ -588,7 +588,7 @@ public class UncheckImportBook extends TestCase {
         fieldNames.add("col3");
 //        ResultSetMetaData dstMd = dstExec.GetMetaData("test_tb_07", fieldNames);
 		ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose("test_tb_07", fieldNames);
-        PFSqlInsertCollection insert=dstExec.getInsertCollection(dstMd);
+        SGSqlInsertCollection insert=dstExec.getInsertCollection(dstMd);
         insert.Set("id",8);
         insert.Set("col1",1662717600000L);
         insert.Set("col2",1662717600000L);
@@ -667,7 +667,7 @@ public class UncheckImportBook extends TestCase {
 			model.setCover("aa");
 			model.setCreate_date(SGDate.Now());
 			
-			PFSqlInsertCollection insert=dstExec.getInsertCollection();
+			SGSqlInsertCollection insert=dstExec.getInsertCollection();
 			
 			insert.InitItemByModel(model);
 			

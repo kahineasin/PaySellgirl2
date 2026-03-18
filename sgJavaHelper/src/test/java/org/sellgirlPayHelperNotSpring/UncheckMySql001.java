@@ -40,7 +40,7 @@ import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlCreateTableCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
-import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlTransferItem;
 import com.sellgirl.sgJavaHelper.sql.PFTidbSqlExecute;
@@ -4165,7 +4165,7 @@ public class UncheckMySql001 extends TestCase {
         fieldNames.add("col3");
 //        ResultSetMetaData dstMd = dstExec.GetMetaData("test_tb_07", fieldNames);
 		ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose("test_tb_07", fieldNames);
-        PFSqlInsertCollection insert=dstExec.getInsertCollection(dstMd);
+        SGSqlInsertCollection insert=dstExec.getInsertCollection(dstMd);
         insert.Set("id",8);
         insert.Set("col1",1662717600000L);
         insert.Set("col2",1662717600000L);

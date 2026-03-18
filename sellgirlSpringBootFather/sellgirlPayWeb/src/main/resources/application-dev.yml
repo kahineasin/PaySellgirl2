@@ -44,7 +44,7 @@ mybatis:
     mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
     typeAliasesPackage: com.sellgirl.*.domain
 server:
-    port: 80  # 28303
+    port: 8080
 spring:
     application:
         name: sellgirlPayWeb
@@ -79,7 +79,7 @@ tpf:
 pf:
   sendSysMsg: true
   appKey: yjquery
-  useLocalData: true 
+  useLocalData: false 
   pfDebug: true
   preventFgs: false 
   allowAutoLogin: true
@@ -97,3 +97,6 @@ pf:
     secretKey: uZ3PWjJFfqPskmakjIZVb9gyJXuhvJ
     topic: poctest4
     tag: OPEN_CARD/EDIT_CARD
+zpay:
+  notifyUrl: home.bdhome.xyz/api/pay3/notify
+  returnUrl: home.bdhome.xyz/pay3paid.html

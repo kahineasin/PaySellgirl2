@@ -1401,6 +1401,13 @@ pow:-2  100.0
 			return null;
 		}
 		try {
+			if(Integer.class==value.getClass()) {
+		        int ordinal = Integer.parseInt(value.toString());
+		        TEnum[] constants = cls.getEnumConstants();
+		        if (ordinal >= 0 && ordinal < constants.length) {
+		            return constants[ordinal];
+		        }
+			}
 			return Enum.valueOf(cls, value.toString());
 		} catch (Exception e) {
 			return null;

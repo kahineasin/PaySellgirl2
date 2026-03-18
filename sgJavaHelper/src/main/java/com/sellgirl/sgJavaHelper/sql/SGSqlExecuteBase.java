@@ -426,16 +426,16 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return null;
     }
 
-    public PFSqlInsertCollection getInsertCollection() {
+    public SGSqlInsertCollection getInsertCollection() {
         // throw new Exception("Not Declare getConnection()");
         try {
-            PFSqlInsertCollection r = null;
+            SGSqlInsertCollection r = null;
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
             if (_jdbc.GetSqlType() == PFSqlType.MySql || _jdbc.GetSqlType() == PFSqlType.ClickHouse
                     || PFSqlType.Tidb == _jdbc.GetSqlType()) {
                 r = new PFMySqlInsertCollection();
             } else {
-                r = new PFSqlInsertCollection();
+                r = new SGSqlInsertCollection();
             }
             r.setSqlType(_jdbc.GetSqlType());
             return r;
@@ -446,8 +446,8 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return null;
     }
 
-    public PFSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd) {
-        PFSqlInsertCollection dstInsert = getInsertCollection();
+    public SGSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd) {
+        SGSqlInsertCollection dstInsert = getInsertCollection();
 
         // 注意这里的insert的valueType应该是目标表的类型(但转换为PFType的
         try {
@@ -676,6 +676,18 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return null;
     }
 
+	@Override
+	public Object QuerySingleValue(String tableName,String fleld, Consumer<SGSqlWhereCollection> whereAction) {
+
+        SGSqlWhereCollection where = getWhereCollection();
+        if (whereAction != null) {
+            whereAction.accept(where);
+        }
+        return QuerySingleValue(
+                SGDataHelper.FormatString("select {0} from {1} {2} limit 1", 
+                		fleld,
+                		tableName, where == null ? "" : where.ToSql()));
+	}
     public <T> List<T> QueryList(Class<T> tClass, String sql) {
         // 建立Statement对象
         try {
@@ -1578,7 +1590,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
      * 注意用这个方法插入到SqlServer时非常慢,应该和processBatch和autoCommit有关,用HugeBulkReader吧
      */
     @Override
-    public Boolean HugeInsertReader(PFSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
+    public Boolean HugeInsertReader(SGSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
                                     Consumer<BaseSqlUpdateCollection> rowAction, Consumer<Integer> sqlRowsCopiedAction,
                                     Predicate<Boolean> stopAction) {
 
@@ -1740,7 +1752,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
      * 2.如果提供insert参数，需保证其包含主键
      */
     @Override
-    public <T> Boolean HugeBulkList(PFSqlInsertCollection dstInsert, List<T> list,
+    public <T> Boolean HugeBulkList(SGSqlInsertCollection dstInsert, List<T> list,
                                     // Class<T> tClass,
                                     String tableName,
                                     // Consumer<BatchInsertOption> insertOptionAction,
@@ -2201,7 +2213,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
 
                     // dr = srcExec.GetDataReader(sql);
 
-                    PFSqlInsertCollection insert = null;
+                    SGSqlInsertCollection insert = null;
 
                     SetCommandTimeOut(transferItem.getSqlCommandTimeout());
 
@@ -2736,7 +2748,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return true;
     }
 
-    protected String GetInsertSql(String tableName, PFSqlInsertCollection insert) {
+    protected String GetInsertSql(String tableName, SGSqlInsertCollection insert) {
         // return PFDataHelper.FormatString(" ALTER TABLE {0} UPDATE {1} {2};",
         // tableName,
         // update.ToSetSql(),
@@ -2910,7 +2922,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return ExecuteSql(new SGSqlCommandString(SGDataHelper.FormatString("truncate table {0}", tableName)));
     }
 
-    private PFDataRow GetDataRowByInsertCollection(PFSqlInsertCollection srcInsert // ,ResultSetMetaData rsMD
+    private PFDataRow GetDataRowByInsertCollection(SGSqlInsertCollection srcInsert // ,ResultSetMetaData rsMD
     ) {
 
         List<PFDataColumn> col = new ArrayList<PFDataColumn>(); // 行所有列集合
@@ -3306,7 +3318,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             ResultSetMetaData rsMD = srcRs.getMetaData();
             //PFSqlInsertCollection srcInsert = this.getInsertCollection(rsMD);
 
-            PFSqlInsertCollection srcInsert = this.getInsertCollection();
+            SGSqlInsertCollection srcInsert = this.getInsertCollection();
             for (int i = 0; i < rsMD.getColumnCount(); i++) {
                 try {
                     int mdIdx = i + 1;
@@ -3515,7 +3527,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             ResultSetMetaData rsMD = srcRs.getMetaData();
             //PFSqlInsertCollection srcInsert = this.getInsertCollection(rsMD);
 
-            PFSqlInsertCollection srcInsert = this.getInsertCollection();
+            SGSqlInsertCollection srcInsert = this.getInsertCollection();
             for (int i = 0; i < rsMD.getColumnCount(); i++) {
                 try {
                     int mdIdx = i + 1;
@@ -3733,7 +3745,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             ResultSetMetaData rsMD = srcRs.getMetaData();
             //PFSqlInsertCollection srcInsert = this.getInsertCollection(rsMD);
 
-            PFSqlInsertCollection srcInsert = this.getInsertCollection();
+            SGSqlInsertCollection srcInsert = this.getInsertCollection();
             for (int i = 0; i < rsMD.getColumnCount(); i++) {
                 try {
                     int mdIdx = i + 1;
@@ -3960,9 +3972,9 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             ResultSetMetaData rsMDR = dstRs.getMetaData();
             //PFSqlInsertCollection srcInsert = this.getInsertCollection(rsMD);
 
-            PFSqlInsertCollection srcInsert = this.getInsertCollection();
+            SGSqlInsertCollection srcInsert = this.getInsertCollection();
             //PFSqlInsertCollection srcInsert =this.getInsertCollection(srcRs.getMetaData());
-            PFSqlInsertCollection dstInsert = dstExec.getInsertCollection();
+            SGSqlInsertCollection dstInsert = dstExec.getInsertCollection();
             //PFSqlInsertCollection dstInsert =dstExec.getInsertCollection(dstRs.getMetaData());
             for (int i = 0; i < rsMD.getColumnCount(); i++) {
                 try {
@@ -4630,7 +4642,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             // PFFunc3<Integer,Object,Object,T> getItemAction ,
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction) {
-        PFSqlInsertCollection dstInsert = null;
+        SGSqlInsertCollection dstInsert = null;
 
         BatchInsertOption insertOption = GetInsertOption();
 
@@ -5289,7 +5301,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction,
             int totalThread) {
-        PFSqlInsertCollection dstInsert = null;
+        SGSqlInsertCollection dstInsert = null;
 
         BatchInsertOption insertOption = GetInsertOption();
 
@@ -6592,7 +6604,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
 
             UpToCommandTimeOut(PFSqlCommandTimeoutSecond.NormalTransfer());
 
-            PFSqlInsertCollection srcInsert = null;
+            SGSqlInsertCollection srcInsert = null;
             List<String> srcFieldNames = null;
             if (lRow != null && (!lRow.isEmpty())) {
                 srcInsert = getInsertCollection();

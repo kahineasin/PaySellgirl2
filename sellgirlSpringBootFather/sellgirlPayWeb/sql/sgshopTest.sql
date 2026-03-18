@@ -1,3 +1,14 @@
+use sgshop;
+
+
+CREATE TABLE IF NOT EXISTS `sg_vip_user`(
+   `vip_user_id` INT UNSIGNED AUTO_INCREMENT,
+   `user_id` INT NOT null ,
+    `vip` TINYINT NOT NULL DEFAULT 0 COMMENT '支付状态：0-电子书，1-资源',
+    `expire_time` DATETIME COMMENT '会员有效期截止时间',
+   PRIMARY KEY ( `vip_user_id` ),
+    INDEX `idx_user_id` (`user_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- 根据 书名 章名 查询
   select a.book_id,a.book_name,b.* from sg_book a
   left join sg_book_chap b on b.book_id=a.book_id
@@ -26,6 +37,7 @@ select  * from sg_book  where  `book_id`=10 limit 1;
 
 -- UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 
+  select *  from sgshop.sg_user
 
   select max(book_id) from sgshop.sg_book
   select * from sg_book where book_name='人间烟火' -- 'äººé—´çƒŸç�«' -- '二马'
@@ -43,3 +55,7 @@ select  * from sg_book  where  `book_id`=10 limit 1;
   where a.book_name='今日简史'
   
   show variables like 'character_set%'
+  
+  select * from sgshop.sg_vip_order
+  
+  select status from sg_vip_order  where  `vip_order_id`=2  limit 1

@@ -1,5 +1,7 @@
 package com.sellgirl.sellgirlPayWeb.user.service;
 
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +23,7 @@ import com.sellgirl.sgJavaHelper.SGSqlCommandString;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
-import com.sellgirl.sgJavaHelper.sql.PFSqlInsertCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
@@ -116,6 +118,59 @@ public class UserService
 		}
 	}
 
+    public boolean updateUserVip(long userId,
+    		Boolean vip1,SGDate vip1_expire,
+    		Boolean vip2,SGDate vip2_expire)
+    {
+        ISGJdbc jdbc=JdbcHelper.GetShop();
+        try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+            dstExec.AutoCloseConn(false);
+            List<String> srcFieldNames = new ArrayList<String>();
+            srcFieldNames.add("user_id");
+            srcFieldNames.add("vip1");
+            srcFieldNames.add("vip1_expire");
+            srcFieldNames.add("vip2");
+            srcFieldNames.add("vip2_expire");
+            
+            String tableName="sg_user";
+            ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
+
+            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            update.Set("user_id", userId);
+            update.Set("vip1", vip1);
+            update.Set("vip1_expire", vip1_expire);
+            update.Set("vip2", vip2);
+            update.Set("vip2_expire", vip2_expire);
+            
+//            String[] mArray = new String[] {"status"};
+            String[] primaryKeys = new String[] {"user_id"};
+//            update.UpdateFields(mArray);
+            update.PrimaryKeyFields(true, primaryKeys);
+
+//            update.Set("vip_order_id", id);
+//            update.Set("status", com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus.已支付.ordinal());
+            
+            
+            SGSqlCommandString sql=new SGSqlCommandString(
+                    SGDataHelper.FormatString(
+                            " update {2} set  {0} {1} limit 1",
+                            update.ToSetSql(),
+                            update.ToWhereSql(),
+                            tableName
+                    ));
+            dstExec.close();
+            int r=dstExec.ExecuteSqlInt(sql, null, true);
+            dstExec.close();
+            if(0<r) {
+                return true;
+            }
+            //System.out.println("id2:"+dstExec.GetLastInsertedId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 	public User getUser(String userName) {
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
@@ -131,6 +186,7 @@ public class UserService
             SGDataTable dt= myResource.GetDataTable(SqlString,null);
             if(null!=dt&&!dt.IsEmpty()) {
             	List<User> list= dt.ToList(User.class, (obj,row,c)->{
+            		obj.setUserId(SGDataHelper.ObjectToLong0(row.getColumn("user_id")) );
             		obj.setUserName(row.getStringColumn("user_name"));
             		obj.setInvitationCode(row.getStringColumn("invitation_code"));
             		obj.setSignDay(SGDataHelper.ObjectToInt(row.getColumn("sign_day")));

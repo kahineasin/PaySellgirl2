@@ -55,6 +55,8 @@ mybatis:
 server:
     port: 28303
 spring:
+    profiles:
+        active: dev
     application:
         name: sellgirlPayWeb
     freemarker:

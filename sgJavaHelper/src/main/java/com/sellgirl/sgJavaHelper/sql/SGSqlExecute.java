@@ -266,11 +266,11 @@ public class SGSqlExecute extends SGSqlExecuteBase implements ISqlExecute {
 //		return b;
 //	}
 
-	public PFSqlInsertCollection getInsertCollectionByReader(ResultSet rdr, String tableName) {
+	public SGSqlInsertCollection getInsertCollectionByReader(ResultSet rdr, String tableName) {
 
 		// insert = new PFClickHouseSqlInsertCollection();
 //        insert = new SqlInsertCollection();
-		PFSqlInsertCollection insert = getInsertCollection();
+		SGSqlInsertCollection insert = getInsertCollection();
 		try {
 			ResultSetMetaData md = rdr.getMetaData();
 
@@ -1136,7 +1136,7 @@ numeric[19]及以上是BigDecimal
 	 * @return
 	 * @throws SQLException
 	 */
-	private CachedRowSet insertIntoCachedRowSet(CachedRowSet crs, PFSqlInsertCollection dstInsert) throws SQLException {
+	private CachedRowSet insertIntoCachedRowSet(CachedRowSet crs, SGSqlInsertCollection dstInsert) throws SQLException {
 		// 移动指针到“插入行”，插入行是一个虚拟行
 		crs.moveToInsertRow();
 
@@ -1241,7 +1241,7 @@ numeric[19]及以上是BigDecimal
 //		return DoBulkReader(insert, crs, tableName, false);
 //	}
 
-	public Boolean DoBulkReader(PFSqlInsertCollection insert,
+	public Boolean DoBulkReader(SGSqlInsertCollection insert,
 			// CachedRowSetImpl crs,
 			// ResultSet crs,
 			CachedRowSet crs, String tableName, Boolean transferOneByOne// 只有当一条一条导入时,bulk的错误才能确定是insert里的值
@@ -1634,7 +1634,7 @@ numeric[19]及以上是BigDecimal
 		if(!isMicroJdbc) {
 			return super.doInsertList(dstFieldNames, tableName, hasNextAction, getItemAction, rowAction, sqlRowsCopiedAction, stopAction);
 		}
-		PFSqlInsertCollection dstInsert=null;
+		SGSqlInsertCollection dstInsert=null;
 		
 		BatchInsertOption insertOption = GetInsertOption();
 
@@ -1826,7 +1826,7 @@ numeric[19]及以上是BigDecimal
 	 * 2.如果提供insert参数，需保证其包含主键
 	 */
 	@Override
-	public Boolean HugeBulkReader(PFSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
+	public Boolean HugeBulkReader(SGSqlInsertCollection dstInsert, ResultSet rdr, String tableName,
 			//Consumer<BaseSqlUpdateCollection> rowAction, 
 			SGAction<BaseSqlUpdateCollection,Integer,Object> rowAction,
 			Consumer<Integer> sqlRowsCopiedAction,
@@ -2089,7 +2089,7 @@ numeric[19]及以上是BigDecimal
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		PFSqlInsertCollection dstInsert = getInsertCollection(dstMd);
+		SGSqlInsertCollection dstInsert = getInsertCollection(dstMd);
 
 //    BatchInsertOption insertOption = new BatchInsertOption();
 //    if (insertOptionAction != null) { insertOptionAction.accept(insertOption); }
@@ -2425,7 +2425,7 @@ numeric[19]及以上是BigDecimal
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		PFSqlInsertCollection dstInsert = getInsertCollection(dstMd);
+		SGSqlInsertCollection dstInsert = getInsertCollection(dstMd);
 
 //    BatchInsertOption insertOption = new BatchInsertOption();
 //    if (insertOptionAction != null) { insertOptionAction.accept(insertOption); }

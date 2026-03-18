@@ -186,6 +186,10 @@ implements Comparable<SGDate> ,Cloneable
 		   return new SGDate(GetYear(),GetMonth(),GetDay(),GetHour(),0,0);				  
 	   }
 	   
+	 /**
+	  * r>0: this更大
+	  * r<0: this更小
+	  */
 	@Override
 	public int compareTo(SGDate o) {
 		if(o==null) {return 1;}

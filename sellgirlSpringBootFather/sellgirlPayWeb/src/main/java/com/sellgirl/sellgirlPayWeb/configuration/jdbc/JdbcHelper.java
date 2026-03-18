@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.PFJdbc;
+import com.sellgirl.sgJavaHelper.sql.PFJdbcBase;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 @Component
@@ -33,7 +34,7 @@ public class JdbcHelper {
 //	  protected static UserProfileJdbc _userProfileJdbc;
 //	  protected static SellGirlJdbc _sellGirlJdbc;
 //	  protected static SellGirlJdbc2 _sellGirlJdbc2;
-	  protected static ShopJdbc _shopJdbc;
+	  protected static PFJdbcBase _shopJdbc;
 	  @Autowired
 	  public JdbcHelper(
 //			  YJQueryJdbc yjQueryJdbc,YJQueryMonthJdbc yjQueryMonthJdbc,
@@ -259,6 +260,11 @@ public class JdbcHelper {
 	    public static ISGJdbc GetShop()
 	    {
 	    	return new ShopJdbc().Apply(_shopJdbc);//返回新实例,所以改变引用也没问题
+	    	//return _yjQueryJdbc;
+	    }
+	    public static void setShop(PFJdbcBase j)//便于单元测试
+	    {
+	    	_shopJdbc=j;//返回新实例,所以改变引用也没问题
 	    	//return _yjQueryJdbc;
 	    }
 }
