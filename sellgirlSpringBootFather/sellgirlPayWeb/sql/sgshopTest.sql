@@ -57,5 +57,8 @@ select  * from sg_book  where  `book_id`=10 limit 1;
   show variables like 'character_set%'
   
   select * from sgshop.sg_vip_order
+  select * from sgshop.sg_user;
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
+  
+   update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1

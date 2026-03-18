@@ -70,10 +70,12 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 
 ### 云ubuntu
 1. scp -r D:\cache\html1\shop root@你的服务器IP:~/myapp/
+    更新时,通常只上传jar就行了
 2. ssh root@你的服务器IP
 3. cd ~/myapp/shop
+    可能需要修改 sudo nano application.yml
 4. screen -S myapp
 5. java -jar sellgirlPayWeb-0.0.4.jar
-6. 访问 http://156.224.19.162:28303/
+6. 访问 http://www.bdhome.xyz/
 ## 系统参数
 1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt

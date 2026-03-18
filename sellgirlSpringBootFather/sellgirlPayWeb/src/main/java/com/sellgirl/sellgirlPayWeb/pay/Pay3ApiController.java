@@ -18,6 +18,7 @@ import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.SGRequestResult;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
+import com.sellgirl.sgJavaHelper.model.SystemUser;
 
 //import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,160 +56,10 @@ public class Pay3ApiController extends YJQueryController {
 
     @Autowired
     private OrderService orderService;
-//
-//    long newId=0;
-//    String productName = "";//商品名
-//    String money = "";//价格
-//    String pid = "2026031219321114";//商户id
-////    String notifyUrl="www.bdhome.xyz/pay2/notify";
-////    String returnUrl="www.bdhome.xyz/pay2/payPage";
-////    String signStr2;
-//    String signType = "MD5";//签名类型
-//    String key = "uXXOQLIbgs3PasUjBgWp3vKkCmPzc8iN";//商户密钥
-//    String payType = "alipay";//支付类型
-//    @GetMapping("/payPage")
-////    @GetMapping("/pay3")
-//    public ResponseEntity<?> payPage(PayPlan plan,String amount) {
-//    	//newId=getNewId();
-//    	productName="product1";
-//    	money="0.01";
-//    	
-//    	vipOrderCreate order=new vipOrderCreate();
-//    	order.setAmount(new BigDecimal(amount));
-//    	order.setVip_type(plan.ordinal());
-//    	order.setStatus(OrderStatus.待支付.ordinal());
-//    	order.setCreate_time(SGDate.Now());
-//    	order.setUser_id(Long.valueOf(this.GetUserId()));
-//        long orderId=orderService.insertvipOrder(order);
-//        if(0>orderId) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .contentType(MediaType.TEXT_HTML)
-//                    .body("<html>...新增订单失败...</html>");
-//        }
-//        
-//        // 1. 构建请求参数，调用第三方接口
-//        String thirdPartyUrl =zPayNativeService.createNativeOrder(orderId,plan,amount);
-//        
-//        if(true) {
-////        	SGRequestResult r=SGHttpHelper.HttpPost(thirdPartyUrl, "");
-//        	SGRequestResult r=SGHttpHelper.HttpGet(thirdPartyUrl, "");
-//        	if(r.success) {
-//        	System.out.println(thirdPartyUrl);
-////            return ResponseEntity
-////            		.status(HttpStatus.INTERNAL_SERVER_ERROR)
-////                    .contentType(MediaType.TEXT_HTML)                    
-////                    .body(r.content);
-//    		return ResponseEntity.status(HttpStatus.FOUND)
-//    		.location(URI.create(thirdPartyUrl))
-//    		.build();
-//        	}else {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                        .contentType(MediaType.TEXT_HTML)
-//                        .body("<html>...新增订单2失败...</html>");
-//        	}
-//        }
-////        SGDataHelper.HttpPost(prompt, responseBody);
-////        ResponseEntity<String> response = restTemplate.getForEntity(thirdPartyUrl, String.class);
-//
-////        String url = thirdPartyUrl;
-//        HttpHeaders pheaders = new HttpHeaders();
-////        headers.setContentType(MediaType.APPLICATION_JSON);
-//        pheaders.setContentType(MediaType.TEXT_HTML);
-////        JSONObject jsonObject = new JSONObject();
-////        jsonObject.put("idOrNumber", userno);
-////        String data = jsonObject.toJSONString();
-//        HttpEntity<String> httpEntity = new HttpEntity<>("", pheaders);
-//        RestTemplate restTemplate = new RestTemplate();
-////        restTemplate.getRequestFactory().createRequest(null, null)
-//        
-////        String param=SGDataHelper.FormatString(
-////        		"name={0}&money={1}&out_trade_no={2}&notify_url={3}&pid={4}&param={5}&return_url={6}&sign={7}&sign_type={8}&type={9}",
-////        		productName,
-////        		"0.01",
-////        		newId,
-////        		notifyUrl,
-////        		pid,
-////        		"256G",
-////        		returnUrl,
-////        		signStr2,
-////        		signType,
-////        		"alipay"
-////        		);
-//        ResponseEntity<String> response = restTemplate.exchange(thirdPartyUrl, HttpMethod.POST, httpEntity, String.class);
-////        ResponseEntity<String> response = restTemplate.getForEntity(thirdPartyUrl, String.class);
-////        ResponseEntity<String> response = restTemplate.postForEntity(thirdPartyUrl,null, String.class);
-////        ResponseEntity<String> response = restTemplate.getForEntity(thirdPartyUrl,null, String.class);
-//
-//        // 2. 判断响应内容类型
-//        HttpHeaders headers = response.getHeaders();
-//        String body = response.getBody();
-//        MediaType contentType = headers.getContentType();
-//
-//        if (contentType != null && contentType.includes(MediaType.TEXT_HTML)) {
-//            // 返回HTML页面给浏览器
-//            return ResponseEntity.ok()
-//                    .contentType(MediaType.TEXT_HTML)
-//                    .body(body);
-//        } else {
-////            // 3. 非HTML响应（如JSON错误），记录错误，返回自定义错误页面
-////            log.error("支付接口返回非HTML: {}", body);
-//            // 可以返回一个错误视图，或者用ResponseEntity返回自定义JSON
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .contentType(MediaType.TEXT_HTML)
-//                    .body("<html>...错误信息...</html>");
-//        }
-//    }
-//    private long getNewId() {
-//    	String s=SGDataHelper.ReadLocalTxt("newOrderId.txt", LocalDataType.System);
-//    	long id=Long.valueOf(s);
-//    	id++;
-//    	SGDataHelper.WriteLocalTxt(String.valueOf(id),"newOrderId.txt", LocalDataType.System);
-//    	return id;
-//    }
-//
-////    /**
-////     * 创建Native支付订单，返回二维码code_url
-////     */
-////    @PostMapping("/native")
-////    public Map<String, Object> createNativeOrder(@RequestBody Map<String, String> params) {
-////        String description = params.get("description");  // 商品描述
-////        Integer totalFee = Integer.valueOf(params.get("totalFee")); // 金额（分）
-////
-////        // 生成商户订单号（简单示例，实际应该用更严谨的规则）
-////        String outTradeNo = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 24);
-////
-////        // 创建本地订单记录
-////        orderService.createOrder(outTradeNo);
-////
-////        // 调用微信支付Native下单
-////        String codeUrl = wechatPayNativeService.createNativeOrder(outTradeNo, totalFee, description);
-////
-////        Map<String, Object> result = new HashMap<>();
-////        result.put("success", true);
-////        result.put("codeUrl", codeUrl);
-////        result.put("outTradeNo", outTradeNo);
-////        return result;
-////    }
 
     /**
      * 微信支付结果回调
      */
-//    @PostMapping("/notify")
-////    @RequestMapping("/notify")
-//    public String payNotify(@RequestBody String notifyData) {
-//        // 实际开发中需要验证签名、解密资源、更新订单状态
-//        // 这里简化处理：打印回调数据，并假设支付成功
-////        log.info("收到支付回调：{}", notifyData);
-//    	SGDataHelper.getLog().print(
-//		SGDataHelper.FormatString("收到支付回调：{0}",notifyData)
-//    	);
-//
-//        // TODO 解析回调，获取 out_trade_no，验证并更新订单状态
-//        // 示例：orderService.markPaid(outTradeNo);
-//
-//        // 必须返回SUCCESS，否则微信会持续通知
-//        return "SUCCESS";
-//    }
     @GetMapping("/notify")
 //  @RequestMapping("/notify")
   public String payNotify(long pid,
@@ -276,6 +127,9 @@ public class Pay3ApiController extends YJQueryController {
     				user.setVip2_expire(user.getVip2_expire().AddYears(1).AddMonths(3));
     			}
     		}
+    		SystemUser sysUser=this.GetSystemUser();
+    		sysUser.isVip=true;
+    		this.SetSystemUser(sysUser);
     		this.userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
     	      return "success";
     	}

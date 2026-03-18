@@ -53,10 +53,8 @@ mybatis:
     mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
     typeAliasesPackage: com.sellgirl.*.domain
 server:
-    port: 28303
+    port: 8080
 spring:
-    profiles:
-        active: dev
     application:
         name: sellgirlPayWeb
     freemarker:
@@ -137,3 +135,6 @@ caffeine:
   device-block:
     maximum-size: 20000
     expire-after-write: 30m
+zpay:
+  notifyUrl: home.bdhome.xyz/api/pay3/notify
+  returnUrl: home.bdhome.xyz/pay3paid.html
