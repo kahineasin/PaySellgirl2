@@ -109,8 +109,11 @@ public class Pay3Controller extends YJQueryController {
       }
       // 1. 构建请求参数，调用第三方接口
       String thirdPartyUrl =zPayNativeService.createNativeOrder(orderId,plan,amount);
-      
 
+      if(isTest) {
+    	System.out.println("------------thirdPartyUrl-----------");
+    	System.out.println(thirdPartyUrl);
+      }
       	SGRequestResult r=SGHttpHelper.HttpGet(thirdPartyUrl, "");
       	if(r.success) {
   		
