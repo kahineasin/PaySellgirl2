@@ -10,6 +10,7 @@ import com.sellgirl.sellgirlPayWeb.pay.service.OrderService;
 import com.sellgirl.sellgirlPayWeb.pay.service.ZPayNativeService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 import com.sellgirl.sgJavaHelper.SGDate;
+import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.config.PFAppConfig;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
@@ -62,5 +63,32 @@ public class UncheckVipOrder  extends TestCase {
 //    	UserService service=new UserService();
 //    	SGDate now=SGDate.Now();
 //    	service.updateUserVip(1, true, now, true, now);
+    }
+    public void testSign() {
+    	String correct="4af68f04c2611dadc628a3e709d37534";
+    	String wrong="3b89200e30dddb0b129c75b6a07b30bb";
+    	long pid= 2026031219321114L;
+		  String name= "resource_monthly";
+		  String money= "0.01";
+		  String out_trade_no= "15";
+		  String trade_no= "2026031923001455751430129360";
+		  String param= null;
+		  String trade_status="TRADE_SUCCESS" ;
+		  String type= "alipay";
+		  String sign= "4af68f04c2611dadc628a3e709d37534";
+		  String sign_type="MD5";
+
+			SGRef<String> r=new SGRef();
+	    	if(!ZPayNativeService.isSignCorrect(pid, name, money, out_trade_no, trade_no, param, trade_status, type, sign, sign_type,r)) {
+	    		System.out.println("------error-------");
+	    	}else {
+	    		System.out.println("------right-------");
+	    	}
+    		System.out.println("------correct-------");
+	    	SGDataHelper.getLog().print(correct);
+    		System.out.println("------wrong-------");
+	    	SGDataHelper.getLog().print(wrong);
+    		System.out.println("------current-------");
+	    	SGDataHelper.getLog().print(r.GetValue());
     }
 }

@@ -166,7 +166,9 @@ public class ZPayNativeService {
         signMap.put("money",money);
         signMap.put("out_trade_no",out_trade_no);
         signMap.put("trade_no",trade_no);
+        if(null!=param) {
         signMap.put("param",param);
+        }
         signMap.put("trade_status",trade_status);
         signMap.put("type",type);
 //        signMap.put("notify_url",notifyUrl);
@@ -255,7 +257,7 @@ public class ZPayNativeService {
   		  String trade_no=out_trade_no;
   		  String trade_status="TRADE_SUCCESS";
     	String notify=SGDataHelper.FormatString(
-"http://"+notifyUrl+"?pid={0}&name={1}&money={2}&out_trade_no={3}&trade_no={4}&param={5}&trade_status={6}&type={7}&sign={8}&sign_type={9}"
+notifyUrl+"?pid={0}&name={1}&money={2}&out_trade_no={3}&trade_no={4}&param={5}&trade_status={6}&type={7}&sign={8}&sign_type={9}"
     			,
     			 pid,
       		   name,

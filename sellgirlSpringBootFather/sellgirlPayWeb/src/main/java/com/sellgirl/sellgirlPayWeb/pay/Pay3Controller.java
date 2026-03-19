@@ -47,6 +47,7 @@ import java.util.UUID;
 //@RequestMapping("/pay3")
 public class Pay3Controller extends YJQueryController {
 
+	private String TAG="Pay3Controller";
     @Autowired
     private ZPayNativeService zPayNativeService;
 
@@ -251,7 +252,7 @@ public class Pay3Controller extends YJQueryController {
      * @param sign_type
      * @return
      */
-	@GetMapping(value = { "/pay3paid.html" })//2级路径导致样式错
+	@RequestMapping(value = { "/pay3paid.html" })//2级路径导致样式错
 	@SGAllowAnonymous
     public ModelAndView PaidReturn(long pid,
   		  String name,
@@ -265,6 +266,7 @@ public class Pay3Controller extends YJQueryController {
   		  String sign_type//,PayPlan plan,Integer amount
   		  )
     {
+		try {
 		boolean b=false;
 		SGRef<String> r=new SGRef();
     	if(!ZPayNativeService.isSignCorrect(pid, name, money, out_trade_no, trade_no, param, trade_status, type, sign, sign_type,r)) {
@@ -294,5 +296,9 @@ public class Pay3Controller extends YJQueryController {
 //  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
   	result.setViewName("Product/paid");
   	return result;
+		}catch(Throwable e) {
+			SGDataHelper.getLog().writeException(e,TAG);
+		}
+		return null;
     }
 }

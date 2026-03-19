@@ -72,7 +72,8 @@ public class SGLog implements ISGLog{
 	}
 	@Override
 	public void print(Object e) {
-		System.out.println(e.toString());
+//		System.out.println(e.toString());
+		System.out.println(e);
 	}
 
 }
