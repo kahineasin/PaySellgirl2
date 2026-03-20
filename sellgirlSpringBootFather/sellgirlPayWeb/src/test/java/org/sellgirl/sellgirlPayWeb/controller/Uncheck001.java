@@ -1232,7 +1232,7 @@ public class Uncheck001 extends TestCase {
 	//保存gamepad页到静态文件
 	public void testSaveGamepadHtml() {
 		initPFHelper();
-		String url="http://localhost:28303/story/gamePad2#";
+		String url="http://localhost:8080/story/gamePad2#";
 		SGRequestResult r=SGHttpHelper.HttpGet(url,null);
 		while(!r.success) {
 //			SGDataHelper.SaveStringToFile(r.content,"D:\\cache\\1\\aa.txt");
