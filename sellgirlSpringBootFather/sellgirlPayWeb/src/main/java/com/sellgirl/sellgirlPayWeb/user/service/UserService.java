@@ -83,7 +83,7 @@ public class UserService
 							Arrays.asList(new String[]{
 									"user_name",
 									"pwd",
-									//"email",
+									"email",
 									"invitation_code","create_date"}),
 							"sg_user",
 							(a, b2, c) -> a < insertCnt,
@@ -91,7 +91,7 @@ public class UserService
 								Map<String,Object> map=new HashMap<>();
 								map.put("user_name", model.getUserName());
 								map.put("pwd", model.getPwd());
-//								map.put("email", "");
+								map.put("email", model.getEmail());
 								map.put("invitation_code", model.getInvitationCode());
 								map.put("create_date", SGDate.Now());
 								idx[0]++;

@@ -23,17 +23,17 @@ public class KillingFloor3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.显示准星)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.射击)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("切换弹药模式")};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Jump)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getZR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.射击)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按切换成开镜)};
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class KillingFloor3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getB() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Jump),new GamePadCustomAction(GamePadAction.B1)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.补充弹药),new GamePadCustomAction(GamePadAction.B1)};
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class KillingFloor3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getDOWN() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.补充弹药)};
+		return new GamePadCustomAction[] {new GamePadCustomAction("切换弹药模式")};
 	}
 
 	@Override

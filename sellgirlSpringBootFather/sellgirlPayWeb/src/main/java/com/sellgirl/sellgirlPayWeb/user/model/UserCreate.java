@@ -2,6 +2,7 @@ package com.sellgirl.sellgirlPayWeb.user.model;
 
 public class UserCreate {
 	private String userName;
+	private String email;
 	private String pwd;
 	private String invitationCode;
 	public String getUserName() {
@@ -9,6 +10,13 @@ public class UserCreate {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	public String getPwd() {
 		return pwd;

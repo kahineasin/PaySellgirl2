@@ -1,5 +1,6 @@
 package com.sellgirl.sellgirlPayWeb.user;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
+import com.sellgirl.sgJavaHelper.SGEmailSend;
 import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
@@ -57,33 +59,9 @@ import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 public class UserApiController extends  YJQueryController
 {
 	@Autowired private UserService userService;
-//	@GetMapping(value = { "/AddUser" })
-////	@PostMapping(value = { "/AddUser" })
-//	@CrossOrigin
-//    public AbstractApiResult<?> AddUser()
-//    {
-//		if(userService.addUser()) {
-//    	return AbstractApiResult.success("success");
-//		}else {
-//	    	return AbstractApiResult.error("error");
-//		}
-//    }
 
-////	@GetMapping(value = { "/AddUser" })
-//	@PostMapping(value = { "/AddUser" })
-//	@CrossOrigin
-//    public AbstractApiResult<?> AddUser(String username,String password,String inviteCode)
-//    {
-//		UserCreate model=new UserCreate();
-//		model.setUserName(username);
-//		model.setPwd(password);
-//		model.setInvitationCode(inviteCode);
-//		if(userService.addUser(model)) {
-//    	return AbstractApiResult.success("success");
-//		}else {
-//	    	return AbstractApiResult.error("error");
-//		}
-//    }
+
+
 
 	@GetMapping(value = { "/AddCookie" })
 	@CrossOrigin
@@ -166,4 +144,18 @@ public class UserApiController extends  YJQueryController
 		}
     }
 
+	@PostMapping(value = { "/GenEmailCode" })
+    @SGAllowAnonymous
+    public AbstractApiResult<?> GenEmailCode(String email)
+    { 
+		double d=Math.random()*10000D;	  
+		DecimalFormat df = new DecimalFormat("0");
+		String s = df.format(d);
+		SGEmailSend.SendMail(new String[] {email}, "欢迎注册bdbook", "bdbook注册验证码为:"+s);
+//		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
+//			return AbstractApiResult.error("签到失败,用户名为空");
+//		}
+		PFCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
+		return AbstractApiResult.success();
+    }
 }

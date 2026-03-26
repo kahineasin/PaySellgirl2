@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分区列表 · 资源走廊</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+    <script src="common.js"></script>
+    <script src="data-resources.js"></script>
+    <script> requireResourceUser(); </script>
+    <style>
+        body { background: #f5f7fb; }
+        .navbar { background-color: #2c3e50; margin-bottom: 2rem; }
+        .navbar-brand { color: #fff !important; }
+        .list-group-item { border-radius: 0.8rem !important; border: none; padding: 0.8rem 1.2rem; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: background 0.1s; }
+        .list-group-item:hover { background-color: #f8f9fa; }
+        .thread-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        .section-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .sort-bar { background: white; padding: 0.75rem 1.2rem; border-radius: 3rem; margin: 1.5rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .sort-btn { background: none; border: 1px solid #dee2e6; border-radius: 30px; padding: 0.3rem 1.2rem; margin-right: 0.5rem; font-size: 0.9rem; color: #495057; transition: 0.1s; }
+        .sort-btn.active { background: #3498db; border-color: #3498db; color: white; }
+        .sort-btn:hover { background: #e9ecef; }
+        .extra-meta { font-size: 0.8rem; color: #6c757d; margin-left: 0.5rem; }
+        .empty-msg { padding: 3rem; text-align: center; background: white; border-radius: 1.5rem; }
+        .pagination-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin: 2rem 0; gap: 0.5rem; }
+        .pagination-container .btn-pagination { min-width: 40px; border-radius: 30px; border: 1px solid #dee2e6; background: white; color: #2c3e50; }
+        .pagination-container .btn-pagination.active { background: #3498db; border-color: #3498db; color: white; }
+        .pagination-container .btn-pagination:disabled { opacity: 0.4; pointer-events: none; }
+        .page-jump { display: flex; align-items: center; gap: 0.5rem; }
+        .page-jump input { width: 60px; text-align: center; border-radius: 30px; border: 1px solid #ced4da; padding: 0.2rem; }
+        .announcement-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1000;
+        }
+        .announcement-bar marquee { width: 100%; cursor: default; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="resource-index.html" id="brandLink">🎬 资源走廊</a>
+            <div class="d-flex align-items-center gap-2">
+                <div id="switchBtnContainer" style="display: none;"></div>
+                <a href="resource-index.html" class="btn btn-sm btn-outline-light me-auto">← 首页</a>
+                <form class="d-flex" role="search" action="resource-search.html" method="get">
+                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="搜索..." required>
+                    <button class="btn btn-outline-light btn-sm" type="submit">搜索</button>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="userInfo"></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="announcement-bar" id="announcementBar">
+        <marquee behavior="scroll" direction="left" scrollamount="3"></marquee>
+    </div>
+    <script src="announcement.js"></script>
+    <script>
+        document.querySelector('#announcementBar marquee').innerHTML = ANNOUNCEMENT_TEXT;
+    </script>
+
+    <script>
+        (function() {
+            const user = getCurrentUser();
+            const userInfoDiv = document.getElementById('userInfo');
+            const brandLink = document.getElementById('brandLink');
+            if (user) {
+                brandLink.href = 'resource-index.html';
+                brandLink.textContent = '🎬 资源走廊';
+                const points = getUserPoints();
+                userInfoDiv.innerHTML = `
+                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
+                    <span class="text-light me-2">👤 ${user.username}</span>
+                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
+                    <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
+                    <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
+                `;
+            } else {
+                brandLink.href = 'resource-index.html';
+                brandLink.textContent = '🎬 资源走廊';
+                userInfoDiv.innerHTML = `
+                    <a href="login.html" class="btn btn-sm btn-outline-light me-2">登录</a>
+                    <a href="register.html" class="btn btn-sm btn-outline-light">注册</a>
+                `;
+            }
+        })();
+
+        (function() {
+            const user = getCurrentUser();
+            const switchBtnContainer = document.getElementById('switchBtnContainer');
+            if (user && user.role === 'resource') {
+                switchBtnContainer.innerHTML = `<a href="index.html" class="btn btn-sm btn-outline-light me-2">📚 电子书库</a>`;
+                switchBtnContainer.style.display = 'inline-block';
+            } else {
+                switchBtnContainer.style.display = 'none';
+            }
+        })();
+    </script>
+
+    <div class="container">
+        <div id="board-header" class="d-flex flex-wrap align-items-center justify-content-between">
+            <h2 class="section-title" id="board-name">加载中...</h2>
+            <span class="badge bg-secondary" id="thread-count"></span>
+        </div>
+
+        <div class="sort-bar d-flex flex-wrap align-items-center" id="sort-bar" style="display: none !important;">
+            <span class="me-2 text-secondary">排序：</span>
+            <div id="sort-buttons" class="d-flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="list-group" id="thread-list-container"></div>
+        <div id="empty-message" class="empty-msg d-none">🚫 该分区暂无资源</div>
+
+        <div id="pagination-section" class="pagination-container" style="display: none;"></div>
+    </div>
+
+    <div class="footer-mock text-center p-4 text-secondary mt-4">
+        点击任意标题或缩略图查看详情（含网盘地址）
+    </div>
+
+    <script>
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const boardId = urlParams.get('board');
+            const boardHeader = document.getElementById('board-name');
+            const threadCountSpan = document.getElementById('thread-count');
+            const listContainer = document.getElementById('thread-list-container');
+            const emptyDiv = document.getElementById('empty-message');
+            const sortBar = document.getElementById('sort-bar');
+            const sortButtonsDiv = document.getElementById('sort-buttons');
+            const paginationSection = document.getElementById('pagination-section');
+
+            let currentPage = 1;
+            const pageSize = 10;
+            let totalItems = 0;
+            let totalPages = 0;
+            let currentSortedThreads = [];
+
+            if (!boardId) {
+                boardHeader.textContent = '未指定分区';
+                emptyDiv.classList.remove('d-none');
+                emptyDiv.innerHTML = '请从首页点击“更多”进入正确分区';
+                return;
+            }
+
+            const currentBoard = boards.find(b => b.id === boardId);
+            if (!currentBoard) {
+                boardHeader.textContent = '分区不存在';
+                emptyDiv.classList.remove('d-none');
+                emptyDiv.innerHTML = `没有找到ID为“${boardId}”的分区`;
+                return;
+            }
+
+            boardHeader.textContent = `${currentBoard.name} · 全部资源`;
+            threadCountSpan.textContent = `${currentBoard.threads.length} 个条目`;
+
+            let sortOptions = [];
+            if (boardId === 'movie') {
+                sortOptions = [
+                    { label: '最新上传', field: 'uploadTime', desc: true },
+                    { label: '视频时长', field: 'duration', desc: true },
+                    { label: '视频大小', field: 'size', desc: true }
+                ];
+            } else if (boardId === 'image' || boardId === 'comic') {
+                sortOptions = [
+                    { label: '最新上传', field: 'uploadTime', desc: true },
+                    { label: '图片数量', field: 'imageCount', desc: true }
+                ];
+            } else {
+                sortOptions = [ { label: '最新上传', field: 'uploadTime', desc: true } ];
+            }
+
+            sortBar.style.display = 'flex';
+            sortOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'sort-btn';
+                btn.textContent = opt.label;
+                btn.dataset.field = opt.field;
+                btn.dataset.desc = opt.desc;
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentPage = 1;
+                    sortThreads(opt.field, opt.desc);
+                });
+                sortButtonsDiv.appendChild(btn);
+            });
+
+            if (sortOptions.length > 0) {
+                sortButtonsDiv.children[0].classList.add('active');
+            }
+
+            let originalThreads = [...currentBoard.threads];
+
+            function sortThreads(field, descending = true) {
+                const sorted = [...originalThreads].sort((a, b) => {
+                    let valA = a[field] || 0;
+                    let valB = b[field] || 0;
+                    return descending ? valB - valA : valA - valB;
+                });
+                currentSortedThreads = sorted;
+                totalItems = sorted.length;
+                totalPages = Math.ceil(totalItems / pageSize);
+                renderListForPage(currentPage);
+                renderPagination();
+            }
+
+            function renderListForPage(page) {
+                const start = (page - 1) * pageSize;
+                const end = Math.min(start + pageSize, totalItems);
+                const pageData = currentSortedThreads.slice(start, end);
+
+                listContainer.innerHTML = '';
+                if (pageData.length === 0 && totalItems === 0) {
+                    emptyDiv.classList.remove('d-none');
+                    paginationSection.style.display = 'none';
+                    return;
+                }
+                emptyDiv.classList.add('d-none');
+                paginationSection.style.display = 'flex';
+
+                pageData.forEach(thread => {
+                    const smallImg = thread.previewImg;
+                    const item = document.createElement('a');
+                    item.href = `resource-detail.html?id=${thread.id}`;
+                    item.className = 'list-group-item list-group-item-action d-flex align-items-center';
+
+                    let extraInfo = '';
+                    if (boardId === 'movie') {
+                        extraInfo = ` · 🕒 ${thread.duration}分钟 · 💾 ${(thread.size/1024).toFixed(1)}GB`;
+                    } else if (boardId === 'image' || boardId === 'comic') {
+                        extraInfo = ` · 🖼️ ${thread.imageCount}张`;
+                    } else if (boardId === 'update') {
+                        extraInfo = ` · ⏳ 待更新`;
+                    }
+
+                    item.innerHTML = `
+                        <img src="${smallImg}" alt="${thread.title}" class="thread-img" loading="lazy" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${thread.title}</h6>
+                            <small class="text-secondary">${thread.description || '暂无描述'}${extraInfo}</small>
+                        </div>
+                        <span class="text-primary small">🔗 详情 →</span>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            }
+
+            function renderPagination() {
+                if (totalPages <= 1) {
+                    paginationSection.style.display = 'none';
+                    return;
+                }
+                paginationSection.style.display = 'flex';
+                let html = '';
+
+                html += `<button class="btn btn-pagination" data-page="1" ${currentPage === 1 ? 'disabled' : ''}>首页</button>`;
+                html += `<button class="btn btn-pagination" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>`;
+
+                const delta = 2;
+                let start = Math.max(2, currentPage - delta);
+                let end = Math.min(totalPages - 1, currentPage + delta);
+
+                html += `<button class="btn btn-pagination ${currentPage === 1 ? 'active' : ''}" data-page="1">1</button>`;
+
+                if (start > 2) html += `<span class="mx-1">…</span>`;
+
+                for (let i = start; i <= end; i++) {
+                    html += `<button class="btn btn-pagination ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+                }
+
+                if (end < totalPages - 1) html += `<span class="mx-1">…</span>`;
+
+                if (totalPages > 1) {
+                    html += `<button class="btn btn-pagination ${currentPage === totalPages ? 'active' : ''}" data-page="${totalPages}">${totalPages}</button>`;
+                }
+
+                html += `<button class="btn btn-pagination" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>`;
+                html += `<button class="btn btn-pagination" data-page="${totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>尾页</button>`;
+
+                html += `
+                    <div class="page-jump">
+                        <span>第</span>
+                        <input type="number" id="gotoPageInput" min="1" max="${totalPages}" value="${currentPage}">
+                        <span>页</span>
+                        <button class="btn btn-sm btn-outline-secondary" id="gotoPageBtn">跳转</button>
+                    </div>
+                `;
+
+                paginationSection.innerHTML = html;
+
+                paginationSection.querySelectorAll('.btn-pagination[data-page]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const page = parseInt(e.target.dataset.page);
+                        if (!isNaN(page) && page >= 1 && page <= totalPages && page !== currentPage) {
+                            currentPage = page;
+                            renderListForPage(currentPage);
+                            renderPagination();
+                        }
+                    });
+                });
+
+                const gotoBtn = document.getElementById('gotoPageBtn');
+                const gotoInput = document.getElementById('gotoPageInput');
+                if (gotoBtn) {
+                    gotoBtn.addEventListener('click', () => {
+                        let page = parseInt(gotoInput.value);
+                        if (isNaN(page)) page = 1;
+                        page = Math.max(1, Math.min(page, totalPages));
+                        if (page !== currentPage) {
+                            currentPage = page;
+                            renderListForPage(currentPage);
+                            renderPagination();
+                        }
+                    });
+                }
+            }
+
+            if (sortOptions.length > 0) {
+                sortThreads(sortOptions[0].field, sortOptions[0].desc);
+            } else {
+                currentSortedThreads = originalThreads;
+                totalItems = originalThreads.length;
+                totalPages = Math.ceil(totalItems / pageSize);
+                renderListForPage(1);
+                renderPagination();
+            }
+        })();
+    </script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

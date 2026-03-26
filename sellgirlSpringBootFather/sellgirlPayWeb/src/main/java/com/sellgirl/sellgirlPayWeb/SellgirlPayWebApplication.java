@@ -1,6 +1,11 @@
 package com.sellgirl.sellgirlPayWeb;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Map;
+
 //import org.apache.catalina.Context;
 //import org.apache.catalina.connector.Connector;
 //import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -10,7 +15,14 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+
+import com.sellgirl.sellgirlPayWeb.configuration.AppKey;
+import com.sellgirl.sgJavaHelper.AES;
+import com.sellgirl.sgJavaHelper.HostType;
+import com.sellgirl.sgJavaHelper.SGEmailSend;
 //import com.sellgirl.sellgirlPayMq.*;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+import com.sellgirl.sgJavaHelper.file.SGEncryptByte;
 
 //import com.sellgirl.sellgirlPayWeb.configuration.Inject001;
 //import com.sellgirl.sellgirlPayWeb.configuration.InjectHelper;
@@ -65,10 +77,43 @@ public class SellgirlPayWebApplication {
 //    @Autowired
 //    private Inject001 inject001;
 	public static void main(String[] args) {
+		initSG();
 		SpringApplication.run(SellgirlPayWebApplication.class, args);
 //		Inject001 inject00101=InjectHelper.inject001;
 //		String aa="aa";
 	}
+	private static void initSG() {
+//		File dumpFile = new File("D:\\gitee\\secretKey\\paySellgirl\\key.yml");
+//		AppKey appKey=(AppKey)SGDataHelper.map2Object((Map<String, Object>)Yaml.load(dumpFile),AppKey.class);
+//		
+////		String aa=SGDataHelper.ReadFileToString("D:\\gitee\\secretKey\\paySellgirl\\key.yml");
+////		AppKey appKey=Yaml.loadType(aa,AppKey.class);
+//
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST="";
+//		SGEmailSend.EMAIL_OWNER_ADDR="li@sellgirl.com";
+////		SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailPwd(),"sellgirl19840903");
+//		SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailToken(),getKey());
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY=HostType.SELLGIRL.getProperties();
+
+	try {
+		SGEmailSend.EMAIL_OWNER_ADDR_HOST = "";
+		SGEmailSend.EMAIL_OWNER_ADDR = AES.AESDecryptDemo("u8k/Cz5Z9ddjUvNuTeXVVA==",
+				SGDataHelper.decodeBase64(key));
+		SGEmailSend.EMAIL_OWNER_ADDR_PASS = AES.AESDecryptDemo("9Y4YkBmOw1mlrmmx4QHz8wK5E7/ZhZxuvoll2MmCvVc=",
+				SGDataHelper.decodeBase64(key));
+		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY = HostType.SELLGIRL.getProperties();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	}
+//    public static String getKey() throws IOException {
+//
+//    	File encFile = new File("d:\\github\\1\\2\\b.jpg");
+//		FileInputStream fis = new FileInputStream(encFile);
+//		return SGEncryptByte.DecryptByteToString(fis, SGEncryptByte.DEFAULT_BUFFER_SIZE, 0x123456);
+//
+//    }
+	public static final String key = "a2FoaW5lYXNpbjEyMzQ1Ng==";
 
 //    @Bean
 //	CommandLineRunner init() {

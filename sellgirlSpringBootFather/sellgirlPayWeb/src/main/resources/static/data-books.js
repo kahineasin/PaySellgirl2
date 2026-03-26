@@ -1,4 +1,3 @@
-// data-books.js
 const books = [
     {
         id: 'b1',
@@ -74,17 +73,6 @@ const books = [
         cover: 'assets/images/books/26.jpg',
         chapters: [
             { id: 'c7_1', title: 'Chapter 1. Loomings', content: '<p>Call me Ishmael. Some years ago—never mind how long precisely...</p>' }
-        ]
-    },
-    {
-        id: 'b8',
-        title: 'Yoney',
-        author: 'wc',
-        firstLetter: 'C',
-        cover: 'assets/images/books/26.jpg',
-        chapters: [
-            { id: 'c8_1', title: 'Chapter 1. Loomings', content: '<p>c8_1 Ishmael. Some years ago—never mind how long precisely...</p>' },
-            { id: 'c8_2', title: 'Chapter 3. boomings', content: '<p>c8_2 Ishmael. Some years ago—never mind how long precisely...</p>' }
         ]
     }
 ];

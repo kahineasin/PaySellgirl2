@@ -43,6 +43,7 @@ import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
 import com.sellgirl.sgJavaMvcHelper.HtmlHelperT;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
+import com.sellgirl.sgJavaMvcHelper.config.PFCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
@@ -560,14 +561,13 @@ extends YJQueryController
 	@GetMapping(value = { "/register.html" })
     public ModelAndView Register()
     {
-//  	  return View(new LoginerBase(),"Product/register");
   	ModelAndView result=new ModelAndView();
-//  	result.addObject("username","cuowu");
-////  	result.addObject("Model",model);
-//  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
-  	result.setViewName("Product/register");
+
+
+  	result.setViewName(registerView);
   	return result;
     }
+	private String registerView="Product2/register";
 
 	@SGAllowAnonymous
 	@GetMapping(value = { "/logout.html" })
@@ -620,6 +620,16 @@ extends YJQueryController
 			this.inviteCode = inviteCode;
 		}
 	}
+	
+	private ModelAndView getRegisterView(UserCreate model,String errorMsg) {
+
+		ViewData.put("username", model.getUserName());
+		ViewData.put("email", model.getEmail());
+		ViewData.put("password", model.getPwd());
+		ViewData.put("inviteCode", model.getInvitationCode());
+		ViewData.put("errorMsg", errorMsg);
+    	  return View(registerView);		
+	}
 	/**
 	 * 用户注册
 	 * 注意用户登陆后最好刷新页面。后端跳转也便于隐藏resource页面的存在
@@ -633,18 +643,31 @@ extends YJQueryController
 //	@GetMapping(value = { "/AddUser" })
 	@PostMapping(value = { "/AddUser" })
 //	@CrossOrigin
-    public ModelAndView AddUser(String username,String password,String inviteCode)
-//    public ModelAndView AddUser(@Valid @RequestBody UserCreateDto m, BindingResult bindingResult)
-    {		
+    public ModelAndView AddUser(String username,
+    		String email,
+    		String verifyCode,
+    		String password,String inviteCode)
+    {	
+		UserCreate model=new UserCreate();
+//		String username=m.getUsername();String password=m.getPassword();String inviteCode=m.getInviteCode();
+		model.setUserName(username);
+		model.setEmail(email);
+		model.setPwd(password);
+		model.setInvitationCode(inviteCode);	
+
+		String emailCode2=PFCookieUtils.getCookieValue("registerEmailCode");//10分钟
+		if(null==verifyCode||null==emailCode2||!verifyCode.equals(emailCode2)) {
+
+//			ViewData.put("username", "邮箱验证码错误,请重新获取");
+//	    	  return View(registerView);
+	    	  return this.getRegisterView(model, "邮箱验证码错误,请重新获取");
+		}
+		
 		String filePath = Paths.get(com.sellgirl.sgJavaHelper.config.SGDataHelper.GetBaseDirectory(), 
 				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System.toString() + "LocalData", "Txt", "shop/inviteCode.txt")
 	.toString();
-//		String filePath2 = Paths.get(SGDataHelper.GetBaseDirectory(), LocalDataType.System.toString() + "LocalData", "Txt", "shop","inviteCode.txt")
-//	.toString();
 		System.out.println("---------1----------");
 		System.out.println(filePath);
-//		System.out.println("---------2----------");
-//		System.out.println(filePath2);
 		//linux路径报错 todo
 		String x=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","inviteCode.txt").toString(), 
 				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System).trim();
@@ -653,18 +676,13 @@ extends YJQueryController
 			inviteCode=null;
 		}
 		
-		UserCreate model=new UserCreate();
-//		String username=m.getUsername();String password=m.getPassword();String inviteCode=m.getInviteCode();
-		model.setUserName(username);
-		model.setPwd(password);
-		model.setInvitationCode(inviteCode);
 //		model.setUserName(m.getUsername());
 //		model.setPwd(m.getPassword());
 //		model.setInvitationCode(m.getInviteCode());
 		SGRef<String> error=new SGRef<String>();
 		if(null!=userService.getUser(username)) {
 			ViewData.put("username", "用户名重复，注册失败");
-	    	  return View("Product/register");
+	    	  return View(registerView);
 		}
 		if(userService.addUser(model,error)) {
 
@@ -712,29 +730,18 @@ extends YJQueryController
 
 	  		
 		}else {
-//	    	return AbstractApiResult.error("error");
-//	    	  return View(new LoginerBase(),"Product/register");
+
 		}
-//		UserCreateModel r=new UserCreateModel();
-//		r.setUsername("error");
-//		ViewData.put("storyName",storyName);
-//    	ViewData.SetModel(model);
-//    	ModelAndView result= GetView();
-//    	ModelAndView result=new ModelAndView();
-//    	result.addObject("username","cuowu");
-//////    	result.addObject("Model",model);
-////    	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
-//    	result.setViewName("Product/register");
-//    	return result;
+
 		if(null!=error) {
 			if(0<=error.GetValue().indexOf("Duplicate entry '"+username+"' for key 'user_name'")) {
 		    	ViewData.put("username", "用户名重复，注册失败");
-		    	  return View("Product/register");
+		    	  return View(registerView);
 				
 			}
 		}
     	ViewData.put("username", "注册失败");
-  	  return View("Product/register");
+  	  return View(registerView);
     }
 	
 
@@ -768,44 +775,8 @@ extends YJQueryController
 			if(null!=r) {
 				return r;
 			}
-//	  		BaseReturnInfoDto userSSO = FormsAuth.LoginCheckWebApi(username, password);
-//	  		if(userSSO.isIsSuccess()) {
-//	  	        LoginerBase userData = new LoginerBase();
-//	  	        userData.UserCode=username;
-//	  	        userData.UserName=username;
-//
-//	  	        int effectiveHours = 1;//登陆1小时
-//	  	        User user = FormsAuth.checkUser(username,null,false);
-//	  	        SystemUser sysUser = new SystemUser();
-//	  	    	sysUser.UserCode=user.getUserName();
-//	  	    	sysUser.UserName=user.getUserName();
-////	  	    	sysUser.Email=user.getEmail();
-//	  	    	sysUser.isInvited=!SGDataHelper.StringIsNullOrWhiteSpace(user.getInvitationCode());
-//	  	        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
-//	  	        if(sysUser.isInvited) {
-//	  	        	ViewData.put("username",username);
-//	  	        	ViewData.put("isInvited",true);
-//	  	        	ViewData.put("role","resource");
-//	  	        	ViewData.put("url","/resource-index.html");
-//		  	    	  return View("ProductJump/index");
-//	  	        }else {
-////	  	    	  return View(new LoginerBase(),"Product/index");
-//	  	        	
-////	              return super.RedirectToUrl("/");//这样前端没有cache,ai的页面用不了
-//	  	        	
-////	  	        	ViewData.put("inviteCode","");
-//	  	        	ViewData.put("username",username);
-//	  	        	ViewData.put("isInvited",false);
-//	  	        	ViewData.put("role","normal");	  	        	
-//	  	        	ViewData.put("url","/");
-//	  	    	  return View("ProductJump/index");
-//	  	        }
-//	  		}
+ 		
 	  		
-//		}else {
-////	    	return AbstractApiResult.error("error");
-////	    	  return View(new LoginerBase(),"Product/register");
-//		}	  		
 
 	    	ViewData.put("username", "登陆失败");
   	  return View("Product/login");
@@ -827,7 +798,7 @@ extends YJQueryController
 //  	    	sysUser.UserCode=user.getUserName();
   	    	sysUser.UserCode=userData.UserCode;
   	    	sysUser.UserName=user.getUserName();
-//  	    	sysUser.Email=user.getEmail();
+  	    	sysUser.Email=user.getEmail();
   	    	sysUser.isInvited=!SGDataHelper.StringIsNullOrWhiteSpace(user.getInvitationCode());
   	    	sysUser.signDay=user.getSignDay();
   	    	sysUser.lastSign=user.getLastSign();
@@ -864,11 +835,9 @@ extends YJQueryController
 	@GetMapping(value = { "/profile.html" })
     public ModelAndView Profile()
     {
-//  	  return View(new LoginerBase(),"Product/register");
+
   	ModelAndView result=new ModelAndView();
-//  	result.addObject("username","cuowu");
-////  	result.addObject("Model",model);
-//  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
+
   	SystemUser user=GetSystemUser();
   	result.addObject("logged", null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName));
   	result.addObject("signDay", user.signDay);
@@ -883,11 +852,9 @@ extends YJQueryController
 	@GetMapping(value = { "/vip.html" })
     public ModelAndView Vip()
     {
-//  	  return View(new LoginerBase(),"Product/register");
+
   	ModelAndView result=new ModelAndView();
-//  	result.addObject("username","cuowu");
-////  	result.addObject("Model",model);
-//  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
+
   	result.setViewName("Product/vip");
   	return result;
     }
@@ -909,12 +876,23 @@ extends YJQueryController
 	@SGAllowAnonymous
     public ModelAndView Pay(PayPlan plan,Integer amount)
     {
-//  	  return View(new LoginerBase(),"Product/register");
+
+  	ModelAndView result=new ModelAndView();
+
+  	result.setViewName("Product/pay");
+  	return result;
+    }
+	//---------------------v2---------------------
+
+	@GetMapping(value = { "/forgot-password.html" })
+    public ModelAndView ForgotPassword()
+    {
+
   	ModelAndView result=new ModelAndView();
 //  	result.addObject("username","cuowu");
 ////  	result.addObject("Model",model);
 //  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
-  	result.setViewName("Product/pay");
+  	result.setViewName("Product/forgot-password");
   	return result;
     }
 }
