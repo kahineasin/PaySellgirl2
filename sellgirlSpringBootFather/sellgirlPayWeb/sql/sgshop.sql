@@ -50,3 +50,47 @@ CREATE TABLE IF NOT EXISTS `sg_vip_order` (
     INDEX `idx_order_no` (`order_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE IF NOT EXISTS `sg_resource`(
+   `resource_id` INT UNSIGNED AUTO_INCREMENT,
+   `resource_name` VARCHAR(100) NOT null,
+   `resource_author` VARCHAR(20) ,
+   `cover` VARCHAR(50) ,
+   `description` VARCHAR(100),
+   `netdisk` VARCHAR(100) ,
+   `extract_code` VARCHAR(20) ,
+   `unlock_password` VARCHAR(20) ,
+   `duration` INT  COMMENT '时长(秒)',
+   `size` INT  COMMENT '文件大小KB/漫画图片数量',
+   `create_date` datetime,
+   PRIMARY KEY ( `resource_id` ),
+   INDEX  idx_create_date (`create_date`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `sg_img`(
+   `resource_id` INT UNSIGNED AUTO_INCREMENT,
+   `resource_name` VARCHAR(100) NOT null,
+   `resource_author` VARCHAR(20) ,
+   `cover` VARCHAR(50) ,
+   `netdisk` VARCHAR(20) ,
+   `extractCode` VARCHAR(20) ,
+   `unlockPassword` VARCHAR(20) ,
+   `duration` INT  COMMENT '时长(秒)',
+   `size` INT  COMMENT '文件大小MB/漫画图片数量',
+   `create_date` datetime,
+   PRIMARY KEY ( `resource_id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `sg_comic`(
+   `resource_id` INT UNSIGNED AUTO_INCREMENT,
+   `resource_name` VARCHAR(100) NOT null,
+   `resource_author` VARCHAR(20) ,
+   `cover` VARCHAR(50) ,
+   `netdisk` VARCHAR(20) ,
+   `extractCode` VARCHAR(20) ,
+   `unlockPassword` VARCHAR(20) ,
+   `duration` INT  COMMENT '时长(秒)',
+   `size` INT  COMMENT '文件大小MB/漫画图片数量',
+   `create_date` datetime,
+   PRIMARY KEY ( `resource_id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -24,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;*/
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -61,7 +62,20 @@ public class ResourceInterceptor implements HandlerInterceptor {
         }     
         return false;
 	}
-	
+	public static boolean isRestApi(HandlerMethod handlerMethod) {
+////      HandlerMethod handlerMethod = (HandlerMethod) handler;
+//      // 获取方法上的注解
+//      SGAllowAnonymous allowAll = handlerMethod.getMethod().getAnnotation(SGAllowAnonymous.class);
+//      // 如果方法上的注解为空 则获取类的注解
+//      if (allowAll == null) {
+		RestController rest = handlerMethod.getMethod().getDeclaringClass().getAnnotation(RestController.class);
+//      }
+
+      if (rest != null){
+      	return true;
+      }     
+      return false;
+	}
 //	public static boolean hasAttr(HandlerMethod handlerMethod,Class cls) {
 ////      HandlerMethod handlerMethod = (HandlerMethod) handler;
 //      // 获取方法上的注解

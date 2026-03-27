@@ -11,19 +11,34 @@
     <script> requireResourceUser(); </script>
     <style>
         body { background: #f5f7fb; }
-        .navbar { background-color: #2c3e50; margin-bottom: 2rem; }
+        .navbar { background-color: #2c3e50; /*margin-bottom: 2rem;*/ }
         .detail-card { background: white; border-radius: 2rem; padding: 2rem; box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
-        .preview-img-large {
+        .carousel-item .preview-img-large {
             width: 100%;
             max-width: 400px;
             height: auto;
             max-height: 400px;
             object-fit: contain;
             border-radius: 1.5rem;
+            margin: 0 auto;
         }
         .netdisk-btn { background-color: #27ae60; border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 500; }
         .netdisk-btn:hover { background-color: #2ecc71; }
         .back-links a { text-decoration: none; margin-right: 1.5rem; }
+        .consume-btn { background-color: #ffc107; border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 500; }
+        .consume-btn:hover { background-color: #e0a800; }
+        .disabled-btn { background-color: #6c757d; border: none; cursor: not-allowed; }
+        .announcement-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1000;
+        }
+        .announcement-bar marquee { width: 100%; cursor: default; }
     </style>
 </head>
 <body>
@@ -42,6 +57,15 @@
         </div>
     </nav>
 
+    <!-- 滚动公告条幅 -->
+    <div class="announcement-bar" id="announcementBar">
+        <marquee behavior="scroll" direction="left" scrollamount="3"></marquee>
+    </div>
+    <script src="announcement.js"></script>
+    <script>
+        document.querySelector('#announcementBar marquee').innerHTML = ANNOUNCEMENT_TEXT;
+    </script>
+
     <script>
         (function() {
             const user = getCurrentUser();
@@ -50,9 +74,12 @@
             if (user) {
                 brandLink.href = 'resource-index.html';
                 brandLink.textContent = '🎬 资源走廊';
+                const points = getUserPoints();
+                // 资源用户无升级按钮
                 userInfoDiv.innerHTML = `
+                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
                     <span class="text-light me-2">👤 ${user.username}</span>
-                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
                     <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;
@@ -85,18 +112,62 @@
             <div id="detail-content" class="d-none">
                 <div class="row align-items-center">
                     <div class="col-md-5 text-center">
-                        <img src="" alt="preview" class="preview-img-large img-fluid" id="detail-image" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                        <div id="detailCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators" id="carouselIndicators"></div>
+                            <div class="carousel-inner" id="carouselInner"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#detailCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">上一张</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#detailCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">下一张</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="col-md-7">
                         <h2 id="detail-title" class="mb-3 fw-bold"></h2>
                         <p id="detail-description" class="text-secondary mb-4"></p>
-                        <div class="mb-4">
-                            <span class="badge bg-primary bg-opacity-10 text-dark p-2 px-3">📎 网盘地址</span>
-                            <div class="mt-3">
-                                <a href="#" id="detail-netdisk" class="btn netdisk-btn text-white" target="_blank">🔗 立即保存 / 提取</a>
-                            </div>
-                            <p class="text-muted small mt-3">* 点击按钮跳转至网盘（示例链接）</p>
+                        
+                        <!-- 上传用户 -->
+                        <div class="mb-3">
+                            <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">👤 上传用户</span>
+                            <span class="ms-2" id="detail-uploader"></span>
                         </div>
+
+                        <!-- 时长、文件大小等元信息 -->
+                        <div class="mb-3">
+                            <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">⏱️ 时长</span>
+                            <span class="ms-2" id="detail-duration"></span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">💾 文件大小</span>
+                            <span class="ms-2" id="detail-size"></span>
+                        </div>
+
+                        <!-- 消耗积分查看网盘信息 -->
+                        <div id="consumeArea">
+                            <div id="consumeBtnDiv" class="mb-3">
+                                <button id="consumeButton" class="btn consume-btn btn-lg">消耗1积分查看网盘信息</button>
+                            </div>
+                            <div id="resourceInfo" style="display: none;">
+                                <div class="mb-3">
+                                    <span class="badge bg-primary bg-opacity-10 text-dark p-2 px-3">📎 网盘地址</span>
+                                    <div class="mt-2">
+                                        <a href="#" id="detail-netdisk" class="btn netdisk-btn text-white" target="_blank">🔗 立即保存 / 提取</a>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">🔑 提取码</span>
+                                    <span class="ms-2" id="extractCodeValue"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">🔐 解压密码</span>
+                                    <span class="ms-2" id="unlockPasswordValue"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <button id="favoriteBtn" class="btn btn-outline-warning btn-sm">⭐ 收藏资源</button>
                         </div>
@@ -111,20 +182,47 @@
         </div>
     </div>
 
-    <script>
+    <script src="/product/resource-common.js"></script>
+    <script  type="text/javascript" th:inline="javascript">
         (function() {
+            const uploaderNames = [
+                '深海里的鱼', '云中漫步', '星空下的猫', '风一样的男子', '雨夜带刀',
+                '书虫小七', '影视收藏家', '资源搬运工', '分享快乐', '逍遥客',
+                '追风少年', '静听花开', '月下独酌', '雪落无声', '飞鸟与鱼',
+                '青衫故人', '白衣卿相', '梦里不知身是客', '此间少年', '南风知我意',
+                '北冥有鱼', '东篱把酒', '西窗烛', '南山南', '北海北',
+                '江湖故人', '红尘客栈', '天涯过客', '孤舟蓑笠翁', '独钓寒江雪'
+            ];
+
+            function getFixedIndex(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                    hash |= 0;
+                }
+                return Math.abs(hash) % uploaderNames.length;
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const threadId = urlParams.get('id');
 
             const loadingDiv = document.getElementById('loading');
             const errorDiv = document.getElementById('error-message');
             const contentDiv = document.getElementById('detail-content');
-            const detailImage = document.getElementById('detail-image');
             const detailTitle = document.getElementById('detail-title');
             const detailDescription = document.getElementById('detail-description');
+            const detailUploader = document.getElementById('detail-uploader');
+            const detailDuration = document.getElementById('detail-duration');
+            const detailSize = document.getElementById('detail-size');
             const detailNetdisk = document.getElementById('detail-netdisk');
+            const extractCodeSpan = document.getElementById('extractCodeValue');
+            const unlockPasswordSpan = document.getElementById('unlockPasswordValue');
             const backToBoardLink = document.getElementById('back-to-board-link');
             const favoriteBtn = document.getElementById('favoriteBtn');
+            const carouselInner = document.getElementById('carouselInner');
+            const carouselIndicators = document.getElementById('carouselIndicators');
+            const consumeButton = document.getElementById('consumeButton');
+            const resourceInfoDiv = document.getElementById('resourceInfo');
 
             if (!threadId) {
                 loadingDiv.classList.add('d-none');
@@ -133,38 +231,129 @@
                 return;
             }
 
-            let foundThread = null;
-            let parentBoard = null;
+            //let foundThread = null;
+            //let parentBoard = null;
+            //
+            //for (let board of boards) {
+            //    const match = board.threads.find(t => t.id === threadId);
+            //    if (match) {
+            //        foundThread = match;
+            //        parentBoard = board;
+            //        break;
+            //    }
+            //}            
+            
+            let foundThread = [[${Model}]];
+            let parentBoardId = [[${resourceType}]];
 
-            for (let board of boards) {
-                const match = board.threads.find(t => t.id === threadId);
-                if (match) {
-                    foundThread = match;
-                    parentBoard = board;
-                    break;
-                }
-            }
-
-            if (!foundThread || !parentBoard) {
+            if (!foundThread //|| !parentBoard
+            ) {
                 loadingDiv.classList.add('d-none');
                 errorDiv.classList.remove('d-none');
                 errorDiv.textContent = `没有找到ID为“${threadId}”的资源`;
                 return;
             }
+            //foundThread.id=foundThread.resource_id;
+            //foundThread.title=foundThread.resource_name;
+            //foundThread.id=foundThread.resource_id;
+            foundThread=mapResourceToDto(foundThread,parentBoardId);
+            let parentBoard={id:parentBoardId};
 
             loadingDiv.classList.add('d-none');
             contentDiv.classList.remove('d-none');
 
-            const largeImg = foundThread.previewImg;
-            detailImage.src = largeImg;
-            detailImage.alt = foundThread.title;
             detailTitle.textContent = foundThread.title;
             detailDescription.textContent = foundThread.description || '暂无详细介绍';
-            detailNetdisk.href = foundThread.netdisk;
-            detailNetdisk.textContent = `📁 提取资源 (${foundThread.netdisk.substring(0, 25)}...)`; 
+            //const index = getFixedIndex(foundThread.id);
+            //detailUploader.textContent = uploaderNames[index];
+            detailUploader.textContent = foundThread.resource_author;
+
+            if (foundThread.duration) {
+                detailDuration.textContent = foundThread.duration + ' 分钟';
+            } else {
+                detailDuration.parentElement.style.display = 'none';
+            }
+            if (foundThread.size) {
+                const sizeGB = (foundThread.size / 1024).toFixed(1);
+                detailSize.textContent = sizeGB + ' GB';
+            } else {
+                detailSize.parentElement.style.display = 'none';
+            }
 
             backToBoardLink.href = `resource-board.html?board=${parentBoard.id}`;
 
+            let images = foundThread.images || [foundThread.previewImg];
+            carouselInner.innerHTML = '';
+            carouselIndicators.innerHTML = '';
+
+            images.forEach((imgSrc, idx) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `carousel-item ${idx === 0 ? 'active' : ''}`;
+                itemDiv.innerHTML = `
+                    <img src="${imgSrc}" class="d-block preview-img-large" alt="${foundThread.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                `;
+                carouselInner.appendChild(itemDiv);
+
+                const indicatorBtn = document.createElement('button');
+                indicatorBtn.type = 'button';
+                indicatorBtn.dataset.bsTarget = '#detailCarousel';
+                indicatorBtn.dataset.bsSlideTo = idx;
+                indicatorBtn.className = idx === 0 ? 'active' : '';
+                indicatorBtn.setAttribute('aria-current', idx === 0 ? 'true' : 'false');
+                indicatorBtn.setAttribute('aria-label', `Slide ${idx + 1}`);
+                carouselIndicators.appendChild(indicatorBtn);
+            });
+
+            // 显示网盘信息
+            function showResourceInfo() {
+                detailNetdisk.href = foundThread.netdisk;
+                detailNetdisk.textContent = '🔗 立即保存 / 提取';
+                extractCodeSpan.textContent = foundThread.extractCode || '无';
+                unlockPasswordSpan.textContent = foundThread.unlockPassword || '无';
+                resourceInfoDiv.style.display = 'block';
+                consumeButton.style.display = 'none';
+            }
+
+            // 检查是否已解锁
+            if (isResourceUnlocked(threadId)) {
+                showResourceInfo();
+            } else {
+                const user = getCurrentUser();
+                if (!user) {
+                    consumeButton.textContent = '请先登录';
+                    consumeButton.disabled = true;
+                } else {
+                    const points = getUserPoints();
+                    if (points >= 1) {
+                        consumeButton.disabled = false;
+                        consumeButton.textContent = '消耗1积分查看网盘信息';
+                    } else {
+                        consumeButton.disabled = true;
+                        consumeButton.textContent = '积分不足，请先充值';
+                    }
+                }
+
+                consumeButton.addEventListener('click', function() {
+                    const user = getCurrentUser();
+                    if (!user) {
+                        alert('请先登录');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    // 调用 unlockResource 消耗积分（1分）
+                    if (unlockResource(threadId)) {
+                        showResourceInfo();
+                        // 更新导航栏积分显示
+                        const userInfoDiv = document.getElementById('userInfo');
+                        const points = getUserPoints();
+                        userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${points} 积分`);
+                    } else {
+                        alert('积分不足，无法查看');
+                    }
+                });
+            }
+
+            // 收藏按钮
             function updateFavoriteBtn() {
                 if (isFavorite('resource', foundThread.id)) {
                     favoriteBtn.textContent = '★ 已收藏';

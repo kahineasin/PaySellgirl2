@@ -8,11 +8,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 //import com.perfect99.right.amsweb.ActionReturnInfo;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
+import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
@@ -27,6 +29,7 @@ import com.sellgirl.sgJavaHelper.SGDataTable;
 //import com.sellgirl.sgJavaSpringHelper.PFJsonDataT;
 import com.sellgirl.sgJavaHelper.PFJsonData;
 import com.sellgirl.sgJavaHelper.PFJsonDataT;
+import com.sellgirl.sgJavaHelper.PagingResult;
 import com.sellgirl.sgJavaSpringHelper.PFObject;
 //import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
@@ -34,7 +37,8 @@ import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
-import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
+import com.sellgirl.sgJavaMvcHelper.config.PFCookieUtils;
+import com.sellgirl.sellgirlPayDao.DayDAO;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -42,56 +46,49 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import pf.springBoot.springBootSSO.oAuth.MetabaseFormsAuth;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayWeb.product.model.book;
+import com.sellgirl.sellgirlPayWeb.product.model.bookQuery;
+import com.sellgirl.sellgirlPayWeb.product.model.resource;
+import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
+import com.sellgirl.sellgirlPayWeb.product.service.BookService;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
-//import com.sellgirl.sellgirlPayWeb.service.BalanceService;
 import com.sellgirl.sellgirlPayWeb.user.YJQueryController;
-
+import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
+//import com.sellgirl.sellgirlPayWeb.service.BalanceService;
+import com.sellgirl.sellgirlPayWeb.user.service.UserService;
+import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
 //@RestController
-@Controller
+@RestController
 //@RequestMapping("/User")
-public class ResourceController 
-extends  YJQueryController
-//extends PFBaseWebController
+public class ResourceApiController extends  YJQueryController
 {
 	@Autowired private ResourceService resourceService;
-//    @Autowired
-//    private BalanceService _balanceService;
+	@PostMapping(value = { "/api/resource/list" })
+    public AbstractApiResult<?> getList(String field,boolean descending ,
+    		MvcPagingParameters p
+    		)
+    {
+		resourceQuery q=new resourceQuery();
+		if("uploadTime".equals(field)) {
+			q.sort="create_date";	
+		}else {
+			q.sort=field;
+		}
+		q.desc=descending;
+		List<resource> book=resourceService.GetresourceList(q,p);
+		PagingResult r=new PagingResult();
+		r.data=book;
+		if((null==r||book.isEmpty())&&0==p.getPageIndex()) {
+			r.total=0;
+		}else if((null==r||book.isEmpty())&&0<p.getPageIndex()) {
+			r.total=p.getPageSize()*p.getPageIndex();
+		}else {
+//			r.total=p.getPageSize()*p.getPageIndex()+book.size();
+			r.total=p.getPageSize()*(p.getPageIndex()+3);
+		}
+		return AbstractApiResult.success(r);
+    }
 
-/*
- * 所有系统的单点登陆控制，如果用户已在本系统登陆，直接返回token
- */
-//    @PFAllowAnonymous
-//  	@GetMapping(value = "/")
-	@GetMapping(value = { "/resource-index.html" })
-//	@GetMapping(value = { "/Product/index" })
-    public ModelAndView Home()
-    {
-  	  return View(new LoginerBase(),"Product/resource-index");
-    }
-//	@GetMapping(value = { "/Product/detail?id={id}" })
-//	@GetMapping(value = { "/Product/detail" })
-//    public ModelAndView Detail(@PathVariable(name = "id")String id)
-//    {
-//  	  return View(new LoginerBase(),"Product/detail");
-//    }
-	@GetMapping(value = { "/resource-detail.html" })
-    public ModelAndView Detail(long id,ResourceType resourceType)
-    {
-		resourceService.setResourceType(resourceType);
-		ViewData.put("resourceType", resourceType);
-  	  return View(resourceService.GetOneResource(id),"Product/resource-detail");
-    }
-	@GetMapping(value = { "/resource-search.html" })
-    public ModelAndView Search(String q)
-    {
-  	  return View(new LoginerBase(),"Product/resource-search");
-    }
-	@GetMapping(value = { "/resource-board.html" })
-    public ModelAndView Board()
-    {
-  	  return View(new LoginerBase(),"Product/resource-board");
-    }
 
 }

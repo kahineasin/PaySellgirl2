@@ -8,13 +8,23 @@ import java.util.Map.Entry;
 import com.fasterxml.jackson.databind.JsonNode;
 
 //import pf.java.pfHelper.config.PFDataHelper;
-
+/**
+ * 使用方法:
+ * 1. spring框架可以自动绑定com.sellgirl.sgJavaMvcHelper.MvcPagingParameters子类
+ * 2. 非spring可能需自行做绑定
+ * 3. PagingResult是返回类型,配合使用
+ */
 public class PagingParameters {
-
+	/**
+	 * 首页为0
+	 */
     private int _pageIndex = 0;
 	private Integer _pageSize = null;
 	private Map<String,String> request=null;
 	private String _filterValue=null;
+	/**
+	 * 格式如 "col1 desc,col2" ,因为考虑到多列排序的情况,所以正反向直接拼接
+	 */
 	private String _sort=null;
 
     //public Integer PageIndex { get { return _pageIndex; } set { if (value.HasValue) { _pageIndex = value.Value; } } }//从0开始

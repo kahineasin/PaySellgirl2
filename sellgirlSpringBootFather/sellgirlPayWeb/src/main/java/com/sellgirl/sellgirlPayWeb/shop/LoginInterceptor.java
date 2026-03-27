@@ -12,6 +12,8 @@ import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.pay.Pay3Controller;
 import com.sellgirl.sellgirlPayWeb.product.ResourceController;
 import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
+import com.sellgirl.sellgirlPayWeb.user.UserApiController;
+import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 
@@ -77,21 +79,28 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     			Object controller = method.getBean();
     //判断是否为登录接口实现类
-    			if(controller instanceof Pay3Controller){
+    			if(controller instanceof Pay3Controller
+    					||controller instanceof UserApiController
+    					){
     				if(FormsAuth.IsLogined()) {
     					//不拦截
     					return true;
     				}else {
-    					//拦截
-//    					log.debug("-----------未登录访问   跳回登录页面----");
-    					//这样跳转时样式路径不对
-//    					request.getRequestDispatcher("/login.html").forward(request, response);
-    					String urlEncode=SGDataHelper.getURLEncoderString( request.getRequestURI()+"?"+request.getQueryString());
-    	            	response.sendRedirect("/login.html?return_to="+urlEncode);
+    					boolean isRest=ResourceInterceptor.isRestApi(method);
+    					if(isRest) {
 
-//    	            	response.sendRedirect("/User/LoginMetabase");
-//    					return false;   
-    					return false;
+    			            HttpUtils.responseJsonData(response,AbstractApiResult.error(AbstractApiResult.UNLOGIN,"请登录"));
+	    					return false;
+    					}else {
+	    					//拦截
+	//    					log.debug("-----------未登录访问   跳回登录页面----");
+	    					//这样跳转时样式路径不对
+	//    					request.getRequestDispatcher("/login.html").forward(request, response);
+	    					String urlEncode=SGDataHelper.getURLEncoderString( request.getRequestURI()+"?"+request.getQueryString());
+	    	            	response.sendRedirect("/login.html?return_to="+urlEncode);
+	
+	    					return false;
+    					}
     				}
 //    				SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
 //    				if(null!=user&&SGDataHelper.StringIsNullOrWhiteSpace(user.UserName) ) {

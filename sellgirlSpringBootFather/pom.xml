@@ -56,6 +56,7 @@
 		<sgJavaClickHouseHelper.version>0.0.5</sgJavaClickHouseHelper.version>
 		<sellgirlPayHelperExport.version>0.0.3</sellgirlPayHelperExport.version>
 		<sgJavaMvcHelper.version>0.0.3</sgJavaMvcHelper.version>
+		<sgExportHelper.version>0.0.4</sgExportHelper.version>
 		<sellgirlPayDomain.version>0.0.5</sellgirlPayDomain.version>
 		<sellgirlPayService.version>0.0.3</sellgirlPayService.version>
 		<sellgirlPayDao.version>0.0.3</sellgirlPayDao.version>

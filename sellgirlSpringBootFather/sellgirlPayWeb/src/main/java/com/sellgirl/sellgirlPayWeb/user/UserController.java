@@ -630,6 +630,29 @@ extends YJQueryController
 		ViewData.put("errorMsg", errorMsg);
     	  return View(registerView);		
 	}
+	
+	public static boolean isInviteCodeRight(String inviteCode) {
+
+//		String filePath = Paths.get(com.sellgirl.sgJavaHelper.config.SGDataHelper.GetBaseDirectory(), 
+//				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System.toString() + "LocalData", "Txt", "shop/inviteCode.txt")
+//	.toString();
+//		System.out.println("---------1----------");
+//		System.out.println(filePath);
+		//linux路径报错 todo
+		String x=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","inviteCode.txt").toString(), 
+				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System).trim();
+//		String x=SGDataHelper.ReadFileToString(filePath2).trim();
+		if(null==inviteCode) {
+			return false;
+		}
+		else if(null!=inviteCode&&!x.equals(inviteCode)) {
+//			inviteCode=null;
+			return false;
+		}else if(null!=inviteCode&&x.equals(inviteCode)) {
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * 用户注册
 	 * 注意用户登陆后最好刷新页面。后端跳转也便于隐藏resource页面的存在
@@ -663,16 +686,19 @@ extends YJQueryController
 	    	  return this.getRegisterView(model, "邮箱验证码错误,请重新获取");
 		}
 		
-		String filePath = Paths.get(com.sellgirl.sgJavaHelper.config.SGDataHelper.GetBaseDirectory(), 
-				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System.toString() + "LocalData", "Txt", "shop/inviteCode.txt")
-	.toString();
-		System.out.println("---------1----------");
-		System.out.println(filePath);
-		//linux路径报错 todo
-		String x=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","inviteCode.txt").toString(), 
-				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System).trim();
-//		String x=SGDataHelper.ReadFileToString(filePath2).trim();
-		if(null!=inviteCode&&!x.equals(inviteCode)) {
+//		String filePath = Paths.get(com.sellgirl.sgJavaHelper.config.SGDataHelper.GetBaseDirectory(), 
+//				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System.toString() + "LocalData", "Txt", "shop/inviteCode.txt")
+//	.toString();
+//		System.out.println("---------1----------");
+//		System.out.println(filePath);
+//		//linux路径报错 todo
+//		String x=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","inviteCode.txt").toString(), 
+//				com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System).trim();
+////		String x=SGDataHelper.ReadFileToString(filePath2).trim();
+//		if(null!=inviteCode&&!x.equals(inviteCode)) {
+//			inviteCode=null;
+//		}
+		if(!isInviteCodeRight(inviteCode)) {
 			inviteCode=null;
 		}
 		

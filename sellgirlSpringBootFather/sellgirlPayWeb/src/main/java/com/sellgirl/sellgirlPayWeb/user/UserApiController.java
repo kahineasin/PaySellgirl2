@@ -158,4 +158,27 @@ public class UserApiController extends  YJQueryController
 		PFCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
 		return AbstractApiResult.success();
     }
+	
+
+	@PostMapping(value = { "/api/UpgradeToResource" })
+    public AbstractApiResult<?> UpgradeToResource(String inviteCode)
+    {
+//		if(!IsLogined()) {
+//			
+//		}
+		if(!UserController.isInviteCodeRight(inviteCode)) {
+			return AbstractApiResult.error("邀请码不正确");
+		}
+//		String userName=this.GetUserName();
+//		if(SGDataHelper.StringIsNullOrWhiteSpace(userName)) {//应该用拦截器,不应进入这里
+//			return AbstractApiResult.error("未登录");
+//		}
+		if(!this.userService.updateUserInvite(this.GetUserLongId(),inviteCode)){
+			return AbstractApiResult.error("更新邀请码失败");
+		}else {
+			return AbstractApiResult.success();			
+		}
+
+    }
+
 }

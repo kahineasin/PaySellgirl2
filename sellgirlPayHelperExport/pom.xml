@@ -35,10 +35,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.sellgirl</groupId>
-    <artifactId>sellgirlPayHelperExport</artifactId>
-    <version>0.0.3</version>
+    <artifactId>sgExportHelper</artifactId>
+    <!--0.0.3-->
+    <version>0.0.4</version>
     <!--   <version>0.0.1-SNAPSHOT</version> -->
-    <name>sellgirlPayHelperExport</name>
+    <name>sgJavaHelper</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

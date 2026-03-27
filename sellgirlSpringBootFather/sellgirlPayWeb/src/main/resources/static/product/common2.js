@@ -89,3 +89,50 @@ function getSignStatus() {
         signDays: user.signDays || 0
     };
 }
+
+const UNLOGIN=2001;
+// ==================== 升级为资源用户 ====================
+function upgradeToResource(inviteCode,callback) {
+
+	if(null!=callback&&undefined!=callback){	
+		  $.post("/api/UpgradeToResource",
+		  {
+		    inviteCode:inviteCode
+		  },
+		  function(data,status){
+		    //alert("Data: " + data + "\nStatus: " + status);
+		    if(data.success){
+    			const user = getCurrentUser();
+    			user.role = 'resource';
+            	setCurrentUser(user);
+		    }else if(!data.success&&UNLOGIN==data.code){
+                window.location.href='/login.html';
+                return;
+		    }		    
+			callback({success:data.success,message:data.msg},status);
+		  })
+		  .success(function() { /*alert("second success");*/ })//grid进入
+		  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
+		  .complete(function(XMLHttpRequest, textStatus){})
+		  ;
+		  
+		  return;
+	}
+	
+    const SECRET_INVITE_CODE = '9527';
+    if (inviteCode !== SECRET_INVITE_CODE) {
+        return { success: false, message: '邀请码错误' };
+    }
+    const user = getCurrentUser();
+    if (!user) return { success: false, message: '未登录' };
+    if (user.role === 'resource') {
+        return { success: false, message: '您已经是资源用户' };
+    }
+    const users = getUsers();
+    const index = users.findIndex(u => u.username === user.username);
+    if (index === -1) return { success: false, message: '用户不存在' };
+    users[index].role = 'resource';
+    saveUsers(users);
+    setCurrentUser(users[index]);
+    return { success: true, message: '升级成功！页面即将刷新...' };
+}

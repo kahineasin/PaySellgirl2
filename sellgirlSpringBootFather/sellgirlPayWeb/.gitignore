@@ -2,4 +2,5 @@
 .class
 src/main/resources/static/bookImg/cover/
 src/main/resources/static/bookImg/content/
+src/main/resources/static/resourceImg/
 log/

@@ -17,7 +17,8 @@ import com.sellgirl.sgJavaHelper.FuncAuthorityClass;
 //import com.sellgirl.sgJavaSpringHelper.HtmlHelperT;
 //import com.sellgirl.sgJavaSpringHelper.PFBaseWebController;
 import com.sellgirl.sgJavaHelper.SGCaching;
-import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
+//import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 /**
  * cache中的SystemUser在这处理
@@ -46,6 +47,9 @@ public abstract class YJQueryController extends PFBaseWebController {
 	public String GetUserId() {
 		return FormsAuth.GetUserData().UserCode;		
 	}
+	public long GetUserLongId() {
+		return SGDataHelper.ObjectToLong0(FormsAuth.GetUserData().UserCode) ;		
+	}
 	public String GetUserName() {
 		return FormsAuth.GetUserData().UserName;		
 	}
@@ -65,6 +69,9 @@ public abstract class YJQueryController extends PFBaseWebController {
 //    }
 	
     //#region 用户信息Cache
+//	private boolean IsLogined() {//在拦截器中处理更好?
+//		return FormsAuth.IsLogined();
+//	}
 	public  SystemUser GetSystemUser() {
 		SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
 		

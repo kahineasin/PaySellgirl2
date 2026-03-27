@@ -242,4 +242,45 @@ public class UserService
 			throw new RuntimeException(e);
 		}
 	}
+
+    public boolean updateUserInvite(long userId,
+    		String inviteCode)
+    {
+        ISGJdbc jdbc=JdbcHelper.GetShop();
+        try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+            dstExec.AutoCloseConn(false);
+            List<String> srcFieldNames = new ArrayList<String>();
+            srcFieldNames.add("user_id");
+            srcFieldNames.add("invitation_code");
+            
+            String tableName="sg_user";
+            ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
+
+            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            update.Set("user_id", userId);
+            update.Set("invitation_code", inviteCode);
+            
+            String[] primaryKeys = new String[] {"user_id"};
+            update.PrimaryKeyFields(true, primaryKeys);
+
+       
+            
+            SGSqlCommandString sql=new SGSqlCommandString(
+                    SGDataHelper.FormatString(
+                            " update {2} set  {0} {1} limit 1",
+                            update.ToSetSql(),
+                            update.ToWhereSql(),
+                            tableName
+                    ));
+            dstExec.close();
+            int r=dstExec.ExecuteSqlInt(sql, null, true);
+            dstExec.close();
+            if(0<r) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

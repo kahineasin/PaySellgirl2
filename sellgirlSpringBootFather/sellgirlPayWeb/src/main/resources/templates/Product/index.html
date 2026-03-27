@@ -19,6 +19,18 @@
             object-fit: cover;
             aspect-ratio: 3/4;
         }
+        .announcement-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1000;
+        }
+        .announcement-bar marquee { width: 100%; cursor: default; }
+        
         /*小图标的样式*/
         .letter-group h2 {
             border-bottom: 2px solid #0d6efd;
@@ -52,7 +64,19 @@
         </div>
     </nav>
 
+    <!-- 动态公告条幅 -->
+    <div class="announcement-bar" id="announcementBar">
+        <marquee behavior="scroll" direction="left" scrollamount="3"></marquee>
+    </div>
+
+    <script src="announcement.js"></script>
+    <script>
+        // 动态设置公告内容
+        document.querySelector('#announcementBar marquee').innerHTML = ANNOUNCEMENT_TEXT;
+    </script>
+    
     <script src="common.js"></script>
+    <script src="/product/common2.js"></script>
     <!--<script src="data-books.js"></script>-->
     <script>
         // 用户信息渲染
@@ -68,9 +92,16 @@
                     brandLink.href = 'index.html';
                     brandLink.textContent = '📚 电子书库';
                 }
+                const points = getUserPoints();
+                let upgradeBtn = '';
+                if (user.role !== 'resource') {
+                    upgradeBtn = `<button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#upgradeModal">⭐ 升级资源站</button>`;
+                }
                 userInfoDiv.innerHTML = `
+                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
                     <span class="text-light me-2">👤 ${user.username}</span>
-                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    ${upgradeBtn}
+                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
                     <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;
@@ -441,6 +472,53 @@
 
         })();
     </script>
+    
+    <!-- 升级模态框 -->
+    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="upgradeModalLabel">🔓 升级为资源用户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>输入邀请码，即可解锁资源站访问权限，享受更多精彩内容！</p>
+                    <div class="mb-3">
+                        <label class="form-label">邀请码</label>
+                        <input type="text" class="form-control" id="modalInviteCode" placeholder="请输入邀请码">
+                    </div>
+                    <div id="modalUpgradeMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="modalUpgradeBtn">立即升级</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模态框升级事件
+        const modalUpgradeBtn = document.getElementById('modalUpgradeBtn');
+        if (modalUpgradeBtn) {
+            modalUpgradeBtn.addEventListener('click', function() {
+                const inviteCode = document.getElementById('modalInviteCode').value.trim();
+                upgradeToResource(inviteCode,function(result){                	
+	                const msgDiv = document.getElementById('modalUpgradeMessage');
+	                if (result.success) {
+	                    msgDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+	                    setTimeout(() => {
+	                        location.reload();
+	                    }, 1500);
+	                } else {
+	                    msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+	                }
+                });
+            });
+        }
+    </script>
+
+    
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

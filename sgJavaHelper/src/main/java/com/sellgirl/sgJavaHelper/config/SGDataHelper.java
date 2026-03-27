@@ -540,6 +540,9 @@ public class SGDataHelper {
 		if (value instanceof BigDecimal) {
 			return ((BigDecimal) value).intValue();
 		}
+		if (value instanceof Double) {
+			return ((Double) value).intValue();
+		}
 		if (value instanceof String) {
 			return Integer.valueOf((String) value);
 		}

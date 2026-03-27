@@ -275,6 +275,12 @@
 			<artifactId>sgJavaMvcHelper</artifactId>
 			<version>${sgJavaMvcHelper.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.sellgirl</groupId>
+			<artifactId>sgExportHelper</artifactId>
+			<version>${sgExportHelper.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!--web模块 引入entity模块-->
 		<dependency>
 			<groupId>com.sellgirl</groupId>

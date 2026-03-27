@@ -4,7 +4,7 @@ package com.sellgirl.sgJavaHelper;
  * 此类参考 wisesystem-bns 项目
  */
 public abstract class AbstractApiResult<T> {
-
+	public static int UNLOGIN=2001;
 
     protected int code;
     protected Boolean success;

@@ -1,6 +1,14 @@
 use sgshop;
 
 
+CREATE TABLE IF NOT EXISTS `sg_resource_img`(
+   `resource_img_id` INT UNSIGNED AUTO_INCREMENT,
+   `url` VARCHAR(100) NOT null unique,
+   `resource_id` INT ,
+   `create_date` datetime,
+   PRIMARY KEY ( `resource_img_id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `sg_vip_user`(
    `vip_user_id` INT UNSIGNED AUTO_INCREMENT,
    `user_id` INT NOT null ,
@@ -18,6 +26,10 @@ CREATE TABLE IF NOT EXISTS `sg_vip_user`(
 -- drop table sg_user;
 -- drop table sg_book;
 -- drop table sg_book_chap;
+  -- drop table sg_resource
+  -- drop table sg_img
+  -- drop table sg_comic
+  -- drop table sg_resource_img
 delete from sg_book;
 delete from sg_book_chap;
   select * from sgshop.sg_user;
@@ -27,6 +39,8 @@ select count(1) from sg_book  where  `letter`='X'
 select * from sg_book  where  `letter`='X'  
 select  * from sg_book  where  `book_id`=10 limit 1;
   select max(book_id) from sgshop.sg_book; 
+select * from sgshop.sg_book limit 1000,10; 
+select * from sgshop.sg_book where `book_id`>999 limit 10; 
 -- INSERT INTO sg_user
 -- ( user_name,pwd, invitation_code,email,  create_date)
 -- VALUES( 'cc','cc', 'cc', 'cc', '2026-01-01 01:01:01');
@@ -57,8 +71,13 @@ select  * from sg_book  where  `book_id`=10 limit 1;
   show variables like 'character_set%'
   
   select * from sgshop.sg_vip_order
-  select * from sgshop.sg_user;
+  select * from sgshop.sg_user order by user_id desc;
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
   
    update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1
+   select * from sg_resource limit 20;
+   select * from sg_resource t INNER JOIN(select resource_id from sg_resource order by create_date desc limit 0,10) tmp ON t.resource_id=tmp.resource_id
+   
+   
+   insert into sg_resource (`resource_id`,`resource_name`,`resource_author`,`cover`,`netdisk`,`extract_code`,`unlock_password`,`duration`,`size`,`create_date`) values ( '0' , 'V-No.00013' , '飞鸟与鱼' , '1.jpg,2.jpg,3.jpg' , 'https://pan.baidu.com/s/1KUZFi84x2HiF7EbTsFhykg?pwd=5zqk' , '5zqk' , 'bdhome.xyz' , '0' , '0' , '2026-03-28 00:54:32' )

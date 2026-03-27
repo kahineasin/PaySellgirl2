@@ -76,8 +76,9 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
             		"/assets/**","/.well-known/**",
             		"/sg/js/**",
             		"/demo/**",
-            		"/common.js","/data-books.js","/data-resources.js","/product/common2.js",
-            		"/bookImg/**","/error"
+            		"/common.js","/announcement.js","/data-books.js",
+            		"/data-resources.js","/product/*.js",
+            		"/bookImg/**","/resourceImg/**","/error"
             		);
             // 拦截配置
             addInterceptor.addPathPatterns("/**");
