@@ -82,7 +82,7 @@ public class ResourceService
 SqlString = SGDataHelper.FormatString( 
 "select * from {1} t " +
 "INNER JOIN("+
-"select resource_id from sg_resource order by {2} limit {3},{4}"+
+"select resource_id from {1} order by {2} limit {3},{4}"+
 ") tmp ON t.resource_id=tmp.resource_id"+
 "{0} " 
 , 

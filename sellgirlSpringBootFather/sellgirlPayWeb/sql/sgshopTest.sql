@@ -77,6 +77,8 @@ select * from sgshop.sg_book where `book_id`>999 limit 10;
   
    update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1
    select * from sg_resource limit 20;
+   select * from sg_comic limit 20;
+   select * from sg_img limit 20;
    select * from sg_resource t INNER JOIN(select resource_id from sg_resource order by create_date desc limit 0,10) tmp ON t.resource_id=tmp.resource_id
    
    

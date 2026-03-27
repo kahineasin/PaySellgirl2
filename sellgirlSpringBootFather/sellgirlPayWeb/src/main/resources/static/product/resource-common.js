@@ -3,7 +3,11 @@
 function mapResourceToDto(i,resourceType){
 	i.id=i.resource_id;
 	i.title=i.resource_name;
-	i.duration=(i.duration/60).toFixed(0);//second->minute
+	if('comic'==resourceType||'image'==resourceType){
+		i.imageCount=i.duration;
+	}else{
+		i.duration=(i.duration/60).toFixed(0);//second->minute
+	}
 	i.size=(i.size/1024).toFixed(1);//KB->MB
 	if(i.cover){
 		let coverArr=i.cover.split(',');

@@ -46,6 +46,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import pf.springBoot.springBootSSO.oAuth.MetabaseFormsAuth;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
+import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.bookQuery;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
@@ -65,17 +66,20 @@ public class ResourceApiController extends  YJQueryController
 {
 	@Autowired private ResourceService resourceService;
 	@PostMapping(value = { "/api/resource/list" })
-    public AbstractApiResult<?> getList(String field,boolean descending ,
+    public AbstractApiResult<?> getList(
+    		//String field,boolean descending ,
+    		ResourceType resourceType,
     		MvcPagingParameters p
     		)
     {
 		resourceQuery q=new resourceQuery();
-		if("uploadTime".equals(field)) {
-			q.sort="create_date";	
-		}else {
-			q.sort=field;
-		}
-		q.desc=descending;
+//		if("uploadTime".equals(field)) {
+//			q.sort="create_date";	
+//		}else {
+//			q.sort=field;
+//		}
+//		q.desc=descending;
+		resourceService.setResourceType(resourceType);
 		List<resource> book=resourceService.GetresourceList(q,p);
 		PagingResult r=new PagingResult();
 		r.data=book;

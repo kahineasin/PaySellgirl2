@@ -60,8 +60,8 @@ public class resourceQuery {
 		public  SGDate create_date ;
 
 		public  ResourceType resourceType ;
-		public  String sort;
-		public  boolean desc;
+//		public  String sort;
+//		public  boolean desc;
 				public  int getResource_id (){
 		  return resource_id;
 		}
@@ -131,18 +131,18 @@ public void setResourceType(ResourceType resourceType) {
 	this.resourceType = resourceType;
 }
 
-public String getSort() {
-	return sort;
-}
-public void setSort(String sort) {
-	this.sort = sort;
-}
-public boolean isDesc() {
-	return desc;
-}
-public void setDesc(boolean desc) {
-	this.desc = desc;
-}
+//public String getSort() {
+//	return sort;
+//}
+//public void setSort(String sort) {
+//	this.sort = sort;
+//}
+//public boolean isDesc() {
+//	return desc;
+//}
+//public void setDesc(boolean desc) {
+//	this.desc = desc;
+//}
 }
 
 

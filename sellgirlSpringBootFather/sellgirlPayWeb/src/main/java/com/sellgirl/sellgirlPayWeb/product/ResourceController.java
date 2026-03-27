@@ -34,6 +34,7 @@ import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
+import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
@@ -43,6 +44,8 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayWeb.product.model.resource;
+import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
 //import com.sellgirl.sellgirlPayWeb.service.BalanceService;
@@ -68,6 +71,16 @@ extends  YJQueryController
 //	@GetMapping(value = { "/Product/index" })
     public ModelAndView Home()
     {
+		MvcPagingParameters p=new MvcPagingParameters();
+		p.setSort("create_date desc");
+		p.setPageIndex(0);
+		p.setPageSize(4);
+		for(ResourceType i:ResourceType.values()) {
+			resourceQuery q=new resourceQuery();
+			resourceService.setResourceType(i);
+			List<resource> book=resourceService.GetresourceList(q,p);	
+			ViewData.put(i.name(), book);
+		}
   	  return View(new LoginerBase(),"Product/resource-index");
     }
 //	@GetMapping(value = { "/Product/detail?id={id}" })

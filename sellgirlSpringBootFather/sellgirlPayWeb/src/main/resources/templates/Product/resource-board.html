@@ -223,6 +223,7 @@
               }
 			  $.post("/api/resource/list",
 			  {
+			  	resourceType:currentBoard.id,
 			    //pageindex:currentPage-1,
 			    pageindex:page-1,
 			    pagesize:pageSize,

@@ -101,16 +101,19 @@ public class UncheckImportResource extends TestCase {
 //			String resourcePath="D:\\cache\\html1\\1";
 //			String resourcePath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
 			//String resourcePath="D:\\cache\\html1\\resource_data\\bugData";
-			String resourcePath="D:\\cache\\html1\\20260324mix2\\1-2500预览图\\1-2500预览图";
+			
+//			String resourcePath="D:\\cache\\html1\\20260324mix2\\1-2500预览图\\1-2500预览图";
+//			String resourcePath="D:\\cache\\html1\\20260324mix2\\漫画\\漫画预览图";
+			String resourcePath="D:\\cache\\html1\\20260324mix2\\图片\\P预览图";
 			
 //			String outImgPath="D:\\cache\\html1\\resourceImg\\cover";
 //			String outImgPath2="D:\\cache\\html1\\resourceImg\\content";
-			ResourceType resourceType=ResourceType.movie;
+			ResourceType resourceType=ResourceType.image;
 			String outImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
 			//String outImgPath2="D:\\cache\\html1\\resourceImg\\content";
 
 //			String excelPath="D:\\cache\\html1\\20260324mix2\\视频信息(1).csv";
-			String excelPath="D:\\cache\\html1\\20260324mix2\\media.xlsx";
+			String excelPath="D:\\cache\\html1\\20260324mix2\\"+resourceType+".xlsx";
 			
 			Workbook wb1 = SGExcelHelper.create(new FileInputStream(new File(excelPath)));
 
@@ -171,10 +174,34 @@ public class UncheckImportResource extends TestCase {
 		        	String tmpCover="";
 		        	covers.clear();
 		        	boolean hasAnyCover=false;
-		        	while(true) {
+		        	
+		        	//如果图片名连续固定
+//		        	while(true) {
+//		        		j++;
+////			        	File coverI=new File(Paths.get(resourcePath,title,j+".jpg").toUri());
+//			        	File coverI=new File(Paths.get(resourcePath,title,title+"-"+j+".jpg").toUri());
+//		        		if(coverI.exists()) {
+//		        			if(!hasAnyCover) {hasAnyCover=true;}
+//		        			covers.add(coverI);
+//		        			tmpCover+=j+".jpg"+",";
+////		        			tmpCover+="resourceImg/cover/"+coverI.getName();
+////							SGPath.copyFile(
+////									coverI,
+////			        			new File(Paths.get(outImgPath, resourceId+".jpg").toUri())
+////			        			);
+//		        		}else {
+//		        			break;
+//		        		}
+//		        	}
+		        	
+
+		        	//如果图片名不连续
+		        	j=0;
+		        	File coverFolder=new File(Paths.get(resourcePath,title).toUri());
+		        	for(File coverI:coverFolder.listFiles()) {
 		        		j++;
 //			        	File coverI=new File(Paths.get(resourcePath,title,j+".jpg").toUri());
-			        	File coverI=new File(Paths.get(resourcePath,title,title+"-"+j+".jpg").toUri());
+//			        	File coverI=new File(Paths.get(resourcePath,title,title+"-"+j+".jpg").toUri());
 		        		if(coverI.exists()) {
 		        			if(!hasAnyCover) {hasAnyCover=true;}
 		        			covers.add(coverI);
@@ -209,9 +236,21 @@ public class UncheckImportResource extends TestCase {
 					model.setNetdisk(SGDataHelper.ObjectToString(row.get("链接")));
 					model.setExtractCode(SGDataHelper.ObjectToString(row.get("提取码")));
 					model.setUnlockPassword(SGDataHelper.ObjectToString(row.get("解压密码")));
-					model.setDuration(SGDataHelper.ObjectToInt0(row.get("时长(秒)")));
-					Double size=SGDataHelper.ObjectToDouble0(row.get("大小(字节)"));
-					model.setSize(SGDataHelper.ObjectToInt0(size/1024));
+					if(ResourceType.image==resourceType) {
+//						model.setResource_name(SGDataHelper.ObjectToString(row.get("标题")));
+						model.setDuration(SGDataHelper.ObjectToInt0(row.get("图片数量")));
+						Double size=SGDataHelper.ObjectToDouble0(row.get("总大小(字节)"));
+						model.setSize(SGDataHelper.ObjectToInt0(size/1024));
+					}else if(ResourceType.comic==resourceType) {
+						model.setResource_name(SGDataHelper.ObjectToString(row.get("标题")));
+						model.setDuration(SGDataHelper.ObjectToInt0(row.get("图片数量")));
+						Double size=SGDataHelper.ObjectToDouble0(row.get("总大小(字节)"));
+						model.setSize(SGDataHelper.ObjectToInt0(size/1024));
+					}else {
+						model.setDuration(SGDataHelper.ObjectToInt0(row.get("时长(秒)")));
+						Double size=SGDataHelper.ObjectToDouble0(row.get("大小(字节)"));
+						model.setSize(SGDataHelper.ObjectToInt0(size/1024));
+					}
 					model.setCreate_date(SGDate.Now());
 					if(null==insert) {
 						insert=dstExec.getInsertCollection();					
@@ -222,9 +261,11 @@ public class UncheckImportResource extends TestCase {
 
 					SGSqlCommandString sql=new SGSqlCommandString(
 							SGDataHelper.FormatString(
-									"insert into sg_resource ({0}) values ({1})",
+									"insert into {2} ({0}) values ({1})",
 									insert.ToKeysSql(),
-									insert.ToValuesSql())
+									insert.ToValuesSql(),
+									service.getTableName()
+									)
 							);
 					int r=dstExec.ExecuteSqlInt(sql, null, false);
 					if(1>r) {

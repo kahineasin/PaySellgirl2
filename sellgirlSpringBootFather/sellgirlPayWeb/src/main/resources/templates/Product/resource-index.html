@@ -11,7 +11,7 @@
     <script> requireResourceUser(); </script>
     <style>
         body { background: #f5f7fb; }
-        .navbar { background-color: #2c3e50; margin-bottom: 2rem; }
+        .navbar { background-color: #2c3e50; /*margin-bottom: 2rem;*/ }
         .navbar-brand { color: #fff !important; font-weight: 600; }
         .card { transition: transform 0.15s ease, box-shadow 0.2s; border: none; border-radius: 1.2rem; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.02); }
         .card:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(0,0,0,0.08); }
@@ -34,6 +34,17 @@
         .latest-item span { display: block; font-size: 0.8rem; font-weight: 500; margin-top: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .card-footer-action { background: none; border-top: 1px solid rgba(0,0,0,0.05); padding: 0.75rem 1rem; }
         .footer-mock { text-align: center; padding: 2rem; color: #7f8c8d; font-size: 0.9rem; margin-top: 3rem; border-top: 1px solid #dee2e6; }
+        .announcement-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1000;
+        }
+        .announcement-bar marquee { width: 100%; cursor: default; }
     </style>
 </head>
 <body>
@@ -51,23 +62,31 @@
         </div>
     </nav>
 
+    <div class="announcement-bar" id="announcementBar">
+        <marquee behavior="scroll" direction="left" scrollamount="3"></marquee>
+    </div>
+    <script src="announcement.js"></script>
+    <script>
+        document.querySelector('#announcementBar marquee').innerHTML = ANNOUNCEMENT_TEXT;
+    </script>
+
     <script>
         (function() {
             const user = getCurrentUser();
             const userInfoDiv = document.getElementById('userInfo');
             const brandLink = document.getElementById('brandLink');
             if (user) {
-                // 资源用户品牌链接固定为 resource-index.html
                 brandLink.href = 'resource-index.html';
                 brandLink.textContent = '🎬 资源走廊';
+                const points = getUserPoints();
                 userInfoDiv.innerHTML = `
+                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
                     <span class="text-light me-2">👤 ${user.username}</span>
-                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
                     <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;
             } else {
-                // 未登录用户不应访问此页，但为防万一
                 brandLink.href = 'resource-index.html';
                 brandLink.textContent = '🎬 资源走廊';
                 userInfoDiv.innerHTML = `
@@ -81,7 +100,6 @@
             const user = getCurrentUser();
             const switchBtnContainer = document.getElementById('switchBtnContainer');
             if (user && user.role === 'resource') {
-                // 资源用户在资源站内，切换到电子书库
                 switchBtnContainer.innerHTML = `<a href="index.html" class="btn btn-sm btn-outline-light me-2">📚 电子书库</a>`;
                 switchBtnContainer.style.display = 'inline-block';
             } else {
@@ -99,13 +117,27 @@
         ⚡ 每个卡片内显示该分区最新4条资源 · 点击图片或标题进入详情 · “更多”进入分区列表
     </div>
 
-    <script>
+    <script src="/product/resource-common.js"></script>
+    <script type="text/javascript" th:inline="javascript">
         (function() {
             const container = document.getElementById('board-cards-container');
             if (!container) return;
+            
 
             boards.forEach(board => {
-                const latestThreads = board.threads.slice(-4).reverse();
+                //const latestThreads = board.threads.slice(-4).reverse();
+                let latestThreads=[];
+                let latestThreads2=[];
+                if('movie'==board.id){
+                	latestThreads2=[[${movie}]];
+                }else if('image'==board.id){
+                	latestThreads2=[[${image}]];
+                }else if('comic'==board.id){
+                	latestThreads2=[[${comic}]];
+                }
+                latestThreads2.forEach(j=>{
+                	latestThreads.push(mapResourceToDto(j,board.id));
+                });
                 const col = document.createElement('div');
                 col.className = 'col-md-6 col-lg-3';
 
@@ -113,7 +145,7 @@
                 latestThreads.forEach(thread => {
                     const imgPath = thread.previewImg;
                     latestHtml += `
-                        <a href="resource-detail.html?id=${thread.id}" class="latest-item">
+                        <a href="resource-detail.html?id=${thread.id}&resourceType=${board.id}" class="latest-item">
                             <img src="${imgPath}" alt="${thread.title}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
                             <span>${thread.title}</span>
                         </a>
