@@ -156,6 +156,8 @@
 					<include>static/**/*.jpg</include>
 					<include>static/**/*.css</include>
 					<include>static/**/*.js</include>
+					<include>static/**/*.woff</include>
+					<include>static/**/*.woff2</include>
 <!--					<include>static/assets/css/*.css</include>
 					<include>static/assets/css/*.min.css</include>
 					<include>static/assets/js/bootstrap.bundle.min.js</include>-->

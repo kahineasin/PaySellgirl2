@@ -44,6 +44,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
@@ -96,9 +97,18 @@ extends  YJQueryController
 		ViewData.put("resourceType", resourceType);
   	  return View(resourceService.GetOneResource(id),"Product/resource-detail");
     }
+	
 	@GetMapping(value = { "/resource-search.html" })
     public ModelAndView Search(String q)
     {
+		MvcPagingParameters p=new MvcPagingParameters();
+		p.setPageSize(5);
+		p.setPageIndex(0);
+		p.setSort("create_date desc");
+		for(ResourceType i:ResourceType.values()) {
+			resourceService.setResourceType(i);
+			ViewData.put(i.name(), resourceService.GetresourceListByName(q,p)) ;	
+		}
   	  return View(new LoginerBase(),"Product/resource-search");
     }
 	@GetMapping(value = { "/resource-board.html" })

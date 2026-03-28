@@ -30,17 +30,6 @@
         .pagination-container .btn-pagination:disabled { opacity: 0.4; pointer-events: none; }
         .page-jump { display: flex; align-items: center; gap: 0.5rem; }
         .page-jump input { width: 60px; text-align: center; border-radius: 30px; border: 1px solid #ced4da; padding: 0.2rem; }
-        .announcement-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 0;
-            font-size: 14px;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            z-index: 1000;
-        }
-        .announcement-bar marquee { width: 100%; cursor: default; }
     </style>
 </head>
 <body>
@@ -58,14 +47,6 @@
         </div>
     </nav>
 
-    <div class="announcement-bar" id="announcementBar">
-        <marquee behavior="scroll" direction="left" scrollamount="3"></marquee>
-    </div>
-    <script src="announcement.js"></script>
-    <script>
-        document.querySelector('#announcementBar marquee').innerHTML = ANNOUNCEMENT_TEXT;
-    </script>
-
     <script>
         (function() {
             const user = getCurrentUser();
@@ -74,11 +55,9 @@
             if (user) {
                 brandLink.href = 'resource-index.html';
                 brandLink.textContent = '🎬 资源走廊';
-                const points = getUserPoints();
                 userInfoDiv.innerHTML = `
-                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
                     <span class="text-light me-2">👤 ${user.username}</span>
-                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
+                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
                     <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;

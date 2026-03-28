@@ -70,71 +70,28 @@
     </script>
 
     <div class="container my-5 text-center">
-        <h2 class="mb-4">此页面显示支付结果</h2>
-        <!--<div class="qrcode">
+        <h2 class="mb-4">请使用微信/支付宝扫码支付</h2>
+        <div class="qrcode">
             <img src="assets/images/qrcode-placeholder.jpg" class="img-fluid" alt="支付二维码（模拟）" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
-        </div>-->
-        <p class="mt-3">应付金额：<strong id="amount" th:text="${amount}" ></strong> 元</p>
-        <!--<p class="text-muted">（此为模拟页面，点击下方按钮模拟支付成功）</p>-->
-        <button id="paySuccessBtn" class="btn btn-success btn-lg mt-3">处理支付中...</button>
+        </div>
+        <p class="mt-3">应付金额：<strong id="amount"></strong> 元</p>
+        <p class="text-muted">（此为模拟页面，点击下方按钮模拟支付成功）</p>
+        <button id="paySuccessBtn" class="btn btn-success btn-lg mt-3">模拟支付成功</button>
         <br>
-        <a th:href="${returnUrl}" class="btn btn-outline-secondary mt-3">重新选择套餐</a>
+        <a href="vip.html" class="btn btn-outline-secondary mt-3">重新选择套餐</a>
     </div>
 
-    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
-    <script type="text/javascript" th:inline="javascript">
-        let pollInterval = null;
+    <script>
         (function() {
-        	//benjamin
-        	const paidSuccess=[[${paidSuccess}]];
-        	const outTradeNo=[[${outTradeNo}]];
-        	const successMsg=[[${successMsg}]];
-        	
-        function startPolling(outTradeNo) {
-            pollInterval = setInterval(function() {
-                $.get('/api/pay3/status/' + outTradeNo, function(data) {
-                    if (data.status === 1) {
-                        $('#paySuccessBtn').text('支付成功！').addClass('paid');
-                        clearInterval(pollInterval);
-                		alert(successMsg);
-                		window.location.href = '/profile.html';
-                    } else if (data.status === 0) {
-                        //$('#paySuccessBtn').text('等待支付...');
-                        $('#paySuccessBtn').text('处理支付中...');//既然zpay回调此页面,所以用户肯定已经扫码了
-                    } else if (data.status === 2) {
-                        $('#paySuccessBtn').text('订单已取消');
-                    }  else {
-                        $('#paySuccessBtn').text('订单不存在');
-                        clearInterval(pollInterval);
-                    }
-                });
-            }, 2000); // 每2秒查询一次
-        }
-        
-        	if(paidSuccess){
-                alert(successMsg);
-                window.location.href = '/profile.html';
-                return;
-        	}else if(null!=outTradeNo){        	
-                        // 开始轮询支付状态
-                        startPolling(outTradeNo);
-        	}
-        
-            //const urlParams = new URLSearchParams(location.search);
-            //const amount = urlParams.get('amount') || '0';
-            //document.getElementById('amount').textContent = amount;
+            const urlParams = new URLSearchParams(location.search);
+            const amount = urlParams.get('amount') || '0';
+            document.getElementById('amount').textContent = amount;
 
-            //document.getElementById('paySuccessBtn').addEventListener('click', function() {
-            //    alert('支付成功！您已成为VIP会员。');
-            //    window.location.href = 'profile.html';
-            //});
+            document.getElementById('paySuccessBtn').addEventListener('click', function() {
+                alert('支付成功！您已成为VIP会员。');
+                window.location.href = 'profile.html';
+            });
         })();
-        // 页面卸载时停止轮询
-        window.onbeforeunload = function() {
-            if (pollInterval) {
-                clearInterval(pollInterval);
-            }
-        };
     </script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

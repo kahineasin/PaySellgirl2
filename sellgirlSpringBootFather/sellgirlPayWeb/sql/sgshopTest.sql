@@ -1,5 +1,8 @@
 use sgshop;
-
+-- ------- 更新表-------
+alter table sg_user add column point INT not null default 0; 
+alter table sg_user drop column point; 
+  select *  from sgshop.sg_user
 
 CREATE TABLE IF NOT EXISTS `sg_resource_img`(
    `resource_img_id` INT UNSIGNED AUTO_INCREMENT,
@@ -76,6 +79,9 @@ select * from sgshop.sg_book where `book_id`>999 limit 10;
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
   
    update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1
+   update sg_user set point=point+1 where user_id=1
+   update sg_user set point=0 where user_id=1
+   select user_id,point from sg_user where user_id=1;
    select * from sg_resource limit 20;
    select * from sg_comic limit 20;
    select * from sg_img limit 20;

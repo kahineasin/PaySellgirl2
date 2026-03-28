@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>扫码支付 · 电子书库</title>
+    <title>积分充值 · 电子书库</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
     <style>
         body { background: #f8f9fa; }
         .navbar { background-color: #2c3e50; }
         .qrcode { max-width: 250px; margin: 0 auto; }
+        .alipay-badge {
+            background-color: #1677ff;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -39,9 +47,11 @@
                     brandLink.textContent = '📚 电子书库';
                 }
 
+                const points = getUserPoints();
                 userInfoDiv.innerHTML = `
+                    <span class="badge bg-info text-dark me-2">⭐ ${points} 积分</span>
                     <span class="text-light me-2">👤 ${user.username}</span>
-                    <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                    <a href="pay.html" class="btn btn-sm btn-warning me-2">积分充值</a>
                     <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
                     <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
                 `;
@@ -70,28 +80,92 @@
     </script>
 
     <div class="container my-5 text-center">
-        <h2 class="mb-4">请使用微信/支付宝扫码支付</h2>
-        <div class="qrcode">
-            <img src="assets/images/qrcode-placeholder.jpg" class="img-fluid" alt="支付二维码（模拟）" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+        <div class="alipay-badge">
+            <i class="bi bi-alipay"></i> 仅支持支付宝支付
         </div>
-        <p class="mt-3">应付金额：<strong id="amount"></strong> 元</p>
-        <p class="text-muted">（此为模拟页面，点击下方按钮模拟支付成功）</p>
-        <button id="paySuccessBtn" class="btn btn-success btn-lg mt-3">模拟支付成功</button>
-        <br>
-        <a href="vip.html" class="btn btn-outline-secondary mt-3">重新选择套餐</a>
+        <h2 class="mb-4">选择充值套餐</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">5元套餐</h5>
+                        <p class="card-text">获得 <strong>5 积分</strong></p>
+                        <button class="btn btn-primary" data-amount="5" data-points="5">立即充值</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">10元套餐</h5>
+                        <p class="card-text">获得 <strong>15 积分</strong></p>
+                        <button class="btn btn-primary" data-amount="10" data-points="15">立即充值</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">30元套餐</h5>
+                        <p class="card-text">获得 <strong>50 积分</strong></p>
+                        <button class="btn btn-primary" data-amount="30" data-points="50">立即充值</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="paymentModal" style="display: none; margin-top: 2rem;">
+            <div class="qrcode">
+                <img src="assets/images/qrcode-placeholder.jpg" class="img-fluid" alt="支付宝收款码（模拟）" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+            </div>
+            <p class="mt-3">应付金额：<strong id="payAmount"></strong> 元</p>
+            <p class="text-muted">（此为模拟页面，点击下方按钮模拟支付成功）</p>
+            <button id="confirmPayBtn" class="btn btn-success btn-lg mt-3">模拟支付成功</button>
+            <button id="cancelPayBtn" class="btn btn-outline-secondary btn-lg mt-3 ms-2">取消</button>
+        </div>
     </div>
 
-    <script>
-        (function() {
-            const urlParams = new URLSearchParams(location.search);
-            const amount = urlParams.get('amount') || '0';
-            document.getElementById('amount').textContent = amount;
+    <script  type="text/javascript" th:inline="javascript">
+        	//hyaweh
+        	const generatePayFailed=[[${generatePayFailed}]];
+        	const generatePayMsg=[[${generatePayMsg}]];
+        	if(generatePayFailed){
+        		alert(generatePayMsg);
+        	}
+        	
+        let selectedPoints = 0;
+        let selectedAmount = 0;
+        const paymentModal = document.getElementById('paymentModal');
+        const payAmountSpan = document.getElementById('payAmount');
+        const confirmPayBtn = document.getElementById('confirmPayBtn');
+        const cancelPayBtn = document.getElementById('cancelPayBtn');
 
-            document.getElementById('paySuccessBtn').addEventListener('click', function() {
-                alert('支付成功！您已成为VIP会员。');
-                window.location.href = 'profile.html';
+        document.querySelectorAll('[data-points]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                selectedPoints = parseInt(this.dataset.points);
+                selectedAmount = parseInt(this.dataset.amount);
+                
+                //正式时要改金额 -- hyaweh TODO
+				window.location.href = '/pay3payPage?plan=point'+selectedPoints+'&amount=0.01';
+				return;
+				
+                payAmountSpan.textContent = selectedAmount;
+                paymentModal.style.display = 'block';
             });
-        })();
+        });
+
+        confirmPayBtn.addEventListener('click', function() {
+            if (addPoints(selectedPoints)) {
+                alert(`充值成功！获得 ${selectedPoints} 积分。`);
+                window.location.href = 'profile.html';
+            } else {
+                alert('充值失败，请稍后再试。');
+            }
+        });
+
+        cancelPayBtn.addEventListener('click', function() {
+            paymentModal.style.display = 'none';
+        });
     </script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 </body>

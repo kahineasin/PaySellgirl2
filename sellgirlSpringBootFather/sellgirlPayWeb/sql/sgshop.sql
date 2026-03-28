@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `sg_user`(
     `vip1_expire` DATETIME COMMENT '会员有效期截止时间',
     `vip2` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'ebook会员',
     `vip2_expire` DATETIME COMMENT '会员有效期截止时间',
+   `point` INT not null default 0 ,
    `create_date` datetime,
    PRIMARY KEY ( `user_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

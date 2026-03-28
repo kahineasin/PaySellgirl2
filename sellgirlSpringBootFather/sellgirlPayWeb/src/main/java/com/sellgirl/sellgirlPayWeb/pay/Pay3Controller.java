@@ -67,6 +67,12 @@ public class Pay3Controller extends YJQueryController {
     private boolean isTest=true;
 
     
+    /**
+     * //amount应该固定,不应该前端传过来-- TODO 
+     * @param plan
+     * @param amount
+     * @return
+     */
     @GetMapping("/pay3payPage")
 //  @GetMapping("/pay3")
   public ModelAndView payPage(PayPlan plan,String amount) {
@@ -80,51 +86,71 @@ public class Pay3Controller extends YJQueryController {
   	order.setCreate_time(SGDate.Now());
   	order.setUser_id(Long.valueOf(this.GetUserId()));
       long orderId=orderService.insertvipOrder(order);
-      if(0>orderId) {
-    	  ViewData.put("generatePayFailed",true);
-    	  ViewData.put("generatePayMsg","新增订单失败,请重新支付");
-    	  return this.View("Product/vip");
+      boolean success=0<=orderId;
+      String err=null;
+      if(!success) {
+    	  err="新增订单失败,请重新支付";
+//    	  ViewData.put("generatePayFailed",true);
+//    	  ViewData.put("generatePayMsg","新增订单失败,请重新支付");
+//    	  return this.View("Product/vip");
+      }else {
+
+          if(isTest) {
+//          	int pid=1,
+    		  String name=plan.name();
+    		  String money=amount;
+    		  String out_trade_no=String.valueOf(orderId);
+//    		  String trade_no,
+    		  String param="aa";
+//    		  String trade_status,
+//    		  String type="",
+//    		  String sign,
+//    		  String sign_type
+          	String notify=this.zPayNativeService.getZPayNotifyUrlDemo(
+          			//pid, 
+          			name, money, out_trade_no, 
+          			//trade_no,
+          			param//, 
+          			//trade_status, 
+//          			type
+          			);
+          	System.out.println("------------notify demo-----------");
+          	System.out.println(notify);
+          }
+          // 1. 构建请求参数，调用第三方接口
+          String thirdPartyUrl =zPayNativeService.createNativeOrder(orderId,plan,amount);
+
+          if(isTest) {
+        	System.out.println("------------thirdPartyUrl-----------");
+        	System.out.println(thirdPartyUrl);
+          }
+          	SGRequestResult r=SGHttpHelper.HttpGet(thirdPartyUrl, "");
+          	if(r.success) {
+      		
+      			return this.RedirectToUrl(thirdPartyUrl);
+          	}else {
+          		success=false;
+          		err="新增订单2失败,请重新支付";
+          	}
+  
+      }
+      switch(plan) {
+      case point5:
+      case point15:
+      case point50:
+    	  ViewData.put("generatePayFailed",!success);
+    	  ViewData.put("generatePayMsg",err);
+    	  return this.View("Product/pay");
+      case resource_monthly:
+      case resource_yearly:
+      case ebook_monthly:
+      case ebook_yearly:
+    	  default:
+        	  ViewData.put("generatePayFailed",!success);
+        	  ViewData.put("generatePayMsg",err);
+        	  return this.View("Product/vip");
       }
       
-      if(isTest) {
-//      	int pid=1,
-		  String name=plan.name();
-		  String money=amount;
-		  String out_trade_no=String.valueOf(orderId);
-//		  String trade_no,
-		  String param="aa";
-//		  String trade_status,
-//		  String type="",
-//		  String sign,
-//		  String sign_type
-      	String notify=this.zPayNativeService.getZPayNotifyUrlDemo(
-      			//pid, 
-      			name, money, out_trade_no, 
-      			//trade_no,
-      			param//, 
-      			//trade_status, 
-//      			type
-      			);
-      	System.out.println("------------notify demo-----------");
-      	System.out.println(notify);
-      }
-      // 1. 构建请求参数，调用第三方接口
-      String thirdPartyUrl =zPayNativeService.createNativeOrder(orderId,plan,amount);
-
-      if(isTest) {
-    	System.out.println("------------thirdPartyUrl-----------");
-    	System.out.println(thirdPartyUrl);
-      }
-      	SGRequestResult r=SGHttpHelper.HttpGet(thirdPartyUrl, "");
-      	if(r.success) {
-  		
-  			return this.RedirectToUrl(thirdPartyUrl);
-      	}else {
-        	  ViewData.put("generatePayFailed",true);
-        	  ViewData.put("generatePayMsg","新增订单2失败,请重新支付");
-        	  return this.View("Product/vip");
-      	}
-
   }
     private long getNewId() {
     	String s=SGDataHelper.ReadLocalTxt("newOrderId.txt", LocalDataType.System);
@@ -295,6 +321,25 @@ public class Pay3Controller extends YJQueryController {
   	result.addObject("amount",money);
 //  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
   	result.setViewName("Product/paid");
+
+	long orderId=Long.valueOf(out_trade_no);
+	PayPlan plan=orderService.GetvipOrderVipTypeById(orderId);
+    switch(plan) {
+    case point5:
+    case point15:
+    case point50:
+    	result.addObject("successMsg","成功充值"+plan.name().substring(5)+"积分");
+      	result.addObject("returnUrl","/pay.html");
+  	   break;
+    case resource_monthly:
+    case resource_yearly:
+    case ebook_monthly:
+    case ebook_yearly:
+  	  default:
+      	result.addObject("successMsg","支付成功！您已成为VIP会员。");
+      	result.addObject("returnUrl","/vip.html");
+      	break;
+    }
   	return result;
 		}catch(Throwable e) {
 			SGDataHelper.getLog().writeException(e,TAG);

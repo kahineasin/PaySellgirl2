@@ -97,40 +97,61 @@ public class Pay3ApiController extends YJQueryController {
     		this.orderService.updateOrderPaid(orderId,trade_no);
     		PayPlan vip=orderService.GetvipOrderVipTypeById(orderId);
     		User user=this.userService.getUser(this.GetUserName());
-			SGDate now=SGDate.Now();
-    		if(PayPlan.resource_monthly==vip) {
-    			user.setVip1(true);
-    			if(null==user.getVip1_expire()||0<now.compareTo(user.getVip1_expire())) {
-    				user.setVip1_expire(now.AddMonths(1));
-    			}else {
-    				user.setVip1_expire(user.getVip1_expire().AddMonths(1));
-    			}
-    		}else if(PayPlan.resource_yearly==vip) {
-    			user.setVip1(true);
-    			if(null==user.getVip1_expire()||0<now.compareTo(user.getVip1_expire())) {
-    				user.setVip1_expire(now.AddYears(1).AddMonths(3));
-    			}else {
-    				user.setVip1_expire(user.getVip1_expire().AddYears(1).AddMonths(3));
-    			}
-    		}else if(PayPlan.ebook_monthly==vip) {
-    			user.setVip2(true);
-    			if(null==user.getVip2_expire()||0<now.compareTo(user.getVip2_expire())) {
-    				user.setVip2_expire(now.AddMonths(1));
-    			}else {
-    				user.setVip2_expire(user.getVip2_expire().AddMonths(1));
-    			}
-    		}else if(PayPlan.ebook_yearly==vip) {
-    			user.setVip2(true);
-    			if(null==user.getVip2_expire()||0<now.compareTo(user.getVip2_expire())) {
-    				user.setVip2_expire(now.AddYears(1).AddMonths(3));
-    			}else {
-    				user.setVip2_expire(user.getVip2_expire().AddYears(1).AddMonths(3));
-    			}
-    		}
-    		SystemUser sysUser=this.GetSystemUser();
-    		sysUser.isVip=true;
-    		this.SetSystemUser(sysUser);
-    		this.userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+
+		    if(PayPlan.point5==vip||PayPlan.point15==vip||PayPlan.point50==vip) {
+		    	int point=5;
+		        switch(vip) {
+		        case point5:
+		      		point=5;
+		      		break;
+		        case point15:
+		      		point=15;
+		      		break;
+		        case point50:
+		      		point=50;
+		      		break;
+		      	  default:
+		      		point=5;
+		      		break;
+		        }
+		    	userService.addUserPoint(user.getUserId(),point);
+		    }else {
+				SGDate now=SGDate.Now();
+	    		if(PayPlan.resource_monthly==vip) {
+	    			user.setVip1(true);
+	    			if(null==user.getVip1_expire()||0<now.compareTo(user.getVip1_expire())) {
+	    				user.setVip1_expire(now.AddMonths(1));
+	    			}else {
+	    				user.setVip1_expire(user.getVip1_expire().AddMonths(1));
+	    			}
+	    		}else if(PayPlan.resource_yearly==vip) {
+	    			user.setVip1(true);
+	    			if(null==user.getVip1_expire()||0<now.compareTo(user.getVip1_expire())) {
+	    				user.setVip1_expire(now.AddYears(1).AddMonths(3));
+	    			}else {
+	    				user.setVip1_expire(user.getVip1_expire().AddYears(1).AddMonths(3));
+	    			}
+	    		}else if(PayPlan.ebook_monthly==vip) {
+	    			user.setVip2(true);
+	    			if(null==user.getVip2_expire()||0<now.compareTo(user.getVip2_expire())) {
+	    				user.setVip2_expire(now.AddMonths(1));
+	    			}else {
+	    				user.setVip2_expire(user.getVip2_expire().AddMonths(1));
+	    			}
+	    		}else if(PayPlan.ebook_yearly==vip) {
+	    			user.setVip2(true);
+	    			if(null==user.getVip2_expire()||0<now.compareTo(user.getVip2_expire())) {
+	    				user.setVip2_expire(now.AddYears(1).AddMonths(3));
+	    			}else {
+	    				user.setVip2_expire(user.getVip2_expire().AddYears(1).AddMonths(3));
+	    			}
+	    		}
+	    		SystemUser sysUser=this.GetSystemUser();
+	    		sysUser.isVip=true;
+	    		this.SetSystemUser(sysUser);
+	    		this.userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+		    }  
+		      
     	      return "success";
     	}
 //      // 实际开发中需要验证签名、解密资源、更新订单状态

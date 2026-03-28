@@ -69,22 +69,20 @@ public class ResourceService
 		try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
 			SGSqlWhereCollection query =sql.getWhereCollection();   
 	        
-            query.Add("t.resource_name",q.getResource_name() );
-            query.Add("t.resource_author",q.getResource_author());
 //            query.Add("letter",q.getLetter() );
         
 //if("X".equals(q.getLetter())) {
 //	String aa="aa";
 //}
-            
-            if(null!=p.getPageSize()) {
 
+            query.Add("resource_name",q.getResource_name() );
+            query.Add("resource_author",q.getResource_author());         
+            if(null!=p.getPageSize()) {
 SqlString = SGDataHelper.FormatString( 
 "select * from {1} t " +
 "INNER JOIN("+
-"select resource_id from {1} order by {2} limit {3},{4}"+
-") tmp ON t.resource_id=tmp.resource_id"+
-"{0} " 
+"select resource_id from {1} {0} order by {2} limit {3},{4}"+
+") tmp ON t.resource_id=tmp.resource_id"
 , 
 query.ToSql(),
 tableName,
@@ -117,7 +115,7 @@ tableName
 		}
     }
 
-    public SGDataTable GetresourceByName(String name)
+    public SGDataTable GetresourceByName(String name,MvcPagingParameters p)
     {
 
 		ISGJdbc jdbc=JdbcHelper.GetShop();
@@ -126,11 +124,25 @@ tableName
 //	String aa="aa";
 //}
 
+            if(null!=p.getPageSize()) {
+
+SqlString = SGDataHelper.FormatString( 
+"select * from {1} t " +
+"INNER JOIN("+
+"select resource_id from {1} where resource_name like '%{0}%' or resource_author like '%{0}%' order by {2} limit {3},{4}"+
+") tmp ON t.resource_id=tmp.resource_id"
+, 
+name,
+tableName,
+p.getSort(),p.getPageStart(),p.getPageSize()
+);
+            }else {
 SqlString = SGDataHelper.FormatString( 
 "select * from {1} "+
 "where resource_name like '%{0}%' or resource_author like '%{0}%' limit 20"
 , name,tableName
 );
+            }
 		    return sql.GetDataTable(SqlString,null);
 		} catch (Throwable e) {
 		    SGDataHelper.getLog().writeException(e, TAG);
@@ -185,10 +197,10 @@ SqlString = SGDataHelper.FormatString(
               }
               return list;
           }
-          public List<resource> GetresourceListByName(String name)
+          public List<resource> GetresourceListByName(String name,MvcPagingParameters p)
           {
 //              List<resource> list = new ArrayList<resource>();
-              SGDataTable result =GetresourceByName(name);
+              SGDataTable result =GetresourceByName(name,p);
 //              if (result != null && !result.IsEmpty())
 //              {
 //                  list = result.ToList(resource.class,(a,b,c)->{
