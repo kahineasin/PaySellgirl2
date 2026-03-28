@@ -23,10 +23,8 @@ com.sellgirl.sellgirlPayWeb.user
 com.sellgirl.sellgirlPayWeb.shop
 
 ## 开发待办
-1. 防爬虫
-3. 整合大数据
-4. 支付（测试中，缺少商户id）
-   二维码页面和订单服务单独拆出一个spring boot api
+1. book.html等页面需要改为template/product2里面的需要积分才能看的版本
+2. 记录用户购买的产品到表user_buy{id,user_id,source,source_id} 多种产品用source区分
 
 ## 测试地址
 

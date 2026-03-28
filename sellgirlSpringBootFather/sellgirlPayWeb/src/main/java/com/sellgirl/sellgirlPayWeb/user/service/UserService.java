@@ -256,11 +256,14 @@ public class UserService
 	/**
 	 * 每日签到
 	 * @param userName
+	 * @param signDay 小于0时原子加1, 否则直接update
 	 * @return
 	 */
 	public boolean signDay(String userName
 //			,SGRef<Integer> days
-			,SGRef<User> user
+			,SGRef<User> user,
+//			boolean rebegin,
+			int signDay
 			) {
 //		User user=getUser(userName);
 //		if(null==user) {return false;}
@@ -272,12 +275,13 @@ public class UserService
 //			PFSqlUpdateCollection update =myResource.getUpdateCollection(myResource.GetMetaData(userName, null));
 //			insert.setIgnoreNullValue(false);
 			query.Add("user_name",userName);
-            String SqlString = SGDataHelper.FormatString( 
-            		"UPDATE sg_user SET sign_day = sign_day + 1, last_sign='{1}' " +
+            String SqlString =SGDataHelper.FormatString( 
+            		"UPDATE sg_user SET sign_day = {2}, last_sign='{1}' " +
             		"{0} " 
             		, 
             		        query.ToSql(),
-            		        SGDate.Now().toString()
+            		        SGDate.Now().toString(),
+            		        -1<signDay?signDay:"sign_day + 1"
             		    );
             int r= myResource.ExecuteSqlInt(new SGSqlCommandString(SqlString), null, false);
             if(0<r) {            	

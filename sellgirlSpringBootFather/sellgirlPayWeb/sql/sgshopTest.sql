@@ -55,6 +55,7 @@ select * from sgshop.sg_book where `book_id`>999 limit 10;
 -- UPDATE accounts SET balance = balance - 100 WHERE id = 1;
 
   select *  from sgshop.sg_user
+  update sgshop.sg_user set sign_day=5,last_sign='2026-01-01 01:01:01' where user_id=2
 
   select max(book_id) from sgshop.sg_book
   select * from sg_book where book_name='人间烟火' -- 'äººé—´çƒŸç�«' -- '二马'
@@ -80,8 +81,9 @@ select * from sgshop.sg_book where `book_id`>999 limit 10;
   
    update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1
    update sg_user set point=point+1 where user_id=1
-   update sg_user set point=0 where user_id=1
-   select user_id,point from sg_user where user_id=1;
+   update sg_user set invitation_code='' where user_id=1
+   select user_id,user_name,point from sg_user where user_id=1;
+   select * from sg_resource where resource_name like '%2420%'
    select * from sg_resource limit 20;
    select * from sg_comic limit 20;
    select * from sg_img limit 20;
@@ -89,3 +91,5 @@ select * from sgshop.sg_book where `book_id`>999 limit 10;
    
    
    insert into sg_resource (`resource_id`,`resource_name`,`resource_author`,`cover`,`netdisk`,`extract_code`,`unlock_password`,`duration`,`size`,`create_date`) values ( '0' , 'V-No.00013' , '飞鸟与鱼' , '1.jpg,2.jpg,3.jpg' , 'https://pan.baidu.com/s/1KUZFi84x2HiF7EbTsFhykg?pwd=5zqk' , '5zqk' , 'bdhome.xyz' , '0' , '0' , '2026-03-28 00:54:32' )
+   
+   select * from sg_resource t INNER JOIN(select resource_id from where resource_name like '%a%' or resource_author like '%a%' order by create_date desc limit 0,5) tmp ON t.resource_id=tmp.resource_id

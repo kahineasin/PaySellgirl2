@@ -828,6 +828,7 @@ extends YJQueryController
   	    	sysUser.isInvited=!SGDataHelper.StringIsNullOrWhiteSpace(user.getInvitationCode());
   	    	sysUser.signDay=user.getSignDay();
   	    	sysUser.lastSign=user.getLastSign();
+  	    	sysUser.point=user.getPoint();
   	    	SGDate now= SGDate.Now();
   	    	if(
   	    			(user.isVip1()&&null!=user.getVip1_expire()&&0>now.compareTo(user.getVip1_expire()))
@@ -843,13 +844,17 @@ extends YJQueryController
 	        	String urlDecode=SGDataHelper.getURLDecoderString(return_to);
 	        	return this.RedirectToUrl(urlDecode);
 	        }
-	        else if(sysUser.isInvited) {
-  	        	ViewData.put("isVip",sysUser.isVip);
+
+        	ViewData.put("isVip",sysUser.isVip);
+        	ViewData.put("point",sysUser.point);
+        	ViewData.put("lastSignDate",sysUser.lastSign.toString(SGDataHelper.DayFormat));
+        	
+	        if(sysUser.isInvited) {
+//  	        	ViewData.put("isVip",sysUser.isVip);
   	        	ViewData.put("role","resource");
   	        	ViewData.put("url","/resource-index.html");
 	  	    	  return View("ProductJump/index");
   	        }else {
-  	        	ViewData.put("isVip",sysUser.isVip);
   	        	ViewData.put("role","normal");	  	        	
   	        	ViewData.put("url","/");
   	    	  return View("ProductJump/index");
@@ -870,7 +875,8 @@ extends YJQueryController
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());
   	result.addObject("isVip", user.isVip);
-  	result.setViewName("Product/profile");
+//  	result.setViewName("Product/profile");
+  	result.setViewName("Product2/profile");
   	return result;
     }
 	//------------------vip-----------------------

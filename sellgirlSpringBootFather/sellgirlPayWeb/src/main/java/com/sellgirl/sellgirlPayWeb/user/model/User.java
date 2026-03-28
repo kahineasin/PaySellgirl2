@@ -14,6 +14,7 @@ public class User {
 	private SGDate vip1_expire;
 	private  boolean vip2;
 	private SGDate vip2_expire;
+	private int point;
 	public long getUserId() {
 		return userId;
 	}
@@ -81,5 +82,12 @@ public class User {
 	}
 	public void setVip2_expire(SGDate vip2_expire) {
 		this.vip2_expire = vip2_expire;
+	}
+
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
 	}
 }

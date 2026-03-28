@@ -113,6 +113,10 @@ public class UserApiController extends  YJQueryController
 //			return AbstractApiResult.error("签到失败");
 //		}
 //    }
+	
+//	public enum SignType{
+//		CONSECUTIVE,ONE,ZERO
+//	}
 //	//此版本利用前端登录信息签到. 因为同一页面的收藏功能也是前端缓存保存的
 	@PostMapping(value = { "/PostSign" })
     @SGAllowAnonymous
@@ -121,9 +125,38 @@ public class UserApiController extends  YJQueryController
 		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
 			return AbstractApiResult.error("签到失败,用户名为空");
 		}
+		User user2=userService.getUser(username);
+		if(null==user2) {
+			return AbstractApiResult.error("签到失败,用户不存在");
+		}
+		
+//		boolean rebegin=true;//非连续签到,需要重算
+//		SignType signType=SignType.ONE;
+		SGDate today=SGDate.Now().GetDayStart();
+		boolean pointsEarned=false;
+		int signDay=1;
+		if(null!=user2.getLastSign()) {
+			if(0<user2.getLastSign().compareTo(today)) {
+				return AbstractApiResult.error("今天已签到");
+			}
+			SGDate yesterday=today.AddDays(-1);
+			if(0<user2.getLastSign().compareTo(yesterday)) {//连续签到
+				signDay=-1;
+//				signType=SignType.CONSECUTIVE;
+				if(8<user2.getSignDay()) {
+					signDay=user2.getSignDay()-9;
+//					signType=SignType.ZERO;
+					pointsEarned=true;
+				}
+			}
+		}
 //		SGRef<Integer> days=new SGRef<Integer>(); 
 		SGRef<User> u=new SGRef<User>(); 
-		if( userService.signDay(username,u)) {
+		if(pointsEarned) {//加积分
+			userService.addUserPoint(user2.getUserId(), 1);
+		}
+		if( userService.signDay(username,u,signDay)) {
+			//更新cache
 			SystemUser user=GetSystemUser();
 			if(null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName)
 				&&username.equals(user.UserName)
@@ -138,7 +171,11 @@ public class UserApiController extends  YJQueryController
 			
 //			HashMap<String,Object> r=new HashMap<String,Object>();
 //			r.put("success", true);
-			return AbstractApiResult.success(u.GetValue().getSignDay());
+			HashMap<String,Object> r=new HashMap<String,Object>();
+			r.put("signDay", u.GetValue().getSignDay());
+			r.put("point", u.GetValue().getPoint());
+			r.put("pointsEarned", pointsEarned);
+			return AbstractApiResult.success(r);
 		}else {
 			return AbstractApiResult.error("签到失败");
 		}
@@ -176,7 +213,7 @@ public class UserApiController extends  YJQueryController
 		if(!this.userService.updateUserInvite(this.GetUserLongId(),inviteCode)){
 			return AbstractApiResult.error("更新邀请码失败");
 		}else {
-			return AbstractApiResult.success();			
+			return AbstractApiResult.success("升级成功！页面即将刷新...",null);			
 		}
 
     }

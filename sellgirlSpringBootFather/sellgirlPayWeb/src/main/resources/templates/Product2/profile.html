@@ -54,6 +54,59 @@
     </script>
 
     <script src="common.js"></script>
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
+    <script src="/product/common2.js"></script>
+
+    <div class="container my-4">
+        <div class="points-section" id="pointsDisplay"></div>
+        <div class="sign-section">
+            <h3>每日签到</h3>
+            <p>连续签到 <span id="consecutiveDays"  th:text="${signDay}">0</span> 天（连续10天可获得1积分）</p>
+            <button id="signBtn" class="btn btn-primary">签到</button>
+        </div>
+
+        <div id="upgradeSection" class="upgrade-section" style="display: none;">
+            <h5>🔓 升级为资源用户</h5>
+            <p>输入邀请码，即可解锁资源站访问权限，享受更多精彩内容！</p>
+            <form id="upgradeForm">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="upgradeInviteCode" placeholder="请输入邀请码" required>
+                    <button class="btn btn-outline-primary" type="submit">立即升级</button>
+                </div>
+                <div id="upgradeMessage"></div>
+            </form>
+        </div>
+
+        <h1 class="mb-4">❤️ 我的收藏</h1>
+        <div id="favoritesList"></div>
+        <div id="emptyMsg" class="alert alert-info">暂无收藏内容</div>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary mt-3">← 返回</a>
+    </div>
+
+    <!-- 升级模态框 -->
+    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="upgradeModalLabel">🔓 升级为资源用户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>输入邀请码，即可解锁资源站访问权限，享受更多精彩内容！</p>
+                    <div class="mb-3">
+                        <label class="form-label">邀请码</label>
+                        <input type="text" class="form-control" id="modalInviteCode" placeholder="请输入邀请码">
+                    </div>
+                    <div id="modalUpgradeMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="modalUpgradeBtn">立即升级</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function() {
             const user = getCurrentUser();
@@ -116,14 +169,41 @@
                 signBtn.textContent = '签到 (连续10天得1积分)';
             }
 
+			let signing=false;
             signBtn.addEventListener('click', function() {
-                const result = doSign();
-                if (result.success) {
-                    alert(`签到成功！获得 ${result.pointsEarned} 积分。连续签到 ${result.consecutiveDays} 天。当前总积分：${result.totalPoints}`);
-                    location.reload();
-                } else {
-                    alert(result.message);
-                }
+                if(signing){return;}
+                
+                    const result = signIn(
+                    	//user.username,
+                    	user,
+                    	function(result){                    	
+		                    if (result.success) {
+		                        if(result.pointsEarned){
+		                        	alert(`签到成功！获得1积分。连续签到 ${result.signDays} 天。当前总积分：${result.point}`);
+		                        }else{
+		                        	alert('签到成功！连续签到 ' + result.signDays + ' 天');
+		                        }
+		                        location.reload();
+				                //signBtn.disabled = true;
+				                //signBtn.textContent = '今日已签到';
+				                //signDaysSpan.textContent = result.signDays;
+				                ////user.lastSignDate=getTodayStr();
+				                ////user.signDays=result.signDays;
+		                    } else {
+		                        alert(result.message);
+		                    }
+		                    signing=false;
+                    	}
+                    );
+                    
+                return;    
+                //const result = doSign();
+                //if (result.success) {
+                //    alert(`签到成功！获得 ${result.pointsEarned} 积分。连续签到 ${result.consecutiveDays} 天。当前总积分：${result.totalPoints}`);
+                //    location.reload();
+                //} else {
+                //    alert(result.message);
+                //}
             });
 
             const upgradeSection = document.getElementById('upgradeSection');
@@ -180,85 +260,41 @@
                 upgradeForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const inviteCode = document.getElementById('upgradeInviteCode').value.trim();
-                    const result = upgradeToResource(inviteCode);
-                    if (result.success) {
-                        upgradeMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1500);
-                    } else {
-                        upgradeMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
-                    }
+                    
+	                upgradeToResource(inviteCode,function(result){     
+	                    if (result.success) {
+	                        upgradeMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+	                        setTimeout(() => {
+	                            location.reload();
+	                        }, 1500);
+	                    } else {
+	                        upgradeMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+	                    }
+	                });
+                
                 });
             }
         })();
     </script>
-
-    <div class="container my-4">
-        <div class="points-section" id="pointsDisplay"></div>
-        <div class="sign-section">
-            <h3>每日签到</h3>
-            <p>连续签到 <span id="consecutiveDays">0</span> 天（连续10天可获得1积分）</p>
-            <button id="signBtn" class="btn btn-primary">签到</button>
-        </div>
-
-        <div id="upgradeSection" class="upgrade-section" style="display: none;">
-            <h5>🔓 升级为资源用户</h5>
-            <p>输入邀请码，即可解锁资源站访问权限，享受更多精彩内容！</p>
-            <form id="upgradeForm">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="upgradeInviteCode" placeholder="请输入邀请码" required>
-                    <button class="btn btn-outline-primary" type="submit">立即升级</button>
-                </div>
-                <div id="upgradeMessage"></div>
-            </form>
-        </div>
-
-        <h1 class="mb-4">❤️ 我的收藏</h1>
-        <div id="favoritesList"></div>
-        <div id="emptyMsg" class="alert alert-info">暂无收藏内容</div>
-        <a href="javascript:history.back()" class="btn btn-outline-secondary mt-3">← 返回</a>
-    </div>
-
-    <!-- 升级模态框 -->
-    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="upgradeModalLabel">🔓 升级为资源用户</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>输入邀请码，即可解锁资源站访问权限，享受更多精彩内容！</p>
-                    <div class="mb-3">
-                        <label class="form-label">邀请码</label>
-                        <input type="text" class="form-control" id="modalInviteCode" placeholder="请输入邀请码">
-                    </div>
-                    <div id="modalUpgradeMessage"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="modalUpgradeBtn">立即升级</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <script>
         const modalUpgradeBtn = document.getElementById('modalUpgradeBtn');
         if (modalUpgradeBtn) {
             modalUpgradeBtn.addEventListener('click', function() {
                 const inviteCode = document.getElementById('modalInviteCode').value.trim();
-                const result = upgradeToResource(inviteCode);
-                const msgDiv = document.getElementById('modalUpgradeMessage');
-                if (result.success) {
-                    msgDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
-                } else {
-                    msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
-                }
+                
+                upgradeToResource(inviteCode,function(result){
+	                const msgDiv = document.getElementById('modalUpgradeMessage');
+	                if (result.success) {
+	                    msgDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+	                    setTimeout(() => {
+	                        location.reload();
+	                    }, 1500);
+	                } else {
+	                    msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+	                }
+                });
+                
             });
         }
     </script>

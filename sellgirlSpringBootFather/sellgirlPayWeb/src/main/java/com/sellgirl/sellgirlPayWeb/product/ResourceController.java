@@ -102,7 +102,7 @@ extends  YJQueryController
     public ModelAndView Search(String q)
     {
 		MvcPagingParameters p=new MvcPagingParameters();
-		p.setPageSize(5);
+		p.setPageSize(10);
 		p.setPageIndex(0);
 		p.setSort("create_date desc");
 		for(ResourceType i:ResourceType.values()) {

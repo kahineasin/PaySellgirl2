@@ -1,5 +1,12 @@
 //放在原来 common.js 之后引入
+//by hyaweh
 
+function getTodayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+//签到
 function signIn(
 //username,
 user,
@@ -13,9 +20,18 @@ callback) {
 		  function(data,status){
 		    //alert("Data: " + data + "\nStatus: " + status);		    
             user.lastSignDate=getTodayStr();
-            user.signDays=data.data;
+            user.signDays=data.data.signDay;
+            
+    user.consecutiveDays = data.data.signDay;//新版本改了个名
+    user.points = data.data.point;
+    
             setCurrentUser(user);
-			callback({success:data.success,message:data.msg,signDays:data.data},status);
+			callback({
+			success:data.success,message:data.msg,
+			signDays:data.data.signDay,
+			point:data.data.point,
+			pointsEarned:data.data.pointsEarned
+			},status);
 		  })
 		  .success(function() { /*alert("second success");*/ })//grid进入
 		  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
@@ -135,4 +151,11 @@ function upgradeToResource(inviteCode,callback) {
     saveUsers(users);
     setCurrentUser(users[index]);
     return { success: true, message: '升级成功！页面即将刷新...' };
+}
+
+// ==================== 积分系统 ====================
+function getUserPoints() {
+    const user = getCurrentUser();
+    if (!user) return 0;
+    return user.points || 0;
 }
