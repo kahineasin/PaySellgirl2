@@ -19,7 +19,7 @@ import com.sellgirl.sgJavaHelper.config.SGDataHelper;
  * Created by qhong on 2018/10/15 15:46
  **/
 @Component
-public class PFCookieUtils {
+public class SGCookieUtils {
 
     public static final int COOKIE_MAX_AGE = 7 * 24 * 3600;
     public static final int COOKIE_HALF_HOUR = 30 * 60;

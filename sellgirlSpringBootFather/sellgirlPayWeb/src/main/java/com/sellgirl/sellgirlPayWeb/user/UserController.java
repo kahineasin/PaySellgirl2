@@ -45,7 +45,7 @@ import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
 import com.sellgirl.sgJavaMvcHelper.HtmlHelperT;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
-import com.sellgirl.sgJavaMvcHelper.config.PFCookieUtils;
+import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
@@ -681,7 +681,7 @@ extends YJQueryController
 		model.setPwd(password);
 		model.setInvitationCode(inviteCode);	
 
-		String emailCode2=PFCookieUtils.getCookieValue("registerEmailCode");//10分钟
+		String emailCode2=SGCookieUtils.getCookieValue("registerEmailCode");//10分钟
 		if(null==verifyCode||null==emailCode2||!verifyCode.equals(emailCode2)) {
 
 //			ViewData.put("username", "邮箱验证码错误,请重新获取");
@@ -716,7 +716,7 @@ extends YJQueryController
 	    	  return View(registerView);
 		}
 		if(userService.addUser(model,error)) {
-
+			SGCookieUtils.removeCookie("registerEmailCode");
 			ModelAndView r= DoLogin(username, password,null);
 			if(null!=r) {
 				return r;
@@ -852,7 +852,7 @@ extends YJQueryController
 
         	ViewData.put("isVip",sysUser.isVip);
         	ViewData.put("point",sysUser.point);
-        	ViewData.put("lastSignDate",sysUser.lastSign.toString(SGDataHelper.DayFormat));
+        	ViewData.put("lastSignDate",null==sysUser.lastSign?null:sysUser.lastSign.toString(SGDataHelper.DayFormat));
         	
 	        if(sysUser.isInvited) {
 //  	        	ViewData.put("isVip",sysUser.isVip);

@@ -24,7 +24,7 @@ import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
-import com.sellgirl.sgJavaMvcHelper.config.PFCookieUtils;
+import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayWeb.configuration.ProjConfig;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.ActionReturnInfo;
@@ -294,7 +294,7 @@ public class FormsAuth {
         String loginName = userData.UserCode;
         String data = JSON.toJSONString(userData);
 
-        PFCookieUtils.setCookie( cookieKey, data);//待加密--benjamin todo
+        SGCookieUtils.setCookie( cookieKey, data);//待加密--benjamin todo
         
 //        //创建一个FormsAuthenticationTicket，它包含登录名以及额外的用户数据。
 //        var ticket = new FormsAuthenticationTicket(2,
@@ -410,12 +410,12 @@ public class FormsAuth {
         //FormsAuthentication.SignOut();
         if (!SGDataHelper.StringIsNullOrWhiteSpace(userId))
         {
-            PFCookieUtils.removeCookie( cookieKey);//待加密--benjamin todo
+            SGCookieUtils.removeCookie( cookieKey);//待加密--benjamin todo
             //var context = HttpContext.Current;
             //context.Session.RemoveAll();
-            PFCookieUtils.removeCookie(userId + "_FuncAuthorities");
-            PFCookieUtils.removeCookie(userId + "_OtherFuncAuthorities");
-            PFCookieUtils.removeCookie(userId);
+            SGCookieUtils.removeCookie(userId + "_FuncAuthorities");
+            SGCookieUtils.removeCookie(userId + "_OtherFuncAuthorities");
+            SGCookieUtils.removeCookie(userId);
         }
         //using (var redisClient = RedisManager.GetClient())
         //{
@@ -442,7 +442,7 @@ public class FormsAuth {
         	UserData=cl.newInstance();
         	
         	//String ticket=_cookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
-        	String ticket=PFCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+        	String ticket=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
         	if(!SGDataHelper.StringIsNullOrWhiteSpace(ticket)) {
             	//List<Map> meterList= JSONArray.parseArray(paraMap.get("metersList").toString(),Map.class);
             	UserData = JSON.parseObject(ticket, cl);

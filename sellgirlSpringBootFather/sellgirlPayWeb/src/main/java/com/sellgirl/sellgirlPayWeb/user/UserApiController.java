@@ -38,7 +38,7 @@ import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
-import com.sellgirl.sgJavaMvcHelper.config.PFCookieUtils;
+import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
@@ -68,7 +68,7 @@ public class UserApiController extends  YJQueryController
 	@CrossOrigin
     public AbstractApiResult<?> AddCookie(String v)
     {
-		PFCookieUtils.setCookie("aa", v);
+		SGCookieUtils.setCookie("aa", v);
 		return AbstractApiResult.success("success");
     }
 
@@ -77,7 +77,7 @@ public class UserApiController extends  YJQueryController
 	@CrossOrigin
     public AbstractApiResult<?> GetCookie()
     {
-		String ticket=PFCookieUtils.getCookieValue("aa");
+		String ticket=SGCookieUtils.getCookieValue("aa");
 		return AbstractApiResult.success(ticket);
     }
 	@GetMapping(value = { "/AddCache" })
@@ -195,7 +195,7 @@ public class UserApiController extends  YJQueryController
 //		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
 //			return AbstractApiResult.error("签到失败,用户名为空");
 //		}
-		PFCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
+		SGCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
 		return AbstractApiResult.success();
     }
 	
