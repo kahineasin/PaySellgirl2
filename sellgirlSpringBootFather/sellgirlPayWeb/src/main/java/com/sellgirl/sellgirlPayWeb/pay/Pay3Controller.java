@@ -16,6 +16,7 @@ import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.SGRequestResult;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
+import com.sellgirl.sgJavaHelper.model.SystemUser;
 
 //import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -340,6 +341,10 @@ public class Pay3Controller extends YJQueryController {
       	result.addObject("returnUrl","/vip.html");
       	break;
     }
+//    //payNotify中更新了cache
+//    SystemUser user=this.GetSystemUser();
+//  	result.addObject("isVip",user.isVip);
+//  	result.addObject("point",user.point);
   	return result;
 		}catch(Throwable e) {
 			SGDataHelper.getLog().writeException(e,TAG);

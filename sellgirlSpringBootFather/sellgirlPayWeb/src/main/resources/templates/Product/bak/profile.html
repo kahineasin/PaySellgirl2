@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>会员中心 · 电子书库--deprecated</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
+    <style>
+        body { background: #f8f9fa; }
+        .navbar { background-color: #2c3e50; }
+        .favorite-item { background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; transition: background 0.1s; position: relative; }
+        .favorite-item:hover { background: #e9ecef; }
+        .favorite-link { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 1rem; flex: 1; }
+        .favorite-cover {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .resource-cover {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        .cancel-fav { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
+        .sign-section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" id="brandLink">📚 电子书库</a>
+            <div class="d-flex align-items-center gap-2">
+                <div id="switchBtnContainer" style="display: none;"></div>
+                <form class="d-flex" action="ebook-search.html" method="get">
+                    <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="搜索..." required>
+                    <button class="btn btn-outline-light btn-sm" type="submit">搜索</button>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="userInfo"></div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container my-4">
+        <div class="sign-section">
+            <h3>每日签到</h3>
+            <p>连续签到 <span id="signDays" th:text="${signDay}">0</span> 天</p>
+            <button id="signBtn" class="btn btn-primary">每日签到</button>
+        </div>
+
+        <h1 class="mb-4">❤️ 我的收藏</h1>
+        <div id="favoritesList"></div>
+        <div id="emptyMsg" class="alert alert-info">暂无收藏内容</div>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary mt-3">← 返回</a>
+    </div>
+    
+    
+    <script src="common.js"></script>
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
+    <script src="/product/common2.js"></script>
+    <script>
+        (function() {
+            const isVip=[[${isVip}]];
+            const point=[[${point}]];
+            
+            	
+            const user = getCurrentUser();
+            const userInfoDiv = document.getElementById('userInfo');
+            const brandLink = document.getElementById('brandLink');
+            
+            
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            user.isVip=isVip;
+            user.points=point;
+            setCurrentUser(user);
+
+            // 根据角色设置品牌链接
+            if (user.role === 'resource') {
+                brandLink.href = 'resource-index.html';
+                brandLink.textContent = '🎬 资源走廊';
+            } else {
+                brandLink.href = 'index.html';
+                brandLink.textContent = '📚 电子书库';
+            }
+			
+            const vipName=isVip||user.isVip?(user.username+'(vip)'):user.username;
+
+            userInfoDiv.innerHTML = `
+                <span class="text-light me-2">👤 ${vipName}</span>
+                <a href="vip.html" class="btn btn-sm btn-warning me-2">开通VIP</a>
+                <a href="profile.html" class="btn btn-sm btn-outline-light me-2">会员中心</a>
+                <a href="logout.html" class="btn btn-sm btn-outline-light">登出</a>
+            `;
+
+            // 切换按钮逻辑
+            const switchBtnContainer = document.getElementById('switchBtnContainer');
+            if (user.role === 'resource') {
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage.startsWith('resource-')) {
+                    switchBtnContainer.innerHTML = `<a href="index.html" class="btn btn-sm btn-outline-light me-2">📚 电子书库</a>`;
+                } else {
+                    switchBtnContainer.innerHTML = `<a href="resource-index.html" class="btn btn-sm btn-outline-light me-2">🎬 资源走廊</a>`;
+                }
+                switchBtnContainer.style.display = 'inline-block';
+            } else {
+                switchBtnContainer.style.display = 'none';
+            }
+
+            // 签到功能
+            const signStatus = getSignStatus();
+            //benjamin
+            
+            const serverLogged=[[${logged}]];
+            if(serverLogged){
+            	signStatus.signedToday=[[${signedToday}]];
+            }
+            const signBtn = document.getElementById('signBtn');
+            const signDaysSpan = document.getElementById('signDays');
+            if(!serverLogged){
+            	signDaysSpan.textContent = signStatus.signDays;
+            }
+            if (signStatus.signedToday) {
+                signBtn.disabled = true;
+                signBtn.textContent = '今日已签到';
+            } else {
+                signBtn.disabled = false;
+                signBtn.textContent = '每日签到';
+            }
+
+            if (signBtn) {
+				let signing=false;
+                signBtn.addEventListener('click', function() {
+                	if(signing){return;}
+                	signing=true;
+                    const result = signIn(
+                    	//user.username,
+                    	user,
+                    	function(result){                    	
+		                    if (result.success) {
+		                        alert('签到成功！连续签到 ' + result.signDays + ' 天');
+		                        //location.reload();
+				                signBtn.disabled = true;
+				                signBtn.textContent = '今日已签到';
+				                signDaysSpan.textContent = result.signDays;
+				                //user.lastSignDate=getTodayStr();
+				                //user.signDays=result.signDays;
+		                    } else {
+		                        alert(result.message);
+		                    }
+		                    signing=false;
+                    	}
+                    );
+                });
+            }
+
+            // 收藏列表
+            const favorites = getUserFavorites();
+            const container = document.getElementById('favoritesList');
+            const emptyMsg = document.getElementById('emptyMsg');
+
+            if (favorites.length === 0) {
+                emptyMsg.classList.remove('d-none');
+                return;
+            }
+
+            emptyMsg.classList.add('d-none');
+            favorites.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'favorite-item';
+                const coverClass = item.type === 'book' ? 'favorite-cover' : 'resource-cover';
+                const link = item.type === 'book' ? `book.html?id=${item.id}` : `resource-detail.html?id=${item.id}`;
+                div.innerHTML = `
+                    <a href="${link}" class="favorite-link">
+                        <img src="${item.cover || 'assets/images/placeholder.jpg'}" class="${coverClass}" alt="${item.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                        <div>
+                            <h6>${item.title}</h6>
+                            <small class="text-secondary">${item.author || item.description || item.type}</small>
+                        </div>
+                    </a>
+                    <button class="btn btn-sm btn-outline-danger cancel-fav" data-type="${item.type}" data-id="${item.id}">取消收藏</button>
+                `;
+                container.appendChild(div);
+            });
+
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('cancel-fav')) {
+                    const btn = e.target;
+                    const type = btn.dataset.type;
+                    const id = btn.dataset.id;
+                    if (removeFavorite(type, id)) {
+                        btn.closest('.favorite-item').remove();
+                        if (container.children.length === 0) {
+                            emptyMsg.classList.remove('d-none');
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

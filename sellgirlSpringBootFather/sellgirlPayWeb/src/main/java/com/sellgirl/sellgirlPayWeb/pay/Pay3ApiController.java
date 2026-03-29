@@ -95,7 +95,7 @@ public class Pay3ApiController extends YJQueryController {
     	if(null!=trade_status&&"TRADE_SUCCESS".equals(trade_status))
     	{
     		long orderId=Long.valueOf(out_trade_no);
-    		this.orderService.updateOrderPaid(orderId,trade_no);
+//    		this.orderService.updateOrderPaid(orderId,trade_no);
     		PayPlan vip=orderService.GetvipOrderVipTypeById(orderId);
 //    		User user=this.userService.getUser(this.GetUserName());
     		UserQuery q=new UserQuery();
@@ -119,6 +119,10 @@ public class Pay3ApiController extends YJQueryController {
 		      		break;
 		        }
 		    	userService.addUserPoint(user.getUserId(),point);
+
+	    		SystemUser sysUser=this.GetSystemUser();
+	    		sysUser.point+=point;
+	    		this.SetSystemUser(sysUser);
 		    }else {
 				SGDate now=SGDate.Now();
 	    		if(PayPlan.resource_monthly==vip) {
@@ -154,8 +158,11 @@ public class Pay3ApiController extends YJQueryController {
 	    		sysUser.isVip=true;
 	    		this.SetSystemUser(sysUser);
 	    		this.userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+
 		    }  
-		      
+		  //paid页面根据订单状态跳转到profile页并根据cache更新前端store
+		    //所以这里要先更新完cache在变更订单状态
+    		this.orderService.updateOrderPaid(orderId,trade_no);
     	      return "success";
     	}
 //      // 实际开发中需要验证签名、解密资源、更新订单状态

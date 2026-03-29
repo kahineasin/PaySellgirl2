@@ -880,8 +880,9 @@ extends YJQueryController
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());
   	result.addObject("isVip", user.isVip);
-//  	result.setViewName("Product/profile");
-  	result.setViewName("Product2/profile");
+  	result.addObject("point",user.point);//支付成功后更新了cache再跳转到profile
+  	result.setViewName("Product/profile");
+//  	result.setViewName("Product2/profile");
   	return result;
     }
 	//------------------vip-----------------------

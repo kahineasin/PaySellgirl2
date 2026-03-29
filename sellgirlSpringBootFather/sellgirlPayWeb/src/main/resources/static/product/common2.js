@@ -1,5 +1,21 @@
-//放在原来 common.js 之后引入
+//放在原来 common.js 之后引入, 因为调用或复写了它的方法
 //by hyaweh
+
+//新版本前端以curUser为主
+function setCurrentUser(user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    
+    const users = getUsers();
+    let index = users.findIndex(u => u.username === user.username);
+    // if (index === -1) return false;
+    if (index === -1) {
+        users.push(user);
+        //index=users.findIndex(u => u.username === user.username);
+    }else{
+    	users[index]=user;
+    }
+    saveUsers(users);
+}
 
 function getTodayStr() {
     const d = new Date();
@@ -87,9 +103,11 @@ function addFavorite(item) {
     if (!users[index].favorites) users[index].favorites = [];
     if (!users[index].favorites.some(f => f.type === item.type && f.id === item.id)) {
         users[index].favorites.push(item);
-        saveUsers(users);
-        setCurrentUser(users[index]);
+        //saveUsers(users);
+        //setCurrentUser(users[index]);
     }
+    saveUsers(users);
+    setCurrentUser(users[index]);
     return true;
 }
 
@@ -105,9 +123,11 @@ function removeFavorite(type, id) {
     }
     if (users[index].favorites) {
         users[index].favorites = users[index].favorites.filter(f => !(f.type === type && f.id == id));  //id有些页面是string
-        saveUsers(users);
-        setCurrentUser(users[index]);
+        //saveUsers(users);
+        //setCurrentUser(users[index]);
     }
+    saveUsers(users);
+    setCurrentUser(users[index]);
     return true;
 }
 
