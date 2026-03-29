@@ -616,27 +616,11 @@ public class UncheckImportResource extends TestCase {
 	}
 
 	public void testBulkCopy() {
-//		System.out.print("    SELECT  \r\n" + 
-//				"     ORDINAL_POSITION fieldIdx,\r\n" + 
-//				"      COLUMN_NAME fieldName, -- 列名,  \r\n" + 
-//				"      if(COLUMN_KEY='PRI',b'1',b'0')  isPrimaryKey,\r\n" + 
-//				"       COLUMN_TYPE 数据类型,  \r\n" + 
-//				"        DATA_TYPE fieldType, -- 字段类型,  \r\n" + 
-//				"      CHARACTER_MAXIMUM_LENGTH fieldSqlLength, -- 长度,  \r\n" + 
-//				"      -- IS_NULLABLE 是否为空,  \r\n" + 
-//				"      if(IS_NULLABLE='YES',b'0',b'1')  isRequired,\r\n" + 
-//				"      COLUMN_DEFAULT defaultValue, -- 默认值,  \r\n" + 
-//				"      COLUMN_COMMENT columnDescription -- 备注   \r\n" + 
-//				"    FROM  \r\n" + 
-//				"     INFORMATION_SCHEMA.COLUMNS  \r\n" + 
-//				"    where  \r\n" + 
-//				"    -- developerclub为数据库名称，到时候只需要修改成你要导出表结构的数据库即可  \r\n" + 
-//				"    -- table_schema ='cbbk'  \r\n" + 
-//				"    -- AND  \r\n" + 
-//				"    -- article为表名，到时候换成你要导出的表的名称  \r\n" + 
-//				"    -- 如果不写的话，默认会查询出所有表中的数据，这样可能就分不清到底哪些字段是哪张表中的了，所以还是建议写上要导出的名名称  \r\n" + 
-//				"    table_name  = '{0}' ");
-		
+		ResourceType resourceType=ResourceType.comic;
+		ResourceService service=new ResourceService();
+		service.setResourceType(resourceType);
+		  final SGWaiter waiter=new SGWaiter(2000);
+
 		initPFHelper();
 		// bulk到ClickHouse
 		ISGJdbc srcJdbc = JdbcHelperTest.GetSgShopJdbc();
@@ -655,9 +639,9 @@ public class UncheckImportResource extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String dstTableName="sg_resource";
+		String dstTableName=service.getTableName();
 		// 使用NString前
-		ResultSet srcDr = srcExec.GetHugeDataReader("select * from sg_resource");
+		ResultSet srcDr = srcExec.GetHugeDataReader("select * from "+dstTableName);
 		// ResultSet srcDr = srcExec.GetDataReader("select 1 as c1,1 as c2,cast((CASE 1
 		// WHEN 1 THEN 200 WHEN 2 THEN 800 ELSE NULL END) as DECIMAL) as c8");//这样ok
 
@@ -668,7 +652,17 @@ public class UncheckImportResource extends TestCase {
 //		//where.Add("data_date", transfer.getPFCmonth().ToDateTime());
 //	});
 		//dstExec.HugeInsertReader(null, srcDr,dstTableName, null, null, null);//这样可以，但50000一批时会卡住
-		dstExec.HugeBulkReader(null, srcDr,dstTableName, null, null, null);
+		dstExec.HugeBulkReader(null, srcDr,dstTableName, null, 
+//		null,null		
+		a->{
+			if(waiter.isOK()) {
+				System.out.println(SGDate.Now().toString()+"----"+a);
+			}
+		}, a->{
+			boolean b=false;
+			return b;
+		}
+		);
 
 	}
 
