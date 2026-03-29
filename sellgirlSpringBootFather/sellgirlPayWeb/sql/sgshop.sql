@@ -52,6 +52,21 @@ CREATE TABLE IF NOT EXISTS `sg_vip_order` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `sg_user_buy` (
+    `user_buy_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL,
+    `source_type` TINYINT NOT NULL COMMENT '1:电子书 2:视频',
+    `source_id` BIGINT NOT NULL,
+    `create_date` DATETIME NOT NULL,
+    PRIMARY KEY (`user_buy_id`, `user_id`),   -- 复合主键
+   UNIQUE INDEX `idx_user_source` (`user_id`, `source_type`, `source_id`)-- ,
+    -- INDEX `idx_user_time` (`user_id`,`create_date`) deepseek建议
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+PARTITION BY HASH (user_id)
+PARTITIONS 8;   -- 8个分区，根据预估数据量调整
+
+
+
 CREATE TABLE IF NOT EXISTS `sg_resource`(
    `resource_id` INT UNSIGNED AUTO_INCREMENT,
    `resource_name` VARCHAR(100) NOT null,

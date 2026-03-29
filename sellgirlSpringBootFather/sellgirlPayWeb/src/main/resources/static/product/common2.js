@@ -93,6 +93,24 @@ function addFavorite(item) {
     return true;
 }
 
+function removeFavorite(type, id) {
+    const user = getCurrentUser();
+    if (!user) return false;
+    const users = getUsers();
+    const index = users.findIndex(u => u.username === user.username);
+    //if (index === -1) return false;    
+    if (index === -1) {
+        users.push(user);
+        index=users.findIndex(u => u.username === user.username);
+    }
+    if (users[index].favorites) {
+        users[index].favorites = users[index].favorites.filter(f => !(f.type === type && f.id == id));  //id有些页面是string
+        saveUsers(users);
+        setCurrentUser(users[index]);
+    }
+    return true;
+}
+
 function getSignStatus() {
     const user = getCurrentUser();
     //if (!user) return { signedToday: false, signDays: 0 };
@@ -159,3 +177,43 @@ function getUserPoints() {
     if (!user) return 0;
     return user.points || 0;
 }
+
+// ==================== 资源站解锁 ====================
+function unlockResource(resourceId,resourceType,
+callback) {
+
+		  $.post("/api/resource/unlock",
+		  {
+		    resourceType:resourceType,
+		    resourceId:resourceId
+		  },
+		  function(data,status){
+		  	if(data.success){
+			    const user = getCurrentUser();
+			    if(user){
+				    if (!user.unlockedResources) user.unlockedResources = [];
+				    if (!user.unlockedResources.includes(resourceId)) {
+				        user.points =data.data;
+				        user.unlockedResources.push(resourceId);
+				        setCurrentUser(user);
+				    }
+			    }
+    		}
+			callback({
+			success:data.success,message:data.msg,
+			point:data.data
+			},status);
+		  })
+		  .success(function() { /*alert("second success");*/ })//grid进入
+		  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
+		  .complete(function(XMLHttpRequest, textStatus){})
+		  ;
+		  
+}
+
+//如果需要前端判断,那就还需要resourceType
+//function isResourceUnlocked(resourceId) {
+//    const user = getCurrentUser();
+//    if (!user) return false;
+//    return (user.unlockedResources || []).includes(resourceId);
+//}

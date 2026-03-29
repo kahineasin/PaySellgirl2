@@ -19,7 +19,7 @@ public class SystemUser {
     public int signDay;
     public SGDate lastSign;
     public boolean isVip=false;
-    public int point=0;
+    public long point=0;
     /**
      * 
      */

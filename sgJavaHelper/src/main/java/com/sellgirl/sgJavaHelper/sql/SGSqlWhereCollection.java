@@ -136,34 +136,29 @@ public class SGSqlWhereCollection  extends ArrayList<SqlWhereItem>
                     }
                     count++;
                 }
-                else if (val instanceof BigDecimal || val instanceof Integer||val instanceof Long)
+                else if (val instanceof BigDecimal || val instanceof Integer||val instanceof Long
+                		||(null!=val&&val.getClass().isEnum())
+                		)
                 {
                     //result += prev + PFDataHelper.FormatString(" isnull({0},0)={1} ", FormatKey(i.Key), i.Value);
+                	Object tmpVal=(null!=val&&val.getClass().isEnum())?SGDataHelper.ObjectToEnumInt(val.getClass(), val):val;
                     switch (i.ExpressionOperator)
                     {
                         //日期的范围比较有些特别,把临界点包含进来比较适合
                         case Less:
-                            //result += prev + PFDataHelper.FormatString(" isnull({0},0)<={1} ", FormatKey(i.Key), i.Value);
-                            result += prev + SGDataHelper.FormatString(" {0}<{1} ", FormatKey(i.Key), i.Value);
+                            result += prev + SGDataHelper.FormatString(" {0}<{1} ", FormatKey(i.Key), tmpVal);
                             break;
                         case LessOrEqual:
-                            ////result += prev + string.Format(" isnull({0},'') <= '{1}' ", FormatKey(i.Key), i.Value);
-                            //result += prev + string.Format(" isnull({0},0)<={1} ", FormatKey(i.Key), i.Value);
-                            result += prev + SGDataHelper.FormatString(" {0}<={1} ", FormatKey(i.Key), i.Value);
+                            result += prev + SGDataHelper.FormatString(" {0}<={1} ", FormatKey(i.Key), tmpVal);
                             break;
                         case Greater:
-                            //result += prev + PFDataHelper.FormatString(" isnull({0},0)>={1} ", FormatKey(i.Key), i.Value);
-                            result += prev +SGDataHelper.FormatString(" {0}>{1} ", FormatKey(i.Key), i.Value);
+                            result += prev +SGDataHelper.FormatString(" {0}>{1} ", FormatKey(i.Key), tmpVal);
                             break;
                         case GreaterOrEqual:
-                            //result += prev + string.Format(" isnull({0},'') >= '{1}' ", FormatKey(i.Key), i.Value);
-                            //result += prev + string.Format(" isnull({0},0)>={1} ", FormatKey(i.Key), i.Value);
-                            result += prev +SGDataHelper.FormatString(" {0}>={1} ", FormatKey(i.Key), i.Value);
+                            result += prev +SGDataHelper.FormatString(" {0}>={1} ", FormatKey(i.Key), tmpVal);
                             break;
                         default:
-                            //result += prev + PFDataHelper.FormatString(" isnull({0},'')='{1}' ", FormatKey(i.Key), i.Value);
-                            //result += prev + PFDataHelper.FormatString(" isnull({0},0)={1} ", FormatKey(i.Key), i.Value);
-                            result += prev + SGDataHelper.FormatString(" {0}={1} ", FormatKey(i.Key), i.Value);
+                            result += prev + SGDataHelper.FormatString(" {0}={1} ", FormatKey(i.Key), tmpVal);
                             break;
                     }
                     count++;
@@ -247,6 +242,9 @@ public class SGSqlWhereCollection  extends ArrayList<SqlWhereItem>
                         result += prev +SGDataHelper.FormatString(" {0} not in({1}) ", FormatKey(i.Key), this.JoinList(list)) ;//
                         count++;
                     }
+                }else if(null==val) {//如果是null时,肯定只有notIgnoreNull才能进来--benjamin 20260329
+                	result += prev +SGDataHelper.FormatString(" {0} is null ", FormatKey(i.Key)) ;//
+                    count++;
                 }
             }
         }

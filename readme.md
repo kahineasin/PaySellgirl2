@@ -78,28 +78,31 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
 ` namespace task `
 ## sql使用
 ```
+		if(null==q.getUserId()&&null==q.getUserName()) {
+			return null;
+		}
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
-			PFSqlWhereCollection query =myResource.getWhereCollection();
-			query.setIgnoreNullValue(false);
-          query.Add("user_name",userName);
-          query.Add("pwd",pwd); 
-          String SqlString = SGDataHelper.FormatString( 
+		  	SGSqlWhereCollection query =myResource.getWhereCollection();
+			//query.setIgnoreNullValue(false);
+            query.Add("user_id",q.getUserId());
+            query.Add("user_name",q.getUserName());
+          	String SqlString = SGDataHelper.FormatString( 
           		"select * from user " +
           		"{0} " 
           		, 
           		        query.ToSql()
           		    );
-          PFDataTable dt= myResource.GetDataTable(SqlString,null);
-          if(null!=dt&&!dt.IsEmpty()) {
+          	SGDataTable dt= myResource.GetDataTable(SqlString,null);
+          	if(null!=dt&&!dt.IsEmpty()) {
 	          	List<User> list= dt.ToList(User.class, (obj,row,c)->{
 	          		obj.setUserName(row.getStringColumn(SqlString));
 	          		obj.setInvitationCode(SqlString);
 	          	});
           		return list.get(0);
-          }else {
+          	}else {
           		return null;
-          }
+          	}
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		} 
@@ -109,7 +112,7 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
 			bookCreate model=new bookCreate();
 			//...
 			model.setCreate_date(SGDate.Now());			
-			PFSqlInsertCollection insert=dstExec.getInsertCollection();			
+			SGSqlInsertCollection insert=dstExec.getInsertCollection();			
 			insert.InitItemByModel(model);
 			SGSqlCommandString sql=new SGSqlCommandString(
 					SGDataHelper.FormatString(
@@ -179,6 +182,9 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
     	);
 ```
 
+## 发邮件
+1. 配置 SGEmailSend 的public字段
+2. SGEmailSend.SendMail()
 
 下面是一些测试各类型mq的地址，需要根据情况配置对应消费者的地址才行
 1.http://localhost:28303/sendmq

@@ -225,7 +225,7 @@
                     const div = document.createElement('div');
                     div.className = 'favorite-item';
                     const coverClass = item.type === 'book' ? 'favorite-cover' : 'resource-cover';
-                    const link = item.type === 'book' ? `book.html?id=${item.id}` : `resource-detail.html?id=${item.id}`;
+                    const link = item.type === 'book' ? `book.html?id=${item.id}` : `resource-detail.html?id=${item.id}&resourceType=${item.resourceType}`;
                     div.innerHTML = `
                         <a href="${link}" class="favorite-link">
                             <img src="${item.cover || 'assets/images/placeholder.jpg'}" class="${coverClass}" alt="${item.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">

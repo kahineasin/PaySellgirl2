@@ -19,11 +19,46 @@
             //const role = (inviteCode === SECRET_INVITE_CODE) ? 'resource' : 'normal';
             //const role =isInvited ? 'resource' : 'normal';
 
-            const newUser = { username,  role,isVip,points,lastSignDate, favorites: [] };
+			//名相同,优先使用cur
+		    let user= JSON.parse(localStorage.getItem('currentUser'));
+		    if(null!=user&&username==user.username){		    	
+		    }else{
+		    	user=null;
+		    }
+		    
+		    //为了最大限度兼容原本,保留users(如果cur不对,找users)
+		    const users=JSON.parse(localStorage.getItem('users')) || [];		    
+		    let index = users.findIndex(u => u.username === username);
+		    if (index === -1) {
+		    	if(null==user){
+		    		user={username};
+		    		users.push(user);
+		    		index=users.findIndex(u => u.username === username);
+		    	}else{
+		    		users.push(user);
+		    		index=users.findIndex(u => u.username === username);
+		    	}
+		    }else{
+		    	if(null==user){
+		    		//user=users[index];
+		    	}else{
+		    		users[index]=user; //用cur替换掉
+		    	}
+		    }
+		    
+		    //if(null==user){user={};}
+		    //users[index].name=username;
+		    users[index].role=role;
+		    users[index].isVip=isVip;
+		    users[index].points=points;
+		    users[index].lastSignDate=lastSignDate;
+    		if (!users[index].favorites){ users[index].favorites = [];}
+		    
+            //const newUser = { username,  role,isVip,points,lastSignDate, favorites: [] };			
             //users.push(newUser);
-            //localStorage.setItem('users', JSON.stringify(users));
-
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(users[index]));
 
             //if (role === 'resource') {
             //    window.location.href = 'resource-index.html';

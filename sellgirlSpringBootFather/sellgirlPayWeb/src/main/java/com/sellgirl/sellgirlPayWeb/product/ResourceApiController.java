@@ -46,16 +46,19 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import pf.springBoot.springBootSSO.oAuth.MetabaseFormsAuth;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
+import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.bookQuery;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
+import com.sellgirl.sellgirlPayWeb.product.model.userBuyCreate;
 import com.sellgirl.sellgirlPayWeb.product.service.BookService;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
 import com.sellgirl.sellgirlPayWeb.user.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
+import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
 //import com.sellgirl.sellgirlPayWeb.service.BalanceService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
@@ -65,6 +68,7 @@ import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
 public class ResourceApiController extends  YJQueryController
 {
 	@Autowired private ResourceService resourceService;
+	@Autowired private UserService userService;
 	@PostMapping(value = { "/api/resource/list" })
     public AbstractApiResult<?> getList(
     		//String field,boolean descending ,
@@ -95,4 +99,33 @@ public class ResourceApiController extends  YJQueryController
     }
 
 
+	@PostMapping(value = { "/api/resource/unlock" })
+    public AbstractApiResult<?> unlockResource(
+    		ProductType resourceType,
+    		long resourceId
+    		)
+    {
+		long userId=GetUserLongId();
+		SystemUser sysUser=this.GetSystemUser();
+		if(1>sysUser.point) {
+			return AbstractApiResult.error("积分不足，无法查看");
+		}
+		userBuyCreate m=new userBuyCreate();
+		m.setSource_type(resourceType);
+		m.setUser_id(userId);
+		m.setSource_id(resourceId);
+		m.setCreate_date(SGDate.Now());
+		boolean b=resourceService.unlockResource(m);
+		if(b) {
+			userService.addUserPoint(userId, -1);
+			UserQuery q=new UserQuery();
+			q.setUserId(userId);
+			long point=userService.getUser(q).getPoint();
+			sysUser.point=point;
+			this.SetSystemUser(sysUser);
+			return AbstractApiResult.success(point);
+		}else {
+			return AbstractApiResult.error("解锁失败");
+		}
+    }
 }

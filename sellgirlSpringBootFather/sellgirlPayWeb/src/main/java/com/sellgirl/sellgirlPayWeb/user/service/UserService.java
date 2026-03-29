@@ -4,6 +4,7 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
+import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
 import com.sellgirl.sgJavaHelper.SGDataTable;
+import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.PFMySqlWhereCollection;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGRef;
@@ -222,12 +225,16 @@ public class UserService
         }
         return false;
     }
-	public User getUser(String userName) {
+	public User getUser(UserQuery q) {
+		if(null==q.getUserId()&&null==q.getUserName()) {
+			return null;
+		}
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
 			SGSqlWhereCollection query =myResource.getWhereCollection();
-			query.setIgnoreNullValue(false);
-            query.Add("user_name",userName);
+			//query.setIgnoreNullValue(false);
+            query.Add("user_id",q.getUserId());
+            query.Add("user_name",q.getUserName());
             String SqlString = SGDataHelper.FormatString( 
             		"select * from sg_user " +
             		"{0} " 
@@ -237,14 +244,47 @@ public class UserService
             SGDataTable dt= myResource.GetDataTable(SqlString,null);
             if(null!=dt&&!dt.IsEmpty()) {
             	List<User> list= dt.ToList(User.class, (obj,row,c)->{
-            		obj.setUserId(SGDataHelper.ObjectToLong0(row.getColumn("user_id")) );
-            		obj.setUserName(row.getStringColumn("user_name"));
-            		obj.setInvitationCode(row.getStringColumn("invitation_code"));
-            		obj.setSignDay(SGDataHelper.ObjectToInt(row.getColumn("sign_day")));
-            		obj.setLastSign(SGDataHelper.ObjectToSGDate(row.getColumn("last_sign")));
+//            		obj.setUserId(SGDataHelper.ObjectToLong0(row.getColumn("user_id")) );
+//            		obj.setUserName(row.getStringColumn("user_name"));
+//            		obj.setInvitationCode(row.getStringColumn("invitation_code"));
+//            		obj.setSignDay(SGDataHelper.ObjectToInt(row.getColumn("sign_day")));
+//            		obj.setLastSign(SGDataHelper.ObjectToSGDate(row.getColumn("last_sign")));
+
+            		mapRowToUser(row,obj);
             	});
 //            	User user=list.get(0);
             	return list.get(0);
+            }else {
+            	return null;
+            }
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void mapRowToUser(PFDataRow row,User obj) {
+
+		obj.setUserId(SGDataHelper.ObjectToLong0(row.getColumn("user_id")) );
+		obj.setUserName(row.getStringColumn("user_name"));
+		obj.setInvitationCode(row.getStringColumn("invitation_code"));
+		obj.setSignDay(SGDataHelper.ObjectToInt(row.getColumn("sign_day")));
+		obj.setLastSign(SGDataHelper.ObjectToSGDate(row.getColumn("last_sign")));
+	}
+	public ArrayList<LinkedHashMap<String,Object>> getPWD(String email) {
+		ISGJdbc dstJdbc=JdbcHelper.GetShop();
+		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
+			SGSqlWhereCollection query =myResource.getWhereCollection();
+			query.setIgnoreNullValue(false);
+            query.Add("email",email);
+            String SqlString = SGDataHelper.FormatString( 
+            		"select pwd,user_name from sg_user  " +
+            		"{0} " 
+            		, 
+            		        query.ToSql()
+            		    );
+            SGDataTable dt= myResource.GetDataTable(SqlString,null);
+            if(null!=dt&&!dt.IsEmpty()) {
+            	return dt.ToDictList();
             }else {
             	return null;
             }
@@ -286,7 +326,9 @@ public class UserService
             int r= myResource.ExecuteSqlInt(new SGSqlCommandString(SqlString), null, false);
             if(0<r) {            	
 //            	days.SetValue(user.getSignDay()+1);
-            	user.SetValue(getUser(userName));
+            	UserQuery q=new UserQuery();
+            	q.setUserName(userName);
+            	user.SetValue(getUser(q));
             	myResource.close();
             	return true;
             }else {

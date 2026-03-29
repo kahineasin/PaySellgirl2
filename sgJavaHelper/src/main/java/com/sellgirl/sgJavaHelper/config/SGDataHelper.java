@@ -1417,6 +1417,28 @@ pow:-2  100.0
 		}
 
 	}
+
+	public static <TEnum extends Enum<TEnum>> int ObjectToEnumInt(Class<?> cls, Object value)
+	// where TEnum : struct
+	{
+		if (value == null // || value == DBNull.Value
+		) {
+			return 0;
+		}
+		try {
+			if(Integer.class==value.getClass()) {
+		        int ordinal = Integer.parseInt(value.toString());
+		        Object[] constants =  cls.getEnumConstants();
+		        if (ordinal >= 0 && ordinal < constants.length) {
+		            return (int)constants[ordinal];
+		        }
+			}
+			return Enum.valueOf( (Class<TEnum>) cls, value.toString()).ordinal();
+		} catch (Exception e) {
+			return 0;
+		}
+
+	}
 //	@SuppressWarnings({ "unchecked", "rawtypes" })
 //	public static  Object ObjectToEnumNotT(Class<?> cls, Object value)
 //	// where TEnum : struct

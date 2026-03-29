@@ -10,6 +10,7 @@ import com.perfect.demo.utils.HttpUtils;
 import com.sellgirl.sellgirlPayWeb.configuration.pojo.RetCode;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.pay.Pay3Controller;
+import com.sellgirl.sellgirlPayWeb.product.ResourceApiController;
 import com.sellgirl.sellgirlPayWeb.product.ResourceController;
 import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 import com.sellgirl.sellgirlPayWeb.user.UserApiController;
@@ -79,8 +80,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     			Object controller = method.getBean();
     //判断是否为登录接口实现类
-    			if(controller instanceof Pay3Controller
-    					||controller instanceof UserApiController
+    			if(Pay3Controller.class==controller.getClass()
+    				||UserApiController.class==controller.getClass()
+    				||ResourceApiController.class==controller.getClass()
+    				||ResourceController.class==controller.getClass()
     					){
     				if(FormsAuth.IsLogined()) {
     					//不拦截

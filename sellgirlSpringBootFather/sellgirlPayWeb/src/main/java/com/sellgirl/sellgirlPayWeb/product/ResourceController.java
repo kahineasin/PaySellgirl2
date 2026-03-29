@@ -43,6 +43,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import pf.springBoot.springBootSSO.oAuth.MetabaseFormsAuth;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
+import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
@@ -91,10 +92,14 @@ extends  YJQueryController
 //  	  return View(new LoginerBase(),"Product/detail");
 //    }
 	@GetMapping(value = { "/resource-detail.html" })
-    public ModelAndView Detail(long id,ResourceType resourceType)
+    public ModelAndView Detail(long id,ProductType resourceType)
     {
-		resourceService.setResourceType(resourceType);
+		resourceService.setResourceType2(resourceType);
+		
+		boolean isResourceUnlocked=resourceService.isResourceUnlocked(this.GetUserLongId(), id, resourceType);
 		ViewData.put("resourceType", resourceType);
+		ViewData.put("isResourceUnlocked", isResourceUnlocked);
+		
   	  return View(resourceService.GetOneResource(id),"Product/resource-detail");
     }
 	

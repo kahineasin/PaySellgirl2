@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 
 //import com.sellgirl.sellgirlPayDao.TestDAO;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
+import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
 //import com.sellgirl.sellgirlPayWeb.product.model.resourceChap;
 //import com.sellgirl.sellgirlPayWeb.product.model.resourceChapQuery;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
+import com.sellgirl.sellgirlPayWeb.product.model.userBuyCreate;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 import com.sellgirl.sgJavaHelper.SGDataTable;
@@ -41,6 +43,22 @@ public class ResourceService
 	private String SqlString;
 	private String tableName="sg_resource";
 	public void setResourceType(ResourceType resourceType) {
+		switch(resourceType) {
+		case movie:
+			tableName="sg_resource";
+			return;
+		case image:
+			tableName="sg_img";
+			return;
+		case comic:
+			tableName="sg_comic";
+			return;
+		default:
+			tableName="sg_resource";
+			return;
+		}
+	}
+	public void setResourceType2(ProductType resourceType) {
 		switch(resourceType) {
 		case movie:
 			tableName="sg_resource";
@@ -149,15 +167,52 @@ SqlString = SGDataHelper.FormatString(
 		    return null;
 		}
     }
-  //-------------------------------------------Service resourceService
-//  	    private IresourceDAL dal=new resourceDAL();
-//          /// <summary>
-//          /// 查询书
-//          /// </summary>
-//          public PFDataTable Getresource(resourceQuery q)
-//          {
-//              return dal.Getresource(q);
-//          }
+    
+    public boolean unlockResource(userBuyCreate m)
+    {
+
+		ISGJdbc jdbc=JdbcHelper.GetShop();
+		try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) { 
+			SGSqlInsertCollection insert=dstExec.getInsertCollection();			
+        insert.InitItemByModel(m);
+        SGSqlCommandString sql=new SGSqlCommandString(
+                SGDataHelper.FormatString(
+"insert into sg_user_buy ({0}) values ({1})",insert.ToKeysSql(),insert.ToValuesSql())
+                );
+        int r=dstExec.ExecuteSqlInt(sql, null, true);
+        	return -1<r;
+		} catch (Throwable e) {
+		    SGDataHelper.getLog().writeException(e, TAG);
+//		    return null;
+		}
+		return false;
+    }
+    
+    public boolean isResourceUnlocked(long userId,long resourceId,ProductType resourceType)
+    {
+
+		ISGJdbc jdbc=JdbcHelper.GetShop();
+		try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+			SGSqlWhereCollection query =dstExec.getWhereCollection();   
+			query.setIgnoreNullValue(false);
+          query.Add("user_id",userId);
+          query.Add("source_id",resourceId); 
+          query.Add("source_type",resourceType); 
+
+SqlString = SGDataHelper.FormatString( 
+"select user_id from sg_user_buy " +
+"{0} " 
+, 
+query.ToSql()
+);
+        	return null!=dstExec.QuerySingleValue(SqlString);
+		} catch (Throwable e) {
+		    SGDataHelper.getLog().writeException(e, TAG);
+//		    return null;
+		}
+		return false;
+    }
+
     /**
      * 查询书
      */
@@ -238,75 +293,5 @@ SqlString = SGDataHelper.FormatString(
 //  		    }
 //          }
 
-//      public SGDataTable GetresourceChapById(int id)
-//      {
-//  		ISGJdbc jdbc=JdbcHelper.GetShop();
-//  		try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
-//		    return sql.GetOneRow("sg_resource_chap",a->a.Add("resource_chap_id", id));
-//  		} catch (Throwable e) {
-//  		    SGDataHelper.getLog().writeException(e, TAG);
-//  		    return null;
-//  		}
-//      }  
-//
-//      /**
-//       * 获得上一章或下一章的名称
-//       * @param q
-//       * @return
-//       */
-//      public LinkedHashMap<String,Object> GetresourceChapName(int resource,int chapter)
-//      {
-//          
-//		    ISGJdbc jdbc=JdbcHelper.GetShop();
-//		    try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
-//  
-//			SGSqlWhereCollection query =sql.getWhereCollection();  
-//			query.Add("resource_id", resource);  
-//			query.Add("resource_chap_id", chapter);
-//
-//          SqlString = SGDataHelper.FormatString( 
-//"select resource_chap_id,resource_chap_name from sg_resource_chap " +
-//"{0} " 
-//, 
-//          query.ToSql()
-//      );
-//          SGDataTable dt=sql.GetDataTable(SqlString,null);
-//          if(null!=dt&&!dt.IsEmpty()) {
-//        	  return dt.ToDictList().get(0);
-//          }else {
-//        	  return null;
-//          }
-//		    } catch (Throwable e) {
-//		        SGDataHelper.getLog().writeException(e, TAG);
-//		        return null;
-//		    }
-//      }
-//      
-//      /**
-//       * 查询章节
-//       */
-//      public List<resourceChap> GetresourceChapList(resourceChapQuery q,boolean content)
-//      {
-//          List<resourceChap> list = new ArrayList<resourceChap>();
-//          SGDataTable result = GetresourceChap(q, content);
-//          if (result != null && !result.IsEmpty())
-//          {
-//              list = result.ToList(resourceChap.class,null);
-//          }
-//          return list;
-//      }
-//
-//      /**
-//       * 查询一条章节数据
-//       */
-//      public resourceChap GetOneresourceChap(int id)
-//      {
-//          resourceChap model = null;
-//          SGDataTable dt = GetresourceChapById(id);
-//          if (dt != null && !dt.IsEmpty())
-//          {
-//              model = dt.ToList(resourceChap.class,null).get(0);
-//          }
-//          return model;
-//      }
+
 }

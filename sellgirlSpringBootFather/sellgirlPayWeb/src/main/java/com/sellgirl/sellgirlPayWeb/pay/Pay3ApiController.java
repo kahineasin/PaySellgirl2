@@ -11,6 +11,7 @@ import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 import com.sellgirl.sellgirlPayWeb.user.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
+import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGHttpHelper;
@@ -96,7 +97,10 @@ public class Pay3ApiController extends YJQueryController {
     		long orderId=Long.valueOf(out_trade_no);
     		this.orderService.updateOrderPaid(orderId,trade_no);
     		PayPlan vip=orderService.GetvipOrderVipTypeById(orderId);
-    		User user=this.userService.getUser(this.GetUserName());
+//    		User user=this.userService.getUser(this.GetUserName());
+    		UserQuery q=new UserQuery();
+    		q.setUserId(GetUserLongId());
+    		User user=this.userService.getUser(q);
 
 		    if(PayPlan.point5==vip||PayPlan.point15==vip||PayPlan.point50==vip) {
 		    	int point=5;

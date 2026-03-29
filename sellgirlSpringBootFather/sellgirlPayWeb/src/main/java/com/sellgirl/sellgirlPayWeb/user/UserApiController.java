@@ -50,6 +50,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
+import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
 //import com.sellgirl.sellgirlPayWeb.service.BalanceService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 
@@ -125,7 +126,9 @@ public class UserApiController extends  YJQueryController
 		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
 			return AbstractApiResult.error("签到失败,用户名为空");
 		}
-		User user2=userService.getUser(username);
+		UserQuery q=new UserQuery();
+		q.setUserName(username);
+		User user2=userService.getUser(q);
 		if(null==user2) {
 			return AbstractApiResult.error("签到失败,用户不存在");
 		}

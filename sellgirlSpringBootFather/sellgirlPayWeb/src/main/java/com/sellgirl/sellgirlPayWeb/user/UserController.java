@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
+import com.sellgirl.sgJavaHelper.SGEmailSend;
 import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
@@ -57,6 +59,7 @@ import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreateModel;
+import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
 //import com.sellgirl.sellgirlPayWeb.service.BalanceService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 
@@ -706,7 +709,9 @@ extends YJQueryController
 //		model.setPwd(m.getPassword());
 //		model.setInvitationCode(m.getInviteCode());
 		SGRef<String> error=new SGRef<String>();
-		if(null!=userService.getUser(username)) {
+		UserQuery q=new UserQuery();
+		q.setUserName(username);
+		if(null!=userService.getUser(q)) {
 			ViewData.put("username", "用户名重复，注册失败");
 	    	  return View(registerView);
 		}
@@ -926,5 +931,31 @@ extends YJQueryController
 //  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
   	result.setViewName("Product/forgot-password");
   	return result;
+    }
+
+	@PostMapping(value = { "/PostForgotPassword" })
+    public ModelAndView PostForgotPassword(String email)
+    {
+		ModelAndView result=new ModelAndView();
+		ArrayList<LinkedHashMap<String,Object>> list=this.userService.getPWD(email);
+		boolean hasError=false;
+		boolean sentEmail=false;
+		if(null==list||list.isEmpty()) {
+			hasError=true;			
+			result.addObject("err","该邮箱未注册");
+		}else {
+			StringBuilder sb=new StringBuilder();
+			sb.append("<p>以下是你bdhome的账号:</p><ol>");
+			for(LinkedHashMap<String,Object> i:list) {
+				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
+			}
+			sb.append("</ol>");
+			SGEmailSend.SendMail(new String[] {email}, "找回密码", sb.toString());
+			sentEmail=true;
+		}
+		result.addObject("hasError",hasError);
+		result.addObject("sentEmail",sentEmail);
+		result.setViewName("Product/forgot-password");
+		return result;
     }
 }

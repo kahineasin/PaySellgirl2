@@ -24,7 +24,8 @@ com.sellgirl.sellgirlPayWeb.shop
 
 ## 开发待办
 1. book.html等页面需要改为template/product2里面的需要积分才能看的版本
-2. 记录用户购买的产品到表user_buy{id,user_id,source,source_id} 多种产品用source区分
+3. 找回密码的功能(修改密码的功能也没有?)
+4. 换系统邮箱
 
 ## 测试地址
 
@@ -83,5 +84,5 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 ## 系统参数
 1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt
 ## 测试账号
-1. resource eee:eeeeee1
-2. normal fff:ffffff1
+1. normal aaa:aaaaaa1
+2. resource fff:ffffff1

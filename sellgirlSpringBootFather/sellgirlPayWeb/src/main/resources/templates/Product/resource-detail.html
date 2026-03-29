@@ -7,6 +7,7 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
     <script src="common.js"></script>
+    <script src="/sg/js/jq/jquery-2.1.4.js"></script>
     <script src="/product/common2.js"></script>
     <script src="data-resources.js"></script>
     <script> requireResourceUser(); </script>
@@ -246,6 +247,7 @@
             
             let foundThread = [[${Model}]];
             let parentBoardId = [[${resourceType}]];
+            const isResourceUnlocked=[[${isResourceUnlocked}]];
 
             if (!foundThread //|| !parentBoard
             ) {
@@ -316,7 +318,9 @@
             }
 
             // 检查是否已解锁
-            if (isResourceUnlocked(threadId)) {
+            if (//isResourceUnlocked(threadId)
+            isResourceUnlocked
+            ) {
                 showResourceInfo();
             } else {
                 const user = getCurrentUser();
@@ -335,6 +339,7 @@
                 }
 
                 consumeButton.addEventListener('click', function() {
+                    consumeButton.disabled = true;
                     const user = getCurrentUser();
                     if (!user) {
                         alert('请先登录');
@@ -342,15 +347,29 @@
                         return;
                     }
                     // 调用 unlockResource 消耗积分（1分）
-                    if (unlockResource(threadId)) {
-                        showResourceInfo();
-                        // 更新导航栏积分显示
-                        const userInfoDiv = document.getElementById('userInfo');
-                        const points = getUserPoints();
-                        userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${points} 积分`);
-                    } else {
-                        alert('积分不足，无法查看');
-                    }
+                    unlockResource(threadId,parentBoardId,
+                    	function(result){
+                    		if(result.success){
+		                        showResourceInfo();
+		                        // 更新导航栏积分显示
+		                        const userInfoDiv = document.getElementById('userInfo');
+		                        //const points = getUserPoints();
+		                        userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${result.point} 积分`);
+                    		}else{
+                        		alert(result.message);
+                    			consumeButton.disabled = false;
+                    		}
+                    	}
+                    );
+                    //if (unlockResource(threadId)) {
+                    //    showResourceInfo();
+                    //    // 更新导航栏积分显示
+                    //    const userInfoDiv = document.getElementById('userInfo');
+                    //    const points = getUserPoints();
+                    //    userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${points} 积分`);
+                    //} else {
+                    //    alert('积分不足，无法查看');
+                    //}
                 });
             }
 
@@ -382,7 +401,8 @@
                         id: foundThread.id,
                         title: foundThread.title,
                         cover: foundThread.previewImg,
-                        description: foundThread.description
+                        description: foundThread.description,
+                        resourceType: parentBoardId
                     });
                 }
                 updateFavoriteBtn();

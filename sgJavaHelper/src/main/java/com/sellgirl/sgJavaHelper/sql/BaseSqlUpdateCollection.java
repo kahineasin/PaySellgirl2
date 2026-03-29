@@ -89,9 +89,12 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
 
             }
         } else {
-            //// _modelProperties = PFDataHelper.GetProperties(model.GetType());
-            // var modelProperties = PFDataHelper.GetProperties(model.GetType());
+//            //// _modelProperties = PFDataHelper.GetProperties(model.GetType());
+//            // var modelProperties = PFDataHelper.GetProperties(model.GetType());
             Field[] fields = model.getClass().getFields();
+          //下面这样能获取private的字段,要设置为Accessible,有些麻烦,
+            //一直以来干脆把domain的字段设置为public
+//            Field[] fields = model.getClass().getDeclaredFields();
             if (names != null && names.length > 0) {
                 for (String i : names) {
                     Field field;
@@ -158,6 +161,10 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
         }
     }
 
+    /**
+     * 注意model的filed时public才会自动生成
+     * @param model
+     */
     public void InitItemByModel(Object model) {
         InitItemByModel(model, new String[]{});
     }
@@ -586,6 +593,9 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
         		||SGSqlFieldTypeEnum.Bool==dstPFType//mysql 中tinyint(1) 插入 'true' 报错，所以加此条件 --benjamin 20260319
         		) {
             return SGDataHelper.FormatString(" {0} ", SGDataHelper.ObjectToBool0(val) == true ? 1 : 0);
+        }
+        if(val.getClass().isEnum()) {//性能高于一切,enum用TINYINT
+        	return String.valueOf(SGDataHelper.ObjectToEnumInt(val.getClass(), val));
         }
 //        if (val instanceof List)//支持String[]的成员
 //        {
