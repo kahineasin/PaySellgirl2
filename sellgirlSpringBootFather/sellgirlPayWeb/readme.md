@@ -26,13 +26,17 @@ com.sellgirl.sellgirlPayWeb.shop
 1. book.html等页面需要改为template/product2里面的需要积分才能看的版本
 3. 找回密码的功能(修改密码的功能也没有?)
 4. 换系统邮箱
+5. cloudflare加速
+6. resource-search.html 页面搜索中文后, 如果因为登录失效跳到登录页, 之后回来url变为xxx?q=??
+   看看怎么处理好
 
 ## 测试地址
 
 # 开发指南
 ## 打包
-mvn clean package -Pprod-build  //这样可以排除yml,之后把yml放在jar的同级目录即可
-排除的文件在sellgirlPayWeb/pom.xml中设置, 比如有:
+1. mvn clean package -Pprod-build  
+  //这样可以排除yml,之后把yml放在jar的同级目录即可
+2. 排除的文件在sellgirlPayWeb/pom.xml中设置, 比如有:
 application-prod.yml, static/resourceImg/** ...
 注意这些排除项有可能和父项目的include(eclipse开发环境运行时需要)少许冲突
 //排除的这些文件, 视情况, 需要另外复制到jar运行时的同级目录(比如static/resourceImg/...)

@@ -248,6 +248,9 @@
             let foundThread = [[${Model}]];
             let parentBoardId = [[${resourceType}]];
             const isResourceUnlocked=[[${isResourceUnlocked}]];
+            let resourceLock=[[${resourceLock}]];
+            //alert(isResourceUnlocked);
+            //alert(JSON.stringify(resourceLock));
 
             if (!foundThread //|| !parentBoard
             ) {
@@ -277,8 +280,9 @@
                 detailDuration.parentElement.style.display = 'none';
             }
             if (foundThread.size) {
-                const sizeGB = (foundThread.size / 1024).toFixed(1);
-                detailSize.textContent = sizeGB + ' GB';
+                //const sizeGB = (foundThread.size / 1024).toFixed(1);
+                //detailSize.textContent = sizeGB + ' GB';
+                detailSize.textContent = formatMB(foundThread.size);
             } else {
                 detailSize.parentElement.style.display = 'none';
             }
@@ -309,10 +313,10 @@
 
             // 显示网盘信息
             function showResourceInfo() {
-                detailNetdisk.href = foundThread.netdisk;
+                detailNetdisk.href = resourceLock.netdisk;
                 detailNetdisk.textContent = '🔗 立即保存 / 提取';
-                extractCodeSpan.textContent = foundThread.extractCode || '无';
-                unlockPasswordSpan.textContent = foundThread.unlockPassword || '无';
+                extractCodeSpan.textContent = resourceLock.extractCode || '无';
+                unlockPasswordSpan.textContent = resourceLock.unlockPassword || '无';
                 resourceInfoDiv.style.display = 'block';
                 consumeButton.style.display = 'none';
             }
@@ -350,6 +354,7 @@
                     unlockResource(threadId,parentBoardId,
                     	function(result){
                     		if(result.success){
+                    			resourceLock=result.resourceLock;
 		                        showResourceInfo();
 		                        // 更新导航栏积分显示
 		                        const userInfoDiv = document.getElementById('userInfo');

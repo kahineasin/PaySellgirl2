@@ -83,8 +83,8 @@ public class ResourceApiController extends  YJQueryController
 //			q.sort=field;
 //		}
 //		q.desc=descending;
-		resourceService.setResourceType(resourceType);
-		List<resource> book=resourceService.GetresourceList(q,p);
+//		resourceService.setResourceType(resourceType);
+		List<resource> book=resourceService.GetresourceList(q,p,resourceType);
 		PagingResult r=new PagingResult();
 		r.data=book;
 		if((null==r||book.isEmpty())&&0==p.getPageIndex()) {
@@ -123,7 +123,10 @@ public class ResourceApiController extends  YJQueryController
 			long point=userService.getUser(q).getPoint();
 			sysUser.point=point;
 			this.SetSystemUser(sysUser);
-			return AbstractApiResult.success(point);
+			HashMap<String,Object> r=new HashMap<String,Object>();
+			r.put("point", point);
+			r.put("resourceLock", resourceService.GetOneResourceLock(resourceId,resourceService.productToResource(resourceType)));
+			return AbstractApiResult.success(r);
 		}else {
 			return AbstractApiResult.error("解锁失败");
 		}

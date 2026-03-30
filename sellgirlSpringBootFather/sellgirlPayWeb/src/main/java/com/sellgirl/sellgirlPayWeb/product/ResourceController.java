@@ -79,8 +79,8 @@ extends  YJQueryController
 		p.setPageSize(4);
 		for(ResourceType i:ResourceType.values()) {
 			resourceQuery q=new resourceQuery();
-			resourceService.setResourceType(i);
-			List<resource> book=resourceService.GetresourceList(q,p);	
+//			resourceService.setResourceType(i);
+			List<resource> book=resourceService.GetresourceList(q,p,i);	
 			ViewData.put(i.name(), book);
 		}
   	  return View(new LoginerBase(),"Product/resource-index");
@@ -94,13 +94,16 @@ extends  YJQueryController
 	@GetMapping(value = { "/resource-detail.html" })
     public ModelAndView Detail(long id,ProductType resourceType)
     {
-		resourceService.setResourceType2(resourceType);
-		
+//		resourceService.setResourceType2(resourceType);
+		ResourceType type= resourceService.productToResource(resourceType);
 		boolean isResourceUnlocked=resourceService.isResourceUnlocked(this.GetUserLongId(), id, resourceType);
-		ViewData.put("resourceType", resourceType);
-		ViewData.put("isResourceUnlocked", isResourceUnlocked);
-		
-  	  return View(resourceService.GetOneResource(id),"Product/resource-detail");
+		ModelAndView r=View(resourceService.GetOneResource(id,type),"Product/resource-detail");
+		r.addObject("resourceType", resourceType);
+		r.addObject("isResourceUnlocked", isResourceUnlocked);
+		if(isResourceUnlocked) {
+			r.addObject("resourceLock", resourceService.GetOneResourceLock(id,type));
+		}
+  	  return r;
     }
 	
 	@GetMapping(value = { "/resource-search.html" })
@@ -110,11 +113,12 @@ extends  YJQueryController
 		p.setPageSize(10);
 		p.setPageIndex(0);
 		p.setSort("create_date desc");
+		ModelAndView r=View(new LoginerBase(),"Product/resource-search");
 		for(ResourceType i:ResourceType.values()) {
-			resourceService.setResourceType(i);
-			ViewData.put(i.name(), resourceService.GetresourceListByName(q,p)) ;	
+//			resourceService.setResourceType(i);
+			r.addObject(i.name(), resourceService.GetresourceListByName(q,p,i)) ;	
 		}
-  	  return View(new LoginerBase(),"Product/resource-search");
+  	  return r;
     }
 	@GetMapping(value = { "/resource-board.html" })
     public ModelAndView Board()

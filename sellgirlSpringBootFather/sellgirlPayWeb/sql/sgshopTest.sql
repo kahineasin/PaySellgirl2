@@ -46,6 +46,7 @@ select * from sgshop.sg_book limit 1000,10;
 select * from sgshop.sg_book where `book_id`>999 limit 10;
 -- drop table sg_user_buy
 select * from sg_user_buy where user_id is null
+-- delete from sg_user_buy
 select user_id from sg_user_buy  where  `user_id`=2  and  `source_id`=6  
 user_id from sg_resource  where  `user_id`=2  and  `source_id`=2500  
 -- INSERT INTO sg_user
@@ -90,7 +91,10 @@ update sgshop.sg_user set point=point+1000 where user_id=2
    select * from sg_resource where resource_name like '%2420%'
    select * from sg_resource limit 20;
    select * from sg_comic limit 20;
+   select * from sg_comic where resource_id=411 limit 20;
+   
    select * from sg_img limit 20;
+   
    select * from sg_resource t INNER JOIN(select resource_id from sg_resource order by create_date desc limit 0,10) tmp ON t.resource_id=tmp.resource_id
    
    

@@ -159,6 +159,31 @@ public class UncheckEmail001 extends TestCase {
 //		}
 		//System.out.println("测试通过");
 	}
+
+	/**
+	 * qq邮箱发送
+	 * @throws InterruptedException
+	 */
+	public void testEmailSend6() throws InterruptedException {
+		Uncheck001.initPFHelper();
+
+		//PFEmailSend.EMAIL_OWNER_ADDR_HOST="smtp.163.com";
+		SGEmailSend.EMAIL_OWNER_ADDR_HOST="smtp.qq.com";
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST="pop.exmail.qq.com";
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST="imap.exmail.qq.com";
+//		SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
+		SGEmailSend.EMAIL_OWNER_ADDR="2557667040";
+		SGEmailSend.EMAIL_OWNER_ADDR_PASS="zhengwen12";
+		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT.getProperties();
+
+		String title="测试发邮件20260331_1_"+ SGDate.Now().toString();
+
+		String[] emails= new String[]{"miuxiaoniao@126.com"};
+		SGEmailSend.SendMail(emails,
+				title,  title);
+		Thread.sleep(2000);
+		//System.out.println("测试通过");
+	}
 	private static String testPwd="";
 	public void testEmailSend2() throws InterruptedException {
 		Uncheck001.initPFHelper();

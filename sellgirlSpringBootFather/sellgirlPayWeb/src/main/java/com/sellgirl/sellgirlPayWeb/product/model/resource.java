@@ -6,7 +6,7 @@ import java.util.Date;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 /**
-* 资源
+* 资源 列表通用模型,注意不要放解压密码到这里
 */
 public class resource {
         /**
@@ -30,20 +30,20 @@ public class resource {
 		public  String cover ;
 		public  String description ;
 		
-		/**
-        * netdisk
-         */
-		public  String netdisk ;
-		
-        /**
-        * extractCode
-         */
-		public  String extractCode ;
-		
-        /**
-        * unlockPassword
-         */
-		public  String unlockPassword ;
+//		/**
+//        * netdisk(这里含有extractCode)
+//         */
+//		public  String netdisk ;
+		//这是列表模型,密码不要放这,否则很容易暴露到列表的js中
+//        /**
+//        * extractCode
+//         */
+//		public  String extractCode ;
+//		
+//        /**
+//        * unlockPassword
+//         */
+//		public  String unlockPassword ;
 		
         /**
         * duration
@@ -91,24 +91,24 @@ public class resource {
 		public void setDescription(String description) {
 			this.description = description;
 		}
-		public  String getNetdisk (){
-		  return netdisk;
-		}
-		public  void setNetdisk (String netdisk){
-		  this.netdisk=netdisk;
-		}
-		public  String getExtractCode (){
-		  return extractCode;
-		}
-		public  void setExtractCode (String extractCode){
-		  this.extractCode=extractCode;
-		}
-		public  String getUnlockPassword (){
-		  return unlockPassword;
-		}
-		public  void setUnlockPassword (String unlockPassword){
-		  this.unlockPassword=unlockPassword;
-		}
+//		public  String getNetdisk (){
+//		  return netdisk;
+//		}
+//		public  void setNetdisk (String netdisk){
+//		  this.netdisk=netdisk;
+//		}
+//		public  String getExtractCode (){
+//		  return extractCode;
+//		}
+//		public  void setExtractCode (String extractCode){
+//		  this.extractCode=extractCode;
+//		}
+//		public  String getUnlockPassword (){
+//		  return unlockPassword;
+//		}
+//		public  void setUnlockPassword (String unlockPassword){
+//		  this.unlockPassword=unlockPassword;
+//		}
 		public  int getDuration (){
 		  return duration;
 		}

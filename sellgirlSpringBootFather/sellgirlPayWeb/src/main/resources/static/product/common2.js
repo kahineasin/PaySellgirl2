@@ -215,7 +215,7 @@ callback) {
 			    if(user){
 				    if (!user.unlockedResources) user.unlockedResources = [];
 				    if (!user.unlockedResources.includes(resourceId)) {
-				        user.points =data.data;
+				        user.points =data.data.point;
 				        user.unlockedResources.push(resourceId);
 				        setCurrentUser(user);
 				    }
@@ -223,7 +223,8 @@ callback) {
     		}
 			callback({
 			success:data.success,message:data.msg,
-			point:data.data
+			point:data.data.point,
+			resourceLock:data.data.resourceLock
 			},status);
 		  })
 		  .success(function() { /*alert("second success");*/ })//grid进入

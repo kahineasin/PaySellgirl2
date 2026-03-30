@@ -5,6 +5,7 @@ function mapResourceToDto(i,resourceType){
 	i.title=i.resource_name;
 	if('comic'==resourceType||'image'==resourceType){
 		i.imageCount=i.duration;
+		delete i.duration;
 	}else{
 		i.duration=(i.duration/60).toFixed(0);//second->minute
 	}
@@ -21,4 +22,11 @@ function mapResourceToDto(i,resourceType){
 		}
 	}
 	return i;
+}
+
+function formatMB(MB){
+	if(MB>1024){
+		return ''+(MB/1024).toFixed(1)+'GB';
+	}
+	return ''+MB+'MB';
 }

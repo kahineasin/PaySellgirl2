@@ -262,7 +262,8 @@
 			  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
 			  .complete(function(XMLHttpRequest, textStatus){})
 			  ;
-			}
+			}			
+			
             function renderListForPage2(page) {
                 const start = (page - 1) * pageSize;
                 const end = Math.min(start + pageSize, totalItems);
@@ -286,7 +287,7 @@
 
                     let extraInfo = '';
                     if (boardId === 'movie') {
-                        extraInfo = ` · 🕒 ${thread.duration}分钟 · 💾 ${(thread.size/1024).toFixed(1)}GB`;
+                        extraInfo = ` · 🕒 ${thread.duration}分钟 · 💾 ${formatMB(thread.size)}`;
                     } else if (boardId === 'image' || boardId === 'comic') {
                         extraInfo = ` · 🖼️ ${thread.imageCount}张`;
                     } else if (boardId === 'update') {

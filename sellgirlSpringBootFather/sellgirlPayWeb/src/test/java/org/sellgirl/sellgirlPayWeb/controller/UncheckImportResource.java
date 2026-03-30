@@ -142,10 +142,10 @@ public class UncheckImportResource extends TestCase {
 				dstExec.AutoCloseConn(false);
 
 				ResourceService service=new ResourceService();
-				service.setResourceType(resourceType);
+//				service.setResourceType(resourceType);
 				
 				if(clear) {
-					dstExec.TruncateTable(service.getTableName());
+					dstExec.TruncateTable(service.getTableName(resourceType));
 					//dstExec.TruncateTable("sg_resource_chap");
 				}
 
@@ -275,7 +275,7 @@ public class UncheckImportResource extends TestCase {
 									"insert into {2} ({0}) values ({1})",
 									insert.ToKeysSql(),
 									insert.ToValuesSql(),
-									service.getTableName()
+									service.getTableName(resourceType)
 									)
 							);
 					int r=dstExec.ExecuteSqlInt(sql, null, false);
@@ -423,9 +423,10 @@ public class UncheckImportResource extends TestCase {
 	}
 	
 	public void testGenerateSmallImg() {
+		int size=80;
 		ResourceType resourceType=ResourceType.comic;
 		String srcImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
-		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+"60";
+		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+size;
 		SGDirectory.eachFile(
 			new File(srcImgPath), 
 			dstImgPath, File.separatorChar, 
@@ -456,8 +457,8 @@ public class UncheckImportResource extends TestCase {
 //					file2.delete();
 
 					//方法2. 20秒 (推荐)
-					int backW = 60; // 1920;
-					int backH = 60;// 1080;
+					int backW = size; // 1920;
+					int backH = size;// 1080;
 					SGLine imgLine=SGLine.FitHeightAndCenterHorizontally();
 					SGLine backLine=new SGLine(new PFPoint(0, 0), new PFPoint(backW, backH));
 					
@@ -602,7 +603,7 @@ public class UncheckImportResource extends TestCase {
 	public void testBulkCopy() {
 		ResourceType resourceType=ResourceType.comic;
 		ResourceService service=new ResourceService();
-		service.setResourceType(resourceType);
+//		service.setResourceType(resourceType);
 		  final SGWaiter waiter=new SGWaiter(2000);
 
 		initPFHelper();
@@ -623,7 +624,7 @@ public class UncheckImportResource extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String dstTableName=service.getTableName();
+		String dstTableName=service.getTableName(resourceType);
 		// 使用NString前
 		ResultSet srcDr = srcExec.GetHugeDataReader("select * from "+dstTableName);
 		// ResultSet srcDr = srcExec.GetDataReader("select 1 as c1,1 as c2,cast((CASE 1

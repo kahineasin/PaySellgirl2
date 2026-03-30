@@ -36,7 +36,11 @@ import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 public class BookService
 {
 	private final String TAG="BookService";
-	private String SqlString;
+//	/**
+//	 * @deprecated service内部不能有任何"可变的成员变量(如字段)
+//	 */
+//	@Deprecated
+//	private String SqlString;
     /**
     * 查询书
     */
@@ -55,7 +59,7 @@ public class BookService
 //	String aa="aa";
 //}
 
-SqlString = SGDataHelper.FormatString( 
+            String SqlString = SGDataHelper.FormatString( 
 "select * from sg_book " +
 "{0} " 
 , 
@@ -88,7 +92,7 @@ query.ToSql()
 //	String aa="aa";
 //}
 
-SqlString = SGDataHelper.FormatString( 
+			String SqlString = SGDataHelper.FormatString( 
 "select * from sg_book "+
 "where book_name like '%{0}%' or book_author like '%{0}%' limit 20"
 , name
@@ -174,7 +178,7 @@ SqlString = SGDataHelper.FormatString(
   			SGSqlWhereCollection query =sql.getWhereCollection();  
   			query.Add("book_id", q.getBook_id());
 
-              SqlString = SGDataHelper.FormatString( 
+  			String SqlString = SGDataHelper.FormatString( 
   "select {1} from sg_book_chap " +
   "{0} " 
   , 
@@ -214,7 +218,7 @@ SqlString = SGDataHelper.FormatString(
 			query.Add("book_id", book);  
 			query.Add("book_chap_id", chapter);
 
-          SqlString = SGDataHelper.FormatString( 
+			String SqlString = SGDataHelper.FormatString( 
 "select book_chap_id,book_chap_name from sg_book_chap " +
 "{0} " 
 , 
