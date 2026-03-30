@@ -12,7 +12,8 @@ function mapResourceToDto(i,resourceType){
 	if(i.cover){
 		let coverArr=i.cover.split(',');
 		if(0<coverArr.length){
-			i.previewImg='/resourceImg/'+resourceType+'/'+i.resource_id+'/'+coverArr[0];
+			//i.previewImg='/resourceImg/'+resourceType+'/'+i.resource_id+'/'+coverArr[0];
+			i.previewImg='/resourceImg/'+resourceType+'60/'+i.resource_id+'/'+coverArr[0];
 			i.images=[];
 			coverArr.forEach(j=>{
 				i.images.push('/resourceImg/'+resourceType+'/'+i.resource_id+'/'+j);

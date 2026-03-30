@@ -10,7 +10,7 @@ import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.PFEnumClass;
 import com.sellgirl.sgJavaHelper.PFHiveSqlCreateTableCollection;
 import com.sellgirl.sgJavaHelper.PFKeyValueCollection;
-import com.sellgirl.sgJavaHelper.PFLine;
+import com.sellgirl.sgJavaHelper.SGLine;
 import com.sellgirl.sgJavaHelper.PFModelConfig;
 import com.sellgirl.sgJavaHelper.PFModelConfigCollection;
 import com.sellgirl.sgJavaHelper.PFPoint;
@@ -1825,7 +1825,7 @@ public class UncheckTimeTask001 extends TestCase {
 //		int backHeight = h;
 
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image, null,
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
+					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -1837,72 +1837,6 @@ public class UncheckTimeTask001 extends TestCase {
 		return;
 	}
 
-	public void testBackgroundImgInBuffer() {
-		try {
-			int backWidth = 3840; // 1920;
-			int backHeight = 2160;// 1080;
-
-			File infile = new File(sashaImgPath);
-			Image image = ImageIO.read(infile);
-			File infile2 = new File(sashaBeingTiedToTheCrossImgPath);
-			Image image2 = ImageIO.read(infile2);
-			File infile3 = new File(sashaImgPath2);
-			Image image3 = ImageIO.read(infile);
-//		int backWidth = w;
-//		int backHeight = h;
-			// BufferedImage paintBi = new BufferedImage(wWidth * pixelTatio, wHeight *
-			// pixelTatio, 1);
-//		Canvas canvas = new Canvas();
-//		Graphics ctx1 = canvas.getGraphics();
-
-//		Canvas canvas = null;
-//		Graphics ctx1 = null;
-			SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
-			SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
-			BufferedImage paintBi = null;
-			paintBi = SGDataHelper.backgroundImgInBuffer(
-					// canvas,ctx1,
-					canvasRef, ctx1Ref, null, new Dimension(backWidth, backHeight), image, null,
-					// new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
-					// new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(1790, 2160)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
-//		 paintBi = PFDataHelper.backgroundImgInBuffer(
-//					//canvas,ctx1,
-//					canvasRef,ctx1Ref,
-//					null,new Dimension(backWidth, backHeight), image3,
-//					null,
-//					//new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
-//					//new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-//					new PFLine(new PFPoint(0,0),new PFPoint(2000,2160)),
-//					new PFLine(new PFPoint(0,0),new PFPoint(100,100)).IsPercent(), Color.RED,
-//					false);
-
-			paintBi = SGDataHelper.backgroundImgInBuffer(
-//				 canvas,ctx1,
-					canvasRef, ctx1Ref, paintBi, new Dimension(backWidth, backHeight), image2, null,
-					// new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
-					// new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-					new PFLine(new PFPoint(1790, 0), new PFPoint(1790 + 1680, 2160)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
-
-			// canvas=canvasRef.GetValue();
-			canvasRef.GetValue().printAll(ctx1Ref.GetValue());
-
-			String tmpImgPath = Paths
-					.get(SGDataHelper.GetBaseDirectory(),
-							new String[] { "tmpfile\\tmpimg_" + SGDataHelper.GetNewUniqueHashId() + ".jpg" })
-					.toString();
-			SGDirectory.EnsureExists(tmpImgPath);
-			File file2 = new File(tmpImgPath);
-			ImageIO.write(paintBi, "jpg", file2);
-			// ctx1.dispose();
-			// file.delete();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return;
-	}
 
 	public void testDateRange() {
 		SGDate now = SGDate.Now().GetHourStart();

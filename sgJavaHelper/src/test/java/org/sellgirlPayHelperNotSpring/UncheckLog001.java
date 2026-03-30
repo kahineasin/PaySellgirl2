@@ -14,7 +14,7 @@ import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.PFEnumClass;
 import com.sellgirl.sgJavaHelper.PFHiveSqlCreateTableCollection;
 import com.sellgirl.sgJavaHelper.PFKeyValueCollection;
-import com.sellgirl.sgJavaHelper.PFLine;
+import com.sellgirl.sgJavaHelper.SGLine;
 import com.sellgirl.sgJavaHelper.PFModelConfig;
 import com.sellgirl.sgJavaHelper.PFModelConfigCollection;
 import com.sellgirl.sgJavaHelper.PFPoint;

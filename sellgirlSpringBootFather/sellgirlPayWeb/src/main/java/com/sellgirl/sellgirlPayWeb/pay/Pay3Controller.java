@@ -266,7 +266,7 @@ public class Pay3Controller extends YJQueryController {
 //    }
 
     /**
-     * 三方支付回调
+     * 三方支付回调的页面
      * @param pid
      * @param name
      * @param money

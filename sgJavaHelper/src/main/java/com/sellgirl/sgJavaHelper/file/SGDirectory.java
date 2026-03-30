@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.sellgirl.sgJavaHelper.SGAction;
 import com.sellgirl.sgJavaHelper.SGDate;
+import com.sellgirl.sgJavaHelper.SGFunc;
 
 /*
  * 代替C#里的Directory类，就相当于“文件夹”
@@ -184,5 +186,51 @@ public class SGDirectory {
 //				}
 			}
 		}
+	}
+	
+
+	/**
+	 * 深度遍历文件夹中的文件.
+	 * 
+	 * 使用方法:
+		SGDirectory.eachFile(
+			new File(srcImgPath), 
+			dstImgPath, File.separatorChar, 
+			(file,path,obj)->{
+				SGPath.copyFile(file, new File(path));
+			}, 
+			(filder,path,obj)->{
+				SGDirectory.EnsureExists(path);
+			}
+		);
+	 * 
+	 * @param sourceFolder
+	 * @param dstFolder
+	 * @param sp
+	 * @param fileAction
+	 * @param folderAction
+	 */
+	public static void eachFile(File sourceFolder,
+			String dstFolder,char sp,
+			SGAction<File,String,Object> fileAction,
+			SGAction<File,String,Object> folderAction
+			) {		
+//        mkdirs(channel, dstFolder);
+        File[] files = sourceFolder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+            	String dstPath= dstFolder + sp + file.getName();
+                if (file.isFile()) {
+                	fileAction.go(file,dstPath, files);
+//                    System.out.println("上传: " + file.getName());
+//                    try (FileInputStream fis = new FileInputStream(file)) {
+//                        channel.put(fis, dstFolder + sp + file.getName());
+//                    }
+                }else if(file.isDirectory()){
+                	folderAction.go(file, dstPath, files);
+                	SGDirectory.eachFile(file,dstPath,sp,fileAction,folderAction);
+                }
+            }
+        }
 	}
 }

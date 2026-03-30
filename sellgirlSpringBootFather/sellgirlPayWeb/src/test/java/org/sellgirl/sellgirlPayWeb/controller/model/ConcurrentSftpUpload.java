@@ -12,6 +12,11 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 
+/**
+ * 缺点,每上传一个文件都重新open一次connection
+ * 多线程深度递归上传文件到云ubuntu,重试3次
+ */
+@Deprecated
 public class ConcurrentSftpUpload {
 	private static final String TAG="ConcurrentSftpUpload";
     // 配置参数
@@ -19,12 +24,17 @@ public class ConcurrentSftpUpload {
     private static final int PORT = 22;
     private static final String USER ="root";// "ubuntu";
 //    private static final String SSH="C:\\Users\\Administrator\\.ssh\\id_rsa.pub";
-    private static final String SSH=null;//"C:/Users/Administrator/.ssh/id_rsa";
-    private static final String PASSWORD = "x96rNe9e1D";
+  //"C:/Users/Administrator/.ssh/id_rsa";
+    private static final String SSH=null;//"C:\\Users\\Administrator\\.ssh\\id_rsa";
+    private static final String PASSWORD = "";
+    
 //    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg";          // 本地根目录
 //    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg"; // 远程根目录
-    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\movie";          // 本地根目录
-    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/movie"; // 远程根目录
+//    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\movie";          // 本地根目录
+//    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/movie"; // 远程根目录
+    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\movie60";          // 本地根目录
+    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/movie60"; // 远程根目录
+    
     private static final int THREAD_COUNT = 5;                      // 上传线程数
     private static final int QUEUE_CAPACITY = 1000;                 // 队列容量，防止内存爆炸
 
@@ -241,9 +251,10 @@ public class ConcurrentSftpUpload {
                     session=jsch.getSession(USER, HOST, PORT);
                 }
                 session.setConfig("StrictHostKeyChecking", "no");
+                session.setTimeout(30000);
                 session.connect();
                 channel = (ChannelSftp) session.openChannel("sftp");
-                channel.connect();
+                channel.connect(30000);
 
                 String[] parts = parentDir.split("/");
                 String current = "";
@@ -278,10 +289,11 @@ public class ConcurrentSftpUpload {
             session=jsch.getSession(USER, HOST, PORT);
         }
         session.setConfig("StrictHostKeyChecking", "no");
+        session.setTimeout(30000);
         session.connect();
 
         ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-        channel.connect();
+        channel.connect(30000);
 
         try (FileInputStream fis = new FileInputStream(localFile)) {
             channel.put(fis, remotePath);

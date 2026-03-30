@@ -3,6 +3,7 @@ package com.sellgirl.sellgirlPayWeb.pay;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus;
+import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
 import com.sellgirl.sellgirlPayWeb.pay.model.vipOrderCreate;
 import com.sellgirl.sellgirlPayWeb.pay.service.OrderService;
 //import com.sellgirl.sellgirlPayWeb.pay.service.WechatPayNativeService;
@@ -42,6 +43,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * 总体过程:
+ * 1. /pay3payPage 使用户跳转到zpay支付页面, 用户扫码
+ * 2. zpay服务器回调我的/api/pay3/notify  (注意此接口不要试图使用用户的cookie,因为没有)
+ * 3. zpay使用户跳转回我的/pay3paid.html, 页面间歇查询订单状态, 订单完成就跳转到profile.html
+ * 4. profile.html 控制器内查询point并更新用户cache
+ * 
  * 测试zpay支付，
  * 对应static/demo/product3.html
  */
@@ -96,10 +103,12 @@ public class Pay3ApiController extends YJQueryController {
     	{
     		long orderId=Long.valueOf(out_trade_no);
 //    		this.orderService.updateOrderPaid(orderId,trade_no);
-    		PayPlan vip=orderService.GetvipOrderVipTypeById(orderId);
+//    		PayPlan vip=orderService.GetvipOrderVipTypeById(orderId);
+    		vipOrder vipOrder=orderService.GetOnevipOrder(orderId);
+    		PayPlan vip=vipOrder.getVip_type();
 //    		User user=this.userService.getUser(this.GetUserName());
     		UserQuery q=new UserQuery();
-    		q.setUserId(GetUserLongId());
+    		q.setUserId(vipOrder.getUser_id());
     		User user=this.userService.getUser(q);
 
 		    if(PayPlan.point5==vip||PayPlan.point15==vip||PayPlan.point50==vip) {
@@ -118,11 +127,12 @@ public class Pay3ApiController extends YJQueryController {
 		      		point=5;
 		      		break;
 		        }
-		    	userService.addUserPoint(user.getUserId(),point);
+		    	userService.addUserPoint(vipOrder.getUser_id(),point);
 
-	    		SystemUser sysUser=this.GetSystemUser();
-	    		sysUser.point+=point;
-	    		this.SetSystemUser(sysUser);
+//		    	//这里的cookie是zpay服务器,所以在这处理没有用
+//	    		SystemUser sysUser=this.GetSystemUser();
+//	    		sysUser.point+=point;
+//	    		this.SetSystemUser(sysUser);
 		    }else {
 				SGDate now=SGDate.Now();
 	    		if(PayPlan.resource_monthly==vip) {
@@ -154,10 +164,11 @@ public class Pay3ApiController extends YJQueryController {
 	    				user.setVip2_expire(user.getVip2_expire().AddYears(1).AddMonths(3));
 	    			}
 	    		}
-	    		SystemUser sysUser=this.GetSystemUser();
-	    		sysUser.isVip=true;
-	    		this.SetSystemUser(sysUser);
-	    		this.userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+	    		this.userService.updateUserVip(vipOrder.getUser_id(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+//		    	//这里的cookie是zpay服务器,所以在这处理没有用
+//	    		SystemUser sysUser=this.GetSystemUser();
+//	    		sysUser.isVip=true;
+//	    		this.SetSystemUser(sysUser);
 
 		    }  
 		  //paid页面根据订单状态跳转到profile页并根据cache更新前端store

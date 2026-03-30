@@ -2,6 +2,8 @@ package com.sellgirl.sellgirlPayWeb.pay.model;
 
 import java.math.BigDecimal;
 
+import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
+
 public class vipOrder {
 
     /**
@@ -14,15 +16,15 @@ public class vipOrder {
      */
 	public  String order_no ;
 	
-//    /**
-//    * user_id
-//     */
-//	public  long user_id ;
-//	
-//    /**
-//    * vip_type
-//     */
-//	public  Integer vip_type ;
+    /**
+    * user_id
+     */
+	public  long user_id ;
+	
+    /**
+    * vip_type
+     */
+	public  PayPlan vip_type ;
 //	
     /**
     * amount
@@ -66,18 +68,18 @@ public class vipOrder {
 	public  void setOrder_no (String order_no){
 	  this.order_no=order_no;
 	}
-//	public  long getUser_id (){
-//	  return user_id;
-//	}
-//	public  void setUser_id (long user_id){
-//	  this.user_id=user_id;
-//	}
-//	public  Integer getVip_type (){
-//	  return vip_type;
-//	}
-//	public  void setVip_type (Integer vip_type){
-//	  this.vip_type=vip_type;
-//	}
+	public  long getUser_id (){
+	  return user_id;
+	}
+	public  void setUser_id (long user_id){
+	  this.user_id=user_id;
+	}
+	public  PayPlan getVip_type (){
+	  return vip_type;
+	}
+	public  void setVip_type (PayPlan vip_type){
+	  this.vip_type=vip_type;
+	}
 	public  BigDecimal getAmount (){
 	  return amount;
 	}

@@ -19,11 +19,15 @@ import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.sellgirl.sellgirlPayWeb.controller.model.ConcurrentSftpUpload;
+import org.sellgirl.sellgirlPayWeb.controller.model.ConcurrentSftpUpload2;
 import org.sellgirl.sellgirlPayWeb.controller.model.JdbcHelperTest;
 //import org.sellgirl.sellgirlPayWeb.controller.model.SftpUpload2;
 import org.sellgirl.sellgirlPayWeb.controller.model.TestModel001;
 
 import com.alibaba.fastjson.JSON;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
 import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
@@ -89,12 +93,77 @@ public class UncheckUpload extends TestCase {
 	public void testUpload() {
 //		SftpUpload2.main(null);
 		try {
-			ConcurrentSftpUpload.main(null);
+//			ConcurrentSftpUpload.main(null);
+			ConcurrentSftpUpload2.main(null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	private static final String TAG="ConcurrentSftpUpload";
+    // 配置参数
+    private static final String HOST ="156.224.19.162";// "你的服务器IP";
+    private static final int PORT = 22;
+    private static final String USER ="root";// "ubuntu";
+//    private static final String SSH="C:\\Users\\Administrator\\.ssh\\id_rsa.pub";
+  //"C:/Users/Administrator/.ssh/id_rsa";
+    private static final String SSH=null;//"C:\\Users\\Administrator\\.ssh\\id_rsa";
+    private static final String PASSWORD = "x96rNe9e1D";
+
+    //ok
+	public void testSSH() {
+
+        JSch jsch = new JSch();
+        Session session = null;
+        ChannelSftp channel = null;
+
+        try {
+            // 初始化连接
+            session = jsch.getSession(USER, HOST, PORT);
+            session.setPassword(PASSWORD);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setTimeout(30000);      // 连接超时
+            session.connect();
+
+            channel = (ChannelSftp) session.openChannel("sftp");
+            channel.connect(30000);          // 通道超时
+
+            String localFile = "D:\\cache\\html1\\shop\\static\\resourceImg\\comic60\\1\\1.jpg";    //全部上传完成，总耗时 167 秒 
+            String remotePath = "/root/download/aaa.jpg"; // 
+            try (FileInputStream fis = new FileInputStream(localFile)) {
+                channel.put(fis, remotePath);
+            }
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }
+	}
+	public void testSSH2() {
+
+        JSch jsch = new JSch();
+        Session session = null;
+        ChannelSftp channel = null;
+
+        try {
+        	jsch.addIdentity("C:\\Users\\Administrator\\.ssh\\id_rsa");
+            // 初始化连接
+            session = jsch.getSession(USER, HOST, PORT);
+//            session.setPassword(PASSWORD);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setTimeout(30000);      // 连接超时
+            session.connect();
+
+            channel = (ChannelSftp) session.openChannel("sftp");
+            channel.connect(30000);          // 通道超时
+
+            String localFile = "D:\\cache\\html1\\shop\\static\\resourceImg\\comic60\\1\\1.jpg";    //全部上传完成，总耗时 167 秒 
+            String remotePath = "/root/download/aaa.jpg"; // 
+            try (FileInputStream fis = new FileInputStream(localFile)) {
+                channel.put(fis, remotePath);
+            }
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }
+	}
 
 }

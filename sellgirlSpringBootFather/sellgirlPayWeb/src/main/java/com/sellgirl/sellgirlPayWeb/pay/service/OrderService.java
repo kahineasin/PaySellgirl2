@@ -45,7 +45,7 @@ public class OrderService {
         return orderMap.getOrDefault(outTradeNo, -1);
     }
 
-    public SGDataTable GetvipOrderById(int id)
+    public SGDataTable GetvipOrderById(long id)
     {
 		ISGJdbc jdbc=JdbcHelper.GetShop();
 		try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
@@ -123,7 +123,7 @@ public class OrderService {
 		return -1;
 	}
 	
-    public vipOrder GetOnevipOrder(int id)
+    public vipOrder GetOnevipOrder(long id)
     {
         vipOrder model = null;
         SGDataTable dt = GetvipOrderById(id);

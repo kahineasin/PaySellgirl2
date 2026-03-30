@@ -186,6 +186,11 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 1. 配置 SGEmailSend 的public字段
 2. SGEmailSend.SendMail()
 
+## 上传文件到ubuntu(linux)
+见sellgirlPayWeb项目的单元测试的:
+org.sellgirl.sellgirlPayWeb.controller.model.ConcurrentSftpUpload
+此方法未移到helper,因为有额外的小型库引用
+
 下面是一些测试各类型mq的地址，需要根据情况配置对应消费者的地址才行
 1.http://localhost:28303/sendmq
 2.http://localhost:28303/sendmq2

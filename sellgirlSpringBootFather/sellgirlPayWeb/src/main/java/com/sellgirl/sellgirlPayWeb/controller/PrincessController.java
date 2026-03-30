@@ -40,8 +40,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
-import com.sellgirl.sgJavaHelper.PFLine;
-import com.sellgirl.sgJavaHelper.PFLine.PFLineType;
+import com.sellgirl.sgJavaHelper.SGLine;
+import com.sellgirl.sgJavaHelper.SGLine.SGLineType;
 import com.sellgirl.sgJavaHelper.PFPoint;
 import com.sellgirl.sgJavaHelper.SGRef;
 
@@ -121,7 +121,7 @@ public class PrincessController // extends AbstractController
 	@ResponseBody
 	@PrincessSwaggerAttr
 //    @CrossOrigin
-	public byte[] SasaThumbnail(int w, int h,PFLine.PFLineType t) throws IOException {
+	public byte[] SasaThumbnail(int w, int h,SGLine.SGLineType t) throws IOException {
 
 		return getThumbnailBySize(w,h,t,sashaImgPath);
 	}
@@ -129,7 +129,7 @@ public class PrincessController // extends AbstractController
 	@ResponseBody
 	@PrincessSwaggerAttr
 //    @CrossOrigin
-	public byte[] SashaBeingTiedToTheCrossThumbnail(int w, int h,PFLine.PFLineType t) throws IOException {
+	public byte[] SashaBeingTiedToTheCrossThumbnail(int w, int h,SGLine.SGLineType t) throws IOException {
 
 		return getThumbnailBySize(w,h,t,sashaBeingTiedToTheCrossImgPath);
 	}
@@ -148,7 +148,7 @@ public class PrincessController // extends AbstractController
 	@PrincessSwaggerAttr
 //    @CrossOrigin
 	@Deprecated
-	public byte[] SashaBeingTiedToTheCrossThumbnailCMYK(int w, int h,PFLine.PFLineType t) throws IOException {
+	public byte[] SashaBeingTiedToTheCrossThumbnailCMYK(int w, int h,SGLine.SGLineType t) throws IOException {
 
 		//return getThumbnailBySize(w,h,t,sashaBeingTiedToTheCrossImgPath);
 
@@ -157,7 +157,7 @@ public class PrincessController // extends AbstractController
 		Image image = ImageIO.read(infile);
 		String tmpImgPath = SGDataHelper.backgroundImg(backgroundSize, image,
 				null,
-				new PFLine(t), Color.RED,
+				new SGLine(t), Color.RED,
 				false);
 
 
@@ -237,17 +237,17 @@ public class PrincessController // extends AbstractController
 	@ResponseBody
 	@PrincessSwaggerAttr
 //    @CrossOrigin
-	public byte[] SashaLieThumbnail(int w, int h,PFLine.PFLineType t) throws IOException {
+	public byte[] SashaLieThumbnail(int w, int h,SGLine.SGLineType t) throws IOException {
 
 		return getThumbnailBySize(w,h,t,sashaLieImgPath);
 	}
 	@GetMapping(value = { "/aliceliethumbnail" }, produces = { "image/jpeg" })
 	@ResponseBody
-	public byte[] AliceLieThumbnail(int w, int h,PFLine.PFLineType t) throws IOException {
+	public byte[] AliceLieThumbnail(int w, int h,SGLine.SGLineType t) throws IOException {
 
 		return getThumbnailBySize(w,h,t,aliceLieImgPath);
 	}
-	private byte[] getThumbnailBySize(int w, int h,PFLine.PFLineType t,String imgPath)  {
+	private byte[] getThumbnailBySize(int w, int h,SGLine.SGLineType t,String imgPath)  {
 //		try {
 //		File infile = new File(imgPath);
 //		Image image = ImageIO.read(infile);
@@ -269,7 +269,7 @@ public class PrincessController // extends AbstractController
 //		catch(Exception e) {
 //	    }
 //		return null;
-		return getThumbnailBySize(w,  h,new PFLine(t),imgPath);
+		return getThumbnailBySize(w,  h,new SGLine(t),imgPath);
 	}
 	/**
 	 * 改用 getThumbnailBySize(Dimension backgroundSize,PFLine line,String imgPath) 
@@ -280,7 +280,7 @@ public class PrincessController // extends AbstractController
 	 * @return
 	 */
 	@Deprecated
-	private byte[] getThumbnailBySize(int w, int h,PFLine line,String imgPath)  {
+	private byte[] getThumbnailBySize(int w, int h,SGLine line,String imgPath)  {
 		try {
 		File infile = new File(imgPath);
 		Image image = ImageIO.read(infile);
@@ -303,7 +303,7 @@ public class PrincessController // extends AbstractController
 	    }
 		return null;
 	}
-	private byte[] getThumbnailBySize(Dimension backgroundSize,PFLine line,String imgPath)  {
+	private byte[] getThumbnailBySize(Dimension backgroundSize,SGLine line,String imgPath)  {
 		try {
 		File infile = new File(imgPath);
 		Image image = ImageIO.read(infile);
@@ -385,8 +385,8 @@ public class PrincessController // extends AbstractController
 					null,
 					//new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
 					//new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-					new PFLine(new PFPoint(0,0),new PFPoint(1790,2160)),
-					new PFLine(new PFPoint(0,0),new PFPoint(100,100)).IsPercent(), Color.RED,
+					new SGLine(new PFPoint(0,0),new PFPoint(1790,2160)),
+					new SGLine(new PFPoint(0,0),new PFPoint(100,100)).IsPercent(), Color.RED,
 					false);
 
 
@@ -417,8 +417,8 @@ public class PrincessController // extends AbstractController
 					 paintBi,
 					 new Dimension(backWidth, backHeight), image2,
 					null,
-					new PFLine(new PFPoint(1790,0),new PFPoint(backEndX,2160)),
-					new PFLine(new PFPoint(imgStartX,imgStartY),new PFPoint(imgEndX,imgEndY)).IsPercent(), Color.RED,
+					new SGLine(new PFPoint(1790,0),new PFPoint(backEndX,2160)),
+					new SGLine(new PFPoint(imgStartX,imgStartY),new PFPoint(imgEndX,imgEndY)).IsPercent(), Color.RED,
 					false);
 
 			 //canvas=canvasRef.GetValue();
@@ -451,7 +451,7 @@ public class PrincessController // extends AbstractController
 	@CrossOrigin
 	public byte[] SashaCrossMobileDesktopJpg() {
 		//return this.getThumbnailBySize(mobileSize, PFLine.FitHeightAndCenterHorizontally(), sashaBeingTiedToTheCrossImgPath);
-		return this.getThumbnailBySize(mobileSize, new PFLine(
+		return this.getThumbnailBySize(mobileSize, new SGLine(
 //				new PFPoint(26,15), new PFPoint(74,95)).IsPercent(),
 				new PFPoint(25,13), new PFPoint(75,97)).IsPercent(),
 				sashaBeingTiedToTheCrossImgPath);
@@ -467,7 +467,7 @@ public class PrincessController // extends AbstractController
 		double sy = sashaBeingTiedToTheCrossImgSize.height*0.09;
 		double ex = sashaBeingTiedToTheCrossImgSize.width-sx;
 		double ey = ((ex-sx) * photoFrameSize.height/ photoFrameSize.width ) + sy;
-		return this.getThumbnailBySize(photoFrameSize, new PFLine(
+		return this.getThumbnailBySize(photoFrameSize, new SGLine(
 //				new PFPoint(26,15), new PFPoint(74,95)).IsPercent(),
 				new PFPoint(sx,sy), new PFPoint(ex,ey)),
 				sashaBeingTiedToTheCrossImgPath);
@@ -491,7 +491,7 @@ public class PrincessController // extends AbstractController
 //    	      int ex = 2900;
 //    	      int ey = sy - (ex - sx) * backWidth / backHeight;
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
-					new Dimension(600, 845), new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
+					new Dimension(600, 845), new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -523,7 +523,7 @@ public class PrincessController // extends AbstractController
 //    	      int ex = 2900;
 //    	      int ey = sy - (ex - sx) * backWidth / backHeight;
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
-					new Dimension(2736, 3648), new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
+					new Dimension(2736, 3648), new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -555,7 +555,7 @@ public class PrincessController // extends AbstractController
 //    	      int ex = 2900;
 //    	      int ey = sy - (ex - sx) * backWidth / backHeight;
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
-					new Dimension(853, 1280), new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
+					new Dimension(853, 1280), new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -584,7 +584,7 @@ public class PrincessController // extends AbstractController
 		int ex = 2900;
 		int ey = sy - (ex - sx) * backWidth / backHeight;
 		String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
-				new Dimension(3316, 4000), new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, true);
+				new Dimension(3316, 4000), new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED, true);
 		File file = new File(tmpImgPath);
 		FileInputStream inputStream = new FileInputStream(file);
 		byte[] bytes = new byte[inputStream.available()];
@@ -604,7 +604,7 @@ public class PrincessController // extends AbstractController
 		File infile = new File(sashaImgPath);
 		Image image = ImageIO.read(infile);
 		String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(1080, 2340), image, new Dimension(3316, 4000),
-				new PFLine(new PFPoint(600, -300), new PFPoint(2916, 4718)), new Color(34, 28, 62), false);
+				new SGLine(new PFPoint(600, -300), new PFPoint(2916, 4718)), new Color(34, 28, 62), false);
 		File file = new File(tmpImgPath);
 		FileInputStream inputStream = new FileInputStream(file);
 		byte[] bytes = new byte[inputStream.available()];
@@ -617,17 +617,17 @@ public class PrincessController // extends AbstractController
 	@ResponseBody
 	@CrossOrigin
 	public byte[] TiaraMobileDesktopJpg() {
-		return this.getThumbnailBySize(1080, 2340,PFLineType.Anticlockwise90, tiaraMobileImgPath);
+		return this.getThumbnailBySize(1080, 2340,SGLineType.Anticlockwise90, tiaraMobileImgPath);
 	}
 	public byte[] TiaraDrinkTeaMobileDesktopJpg() {
 		return this.getThumbnailBySize(1080, 2340,
-				new PFLine(new PFPoint(61,0),new PFPoint(86,100)).IsPercent(),
+				new SGLine(new PFPoint(61,0),new PFPoint(86,100)).IsPercent(),
 				tiaraDrinkTeaImgPath);
 	}
 	public byte[] TiaraNudeOnTheAirMobileDesktopJpg() {
 		return this.getThumbnailBySize(mobileSize,
 //				new PFLine(new PFPoint(40,0),new PFPoint(60,100)).IsPercent(),
-				PFLine.FitHeightAndCenterHorizontally(),
+				SGLine.FitHeightAndCenterHorizontally(),
 				PrincessController.tiaraNudeOnTheAirPcImgPath);
 	}
 	
@@ -652,7 +652,7 @@ public class PrincessController // extends AbstractController
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
 					new Dimension(3316, 4000),
 					// new PFLine(new PFPoint(600, -300), new PFPoint(2916, 4718)),
-					new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), true);
+					new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), true);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -688,7 +688,7 @@ public class PrincessController // extends AbstractController
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
 					new Dimension(600, 845),
 					// new PFLine(new PFPoint(600, -300), new PFPoint(2916, 4718)),
-					new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
+					new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -724,7 +724,7 @@ public class PrincessController // extends AbstractController
 			String tmpImgPath = SGDataHelper.backgroundImg(mobileSize, image,
 					new Dimension(2736, 3648),
 					// new PFLine(new PFPoint(600, -300), new PFPoint(2916, 4718)),
-					new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
+					new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -760,7 +760,7 @@ public class PrincessController // extends AbstractController
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
 					new Dimension(853, 1280),
 					// new PFLine(new PFPoint(600, -300), new PFPoint(2916, 4718)),
-					new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
+					new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), new Color(34, 28, 62), false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -775,7 +775,7 @@ public class PrincessController // extends AbstractController
 
 
 	public byte[] AthenaArseMobileDesktopJpg() {
-		return this.getThumbnailBySize(PrincessController.mobileSize,PFLine.FitHeightAndCenterHorizontally(), athenaArseImgPath);
+		return this.getThumbnailBySize(PrincessController.mobileSize,SGLine.FitHeightAndCenterHorizontally(), athenaArseImgPath);
 	}
 	
 	/**
@@ -800,7 +800,7 @@ public class PrincessController // extends AbstractController
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(2160, 4680), image, 
 					null,
 					//new Dimension(1125, 740),
-					new PFLine(new PFPoint(1125, 110), new PFPoint(0, 630)), Color.RED, false);
+					new SGLine(new PFPoint(1125, 110), new PFPoint(0, 630)), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -827,7 +827,7 @@ public class PrincessController // extends AbstractController
 //		int ex = 0;
 //		int ey = sy + (sx - ex) * backWidth / backHeight;
 		String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(1125, 740), image, new Dimension(1125, 740),
-				new PFLine(new PFPoint(1125, 740), new PFPoint(0, 0)), Color.RED, false);
+				new SGLine(new PFPoint(1125, 740), new PFPoint(0, 0)), Color.RED, false);
 		File file = new File(tmpImgPath);
 		FileInputStream inputStream = new FileInputStream(file);
 		byte[] bytes = new byte[inputStream.available()];
@@ -854,7 +854,7 @@ public class PrincessController // extends AbstractController
 			int ey = 3800;
 			int ex = (ey * backWidth / backHeight) + sx;
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image,
-					new Dimension(imgWidth, imgHeight), new PFLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED,
+					new Dimension(imgWidth, imgHeight), new SGLine(new PFPoint(sx, sy), new PFPoint(ex, ey)), Color.RED,
 					false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
@@ -904,7 +904,7 @@ public class PrincessController // extends AbstractController
 //			int ex = (ey * backWidth / backHeight) + sx;
 			String tmpImgPath = SGDataHelper.backgroundImg(mobileSize, image,
 					null,
-					PFLine.FitHeightAndCenterHorizontally(),
+					SGLine.FitHeightAndCenterHorizontally(),
 //					GetImgLineByHeight(backWidth , 
 //							 backHeight , imgWidth,
 //							 imgHeight),

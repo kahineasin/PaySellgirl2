@@ -293,7 +293,7 @@
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `carousel-item ${idx === 0 ? 'active' : ''}`;
                 itemDiv.innerHTML = `
-                    <img src="${imgSrc}" class="d-block preview-img-large" alt="${foundThread.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                    <img src="${imgSrc}" class="d-block preview-img-large" alt="${foundThread.title}" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'" />
                 `;
                 carouselInner.appendChild(itemDiv);
 

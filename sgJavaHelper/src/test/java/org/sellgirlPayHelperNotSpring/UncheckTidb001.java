@@ -5,7 +5,7 @@ import com.sellgirl.sgJavaHelper.IPFSqlFieldTypeConverter;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.PFEnumClass;
 import com.sellgirl.sgJavaHelper.PFKeyValueCollection;
-import com.sellgirl.sgJavaHelper.PFLine;
+import com.sellgirl.sgJavaHelper.SGLine;
 import com.sellgirl.sgJavaHelper.PFPoint;
 import com.sellgirl.sgJavaHelper.SGSpeedCounter;
 import com.sellgirl.sgJavaHelper.SGSqlCommandString;

@@ -2,8 +2,10 @@ package com.sellgirl.sgJavaHelper;
 
 import java.awt.Dimension;
 
-public class PFLine {
-	public enum PFLineType {
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+
+public class SGLine {
+	public enum SGLineType {
 		/**
 		 * 按对角线对齐(即自定义)
 		 */
@@ -28,25 +30,33 @@ public class PFLine {
 
 	public PFPoint s;
 	public PFPoint e;
-	public PFLineType t = PFLineType.Diagonal;
+	public SGLineType t = SGLineType.Diagonal;
 	/**
 	 * true时,s和e均是百分比数, 100即为100%
 	 */
 	public boolean isPercent=false;
 
-	private PFLine() {
+	private SGLine() {
 	}
 
-	public PFLine(PFPoint s, PFPoint e) {
+	public SGLine(PFPoint s, PFPoint e) {
 		this.s = s;
 		this.e = e;
 	}
 
-	public  PFLine(PFLineType t) {
+	public  SGLine(SGLineType t) {
 		this.t=t;
 	}
 
-	public PFLine IsPercent() {
+	/**
+	 * 常这样用:
+	 * new PFLine(new PFPoint(0, 0), 
+	              new PFPoint(100, 100)).IsPercent()
+       当想表示来源图的参照线,又不知道来源图的长宽(或者为了方便)时,
+       上面那样可以表示任何规格图片的左上右下对角线
+	 * @return
+	 */
+	public SGLine IsPercent() {
 		this.isPercent=true;
 		return this;
 	}
@@ -54,12 +64,18 @@ public class PFLine {
 	/**
 	 * 按高对齐，水平居中
 	 */
-	public static PFLine FitHeightAndCenterHorizontally() {
-		PFLine l = new PFLine();
-		l.t = PFLineType.FitHeightAndCenterHorizontally;
+	public static SGLine FitHeightAndCenterHorizontally() {
+		SGLine l = new SGLine();
+		l.t = SGLineType.FitHeightAndCenterHorizontally;
 		return l;
 	}
 
+	/**
+	 * 主要用于SGDataHelper.backgroundImgInBuffer
+	 * 调整后的this作为img的参照线,用于对齐background的左上右下对角线的话,就不会因为变形而旋转
+	 * @param backgroundSize 背景图(目标)尺寸
+	 * @param imgSize 图片(源图)尺寸
+	 */
 	public void CaculateLineByType(Dimension backgroundSize, Dimension imgSize// ,
 //			int backWidth, int backHeight, int imgWidth, int imgHeight
 	) {

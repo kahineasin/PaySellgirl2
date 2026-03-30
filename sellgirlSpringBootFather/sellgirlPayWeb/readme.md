@@ -31,7 +31,12 @@ com.sellgirl.sellgirlPayWeb.shop
 
 # 开发指南
 ## 打包
-mvn clean package -Pprod-build  //这样可以排除yml,yml放在jar的同级目录
+mvn clean package -Pprod-build  //这样可以排除yml,之后把yml放在jar的同级目录即可
+排除的文件在sellgirlPayWeb/pom.xml中设置, 比如有:
+application-prod.yml, static/resourceImg/** ...
+注意这些排除项有可能和父项目的include(eclipse开发环境运行时需要)少许冲突
+//排除的这些文件, 视情况, 需要另外复制到jar运行时的同级目录(比如static/resourceImg/...)
+
 ## 前端post
 
 ```

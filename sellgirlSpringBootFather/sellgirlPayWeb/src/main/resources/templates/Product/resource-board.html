@@ -365,7 +365,8 @@
                     gotoBtn.addEventListener('click', () => {
                         let page = parseInt(gotoInput.value);
                         if (isNaN(page)) page = 1;
-                        page = Math.max(1, Math.min(page, totalPages));
+                        //page = Math.max(1, Math.min(page, totalPages));
+                        page = Math.max(1, page);//此版本后端分页,totalPages不是真实的,只是给了当前页+2的值得
                         if (page !== currentPage) {
                             currentPage = page;
                             renderListForPage(currentPage);

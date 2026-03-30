@@ -1,8 +1,15 @@
 package org.sellgirl.sellgirlPayWeb.controller;
 
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
@@ -43,6 +52,8 @@ import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGHttpHelper;
 import com.sellgirl.sgJavaHelper.PFFunc3;
+import com.sellgirl.sgJavaHelper.SGLine;
+import com.sellgirl.sgJavaHelper.PFPoint;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.SGRequestResult;
 import com.sellgirl.sgJavaHelper.SGSpeedCounter;
@@ -410,6 +421,70 @@ public class UncheckImportResource extends TestCase {
 			System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
 		}
 	}
+	
+	public void testGenerateSmallImg() {
+		ResourceType resourceType=ResourceType.comic;
+		String srcImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
+		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+"60";
+		SGDirectory.eachFile(
+			new File(srcImgPath), 
+			dstImgPath, File.separatorChar, 
+			(file,path,obj)->{
+				try {
+					//SGPath.copyFile(file, new File(path));
+////					PFLine.FitHeightAndCenterHorizontally()
+//					//SGDataHelper.backgroundImg(null, null, null, null, null, null)
+					
+					//方法1. 共26秒
+//					int backWidth = 60; // 1920;
+//					int backHeight = 60;// 1080;
+//					Image image = ImageIO.read(file);
+//					//
+//					String tmpImgPath = SGDataHelper.backgroundImg(
+//							new Dimension(backWidth, backHeight),
+//							image,
+//							null,
+//							new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), 
+//							Color.RED,
+//							false);
+//					File file2 = new File(tmpImgPath);
+////					FileInputStream inputStream = new FileInputStream(file2);
+////					byte[] bytes = new byte[inputStream.available()];
+////					inputStream.read(bytes, 0, inputStream.available());
+////					inputStream.close();
+//					SGPath.copyFile(file2, new File(path));
+//					file2.delete();
+
+					//方法2. 20秒 (推荐)
+					int backW = 60; // 1920;
+					int backH = 60;// 1080;
+					SGLine imgLine=SGLine.FitHeightAndCenterHorizontally();
+					SGLine backLine=new SGLine(new PFPoint(0, 0), new PFPoint(backW, backH));
+					
+					SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
+					SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
+					BufferedImage paintBi = null;
+					Image image = ImageIO.read(file);
+					paintBi = SGDataHelper.backgroundImgInBuffer(
+							canvasRef, ctx1Ref, null, 
+							new Dimension(backW, backH), image, null,
+							backLine,imgLine, 
+							//Color.RED
+							null
+							, false);
+					File file2 = new File(path);
+//					ImageIO.write(paintBi, "jpg", file2);
+					ImageIO.write(paintBi, SGPath.getFileExtension(path), file2);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}, 
+			(filder,path,obj)->{
+				SGDirectory.EnsureExists(path);
+			}
+		);
+	}
 
     String[] uploaderNames = new String[] {
                            "深海里的鱼", "云中漫步", "星空下的猫", "风一样的男子", "雨夜带刀",
@@ -500,98 +575,7 @@ public class UncheckImportResource extends TestCase {
 		}
 	}
 	
-//	/**
-//	 * 用对半切法检测是否存在异常字符（注意有时超长截断也会报错提示字符问题）
-//	 */
-//	public void testContentChar() {
-//		int needLen=5;
-//		  SGWaiter waiter=new SGWaiter(2000);
-//		  
-////	        	String p="D:\\cache\\html1\\resource_data\\bugData\\人间烟火\\text4.txt";
-//////	        	String p="D:\\cache\\html1\\resource_data\\bugData\\人间烟火\\text3.txt";
-//////	        	String p="D:\\cache\\html1\\resource_data\\bugData\\人间烟火\\text5.txt";
-////
-////	        	File j=new File(p);
-////	        	if(!j.exists()) { return;}
-//		  
-////	        	String chapName="text"+idx;
-//	        	String chapName="testChar";
-//	        	long resourceId=999;
-//
-//		        SGSqlInsertCollection insert2=null;	        	
-////	        	String content=SGDataHelper.ReadFileToString2(j);
-//	        	String content="";
-//				int wordCnt=SGDataHelper.GetWordsCharLength(content);
-//	        	
-//
-//	    		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
-//	    		int total=0;
-//
-//				resourceChapCreate model2=new resourceChapCreate();
-////				model2.setResource_chap_id(0);
-//				model2.setResource_chap_name(chapName);
-//				model2.setResource_id(((Long)resourceId).intValue());
-////				model2.setContent(content);
-//				model2.setCreate_date(SGDate.Now());
-//				
-//	    		try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
-//	    			dstExec.AutoCloseConn(false);
-//	    			
-//					if(null==insert2) {
-//						insert2=dstExec.getInsertCollection();			
-//						insert2.InitItemByModel(model2);
-//					}else {
-//						insert2.UpdateModelValueAutoConvert(model2);
-//					}
-//					
-//	    			while(true) {
-//	    				int cnt=content.length();
-//	    				int s=cnt/2;
-//	    				String content1=content.substring(0,s);
-//	    				String content2=content.substring(s);
-//	    				content="";
-//	    				boolean b=true;
-//	    				for(String i:new String[] {content1,content2}) {
-//
-//	    					model2.setContent(i);
-////	    					model2.setContent(content);
-//							insert2.UpdateModelValueAutoConvert(model2);
-//							SGSqlCommandString sql2=new SGSqlCommandString(
-//									SGDataHelper.FormatString(
-//											"insert into sg_resource_chap ({0}) values ({1})",
-//											insert2.ToKeysSql(),
-//											insert2.ToValuesSql())
-//									);
-//							int r2=dstExec.ExecuteSqlInt(sql2, null, false);
-//							if(1>r2) {
-//								b=false;
-//								int l=i.length();
-//								if(needLen<l) {
-//									content+=i;
-//									if(waiter.isOK()) {
-//										System.out.println("length: " +l);
-//										System.out.println("sql:\r\n"+sql2);
-//									}
-//								}else {
-//									System.out.println("------------error content:");
-//									System.out.println(i);
-//					    			dstExec.close();
-//					    			doDeleteByIds(new long[] {resourceId});
-//									return;
-//								}
-//							}
-//	    				}
-//	    				if(b) {
-//	    					int aa=1;
-//	    					System.out.println("切割插入完全没问题，应该就是超长阶段，所以有些字符只有一半所以报错. cnt:"+wordCnt);
-//	    					break;
-//	    				}
-//	    			}
-//	    		} catch (Exception e) {
-//	    			// TODO Auto-generated catch block
-//	    			e.printStackTrace();
-//	    		}
-//	}
+
 
 	public void testCreateShopTable() {
 
@@ -614,7 +598,7 @@ public class UncheckImportResource extends TestCase {
 			e.printStackTrace();
 		}
 	}
-
+	//ok
 	public void testBulkCopy() {
 		ResourceType resourceType=ResourceType.comic;
 		ResourceService service=new ResourceService();

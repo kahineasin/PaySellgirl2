@@ -1,16 +1,10 @@
-/*   */ package com.sellgirl.sgJavaHelper;
-/*   */ 
-/*   */ public class PFPoint {
-/* 4 */   public double x = 0;
-/* 5 */   public double y = 0;
-/*   */   public PFPoint(double x, double y) {
-/* 7 */     this.x = x;
-/* 8 */     this.y = y;
-/*   */   }
-/*   */ }
+package com.sellgirl.sgJavaHelper;
 
-
-/* Location:              D:\mylib\sellgirlPayHelper-0.0.1-SNAPSHOT.jar!\pf\java\pfHelper\PFPoint.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class PFPoint {
+  public double x = 0;
+  public double y = 0;
+  public PFPoint(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+}

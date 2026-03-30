@@ -3017,9 +3017,12 @@ public class Uncheck001 extends TestCase {
 	}
 
 	private static Dimension pcSize = new Dimension(2160, 4680);// p30pro 1080, 2340
-	private static String sashaImgPath = "D:\\\\picture\\ps\\princessSasha_lostVirginity_byBenjamin.jpg";
-	private static String sashaImgPath2 = "D:\\\\picture\\ps\\princessSasha_lostVirginity_byBenjamin2.jpg";
-	private static String sashaBeingTiedToTheCrossImgPath = "D:\\\\picture\\ps\\princessSashaBeingTiedToTheCross\\princessSashaBeingTiedToTheCross_byBenjamin.jpg";
+//	private static String sashaImgPath = "D:\\\\picture\\ps\\princessSasha_lostVirginity_byBenjamin.jpg";
+//	private static String sashaImgPath2 = "D:\\\\picture\\ps\\princessSasha_lostVirginity_byBenjamin2.jpg";
+	private static String sashaImgPath = "D:\\\\cache\\2\\sashathumbnail_w2000.jpg";
+	private static String sashaImgPath2 = "D:\\\\cache\\2\\sashathumbnail_w2000_2.jpg";
+//	private static String sashaBeingTiedToTheCrossImgPath = "D:\\\\picture\\ps\\princessSashaBeingTiedToTheCross\\princessSashaBeingTiedToTheCross_byBenjamin.jpg";
+	private static String sashaBeingTiedToTheCrossImgPath = "D:\\\\cache\\2\\sashathumbnail_w2000_3.jpg";
 
 	public void testBackgroundImg() {
 		try {
@@ -3032,7 +3035,7 @@ public class Uncheck001 extends TestCase {
 //		int backHeight = h;
 
 			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image, null,
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
+					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
 			File file = new File(tmpImgPath);
 			FileInputStream inputStream = new FileInputStream(file);
 			byte[] bytes = new byte[inputStream.available()];
@@ -3072,8 +3075,8 @@ public class Uncheck001 extends TestCase {
 					canvasRef, ctx1Ref, null, new Dimension(backWidth, backHeight), image, null,
 					// new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
 					// new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(1790, 2160)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
+					new SGLine(new PFPoint(0, 0), new PFPoint(1790, 2160)),
+					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
 //		 paintBi = PFDataHelper.backgroundImgInBuffer(
 //					//canvas,ctx1,
 //					canvasRef,ctx1Ref,
@@ -3090,8 +3093,8 @@ public class Uncheck001 extends TestCase {
 					canvasRef, ctx1Ref, paintBi, new Dimension(backWidth, backHeight), image2, null,
 					// new PFLine(new PFPoint(0,0),new PFPoint(3840,2160)),
 					// new PFLine(new PFPoint(0,0),new PFPoint(3840,1000)),
-					new PFLine(new PFPoint(1790, 0), new PFPoint(1790 + 1680, 2160)),
-					new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
+					new SGLine(new PFPoint(1790, 0), new PFPoint(1790 + 1680, 2160)),
+					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
 
 			// canvas=canvasRef.GetValue();
 			canvasRef.GetValue().printAll(ctx1Ref.GetValue());
@@ -3105,6 +3108,48 @@ public class Uncheck001 extends TestCase {
 			ImageIO.write(paintBi, "jpg", file2);
 			// ctx1.dispose();
 			// file.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return;
+	}
+
+	public void testBackgroundImgInBuffer2() {
+		try {
+			int backWidth = 60; // 1920;
+			int backHeight = 60;// 1080;
+//			int backHeight = 60*6383/5675;// 1080;
+
+			File infile = new File("D:\\cache\\1\\sasha_all.png");
+			Image image = ImageIO.read(infile);
+			File outfile = new File("D:\\cache\\1\\sasha_all2.png");
+
+			SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
+			SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
+			BufferedImage paintBi = null;
+			
+			//img左上右下 对齐 back左上右下
+//			PFLine imgLine=new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent();
+//			PFLine backLine=new PFLine(new PFPoint(0, 0), new PFPoint(backWidth, backHeight));
+
+			//not ok, backLine不支持percent
+//			PFLine imgLine=new PFLine(new PFPoint(0, 50), new PFPoint(0, 50)).IsPercent();
+//			PFLine backLine=new PFLine(new PFPoint(0, 0), new PFPoint(backWidth/2, backHeight/2));
+
+			//按高对齐，水平居中
+			SGLine imgLine=SGLine.FitHeightAndCenterHorizontally();
+			SGLine backLine=new SGLine(new PFPoint(0, 0), new PFPoint(backWidth, backHeight));
+			paintBi = SGDataHelper.backgroundImgInBuffer(
+					canvasRef, ctx1Ref, null, 
+					new Dimension(backWidth, backHeight), 
+					image, null,
+					backLine,imgLine,
+//					Color.RED
+					null
+					,
+					false);
+
+			ImageIO.write(paintBi, "jpg", outfile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

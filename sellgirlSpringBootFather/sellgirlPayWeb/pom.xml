@@ -442,6 +442,7 @@
                                <!-- 在生产打包时排除 application-prod.yml -->
                                <exclude>application-prod.yml</exclude>
                                <exclude>application.yml</exclude>
+                               <exclude>static/resourceImg/**</exclude>
                            </excludes>
                        </resource>
                    </resources>

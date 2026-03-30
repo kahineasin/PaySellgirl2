@@ -835,12 +835,28 @@ extends YJQueryController
   	    	sysUser.lastSign=user.getLastSign();
   	    	sysUser.point=user.getPoint();
   	    	SGDate now= SGDate.Now();
-  	    	if(
-  	    			(user.isVip1()&&null!=user.getVip1_expire()&&0>now.compareTo(user.getVip1_expire()))
-  	    			||(user.isVip2()&&null!=user.getVip2_expire()&&0>now.compareTo(user.getVip2_expire()))
-  	    			) {
-  	    		sysUser.isVip=true;
+  	    	
+//  	    	if(
+//  	    			(user.isVip1()&&null!=user.getVip1_expire()&&0>now.compareTo(user.getVip1_expire()))
+//  	    			||(user.isVip2()&&null!=user.getVip2_expire()&&0>now.compareTo(user.getVip2_expire()))
+//  	    			) {
+//  	    		sysUser.isVip=true;
+//  	    	}
+  	    	//检查vip是否过期
+  	    	boolean needUpdateVip=false;
+  	    	if(user.isVip1()&&null!=user.getVip1_expire()&&0<now.compareTo(user.getVip1_expire())) {
+  	    		user.setVip1(false);
+  	    		needUpdateVip=true;
   	    	}
+  	    	if(user.isVip2()&&null!=user.getVip2_expire()&&0<now.compareTo(user.getVip2_expire())) {
+  	    		user.setVip2(false);
+  	    		needUpdateVip=true;
+  	    	}
+  	    	if(needUpdateVip) {
+  	    		userService.updateUserVip(user.getUserId(), user.isVip1(), user.getVip1_expire(), user.isVip2(), user.getVip2_expire());
+  	    	}
+	    	sysUser.isVip=user.isVip1()||user.isVip2();
+	    	
   	        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
 	        	ViewData.put("username",username);
 	        	ViewData.put("isInvited",sysUser.isInvited);
@@ -868,6 +884,14 @@ extends YJQueryController
   		return null;
 	}
 	
+	/**
+	 * 此页面当前版本可以不登录就访问(只要前端登录了)
+	 * 
+	 * paid检查订单成功后跳到此页面,
+	 * 所以此页面重新查询用户积分和vip信息更新到cache
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = { "/profile.html" })
     public ModelAndView Profile()
     {
@@ -875,7 +899,21 @@ extends YJQueryController
   	ModelAndView result=new ModelAndView();
 
   	SystemUser user=GetSystemUser();
-  	result.addObject("logged", null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName));
+  	
+  	boolean logged=null!=user&&!SGDataHelper.StringIsNullOrWhiteSpace(user.UserName);
+  	
+  	if(logged) {
+	  	UserQuery q=new UserQuery();
+	  	q.setUserId(SGDataHelper.ObjectToLong(user.UserCode));
+	  	User user2=userService.getUser(q);
+	  	
+	  	//更新cache(可能支付回调需要更新)
+	  	user.point=user2.getPoint();
+	  	user.isVip=user2.isVip1()||user2.isVip2();//登录时验证一次过期就行了
+	  	SetSystemUser(user);
+  	}
+  	
+  	result.addObject("logged", logged);
   	result.addObject("signDay", user.signDay);
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());

@@ -9245,10 +9245,36 @@ public static String escapeCsv3(String input) {
 	private static void DebugPrint(Object s) {
 	}
 
+
 	/**
 	 * 把图片设置为背景图尺寸 imgSize可以为空
+	 * 
+	 * 转换图片的原理:
+	 * [image1]				--------->		[backgroundImg]
+	 * imgSize(可空)							backgroundSize
+	 * diagonalLine(参照线)	对齐------>		左上右下对角线(不可指定) 						
+	 * 
+	 * 使用方法:
+		int backWidth = 60; //目标图的尺寸
+		int backHeight = 60;
+		Image image = ImageIO.read(file);
+		String tmpImgPath = SGDataHelper.backgroundImg(
+				new Dimension(backWidth, backHeight),
+				image,
+				null,
+				new PFLine(new PFPoint(0, 0), 
+				           new PFPoint(100, 100)).IsPercent(), 
+				Color.RED,
+				false);
+	 * @param backgroundSize
+	 * @param image1
+	 * @param imgSize image1的尺寸,可留空
+	 * @param diagonalLine
+	 * @param backgroundColor
+	 * @param flip
+	 * @return
 	 */
-	public static String backgroundImg(Dimension backgroundSize, Image image1, Dimension imgSize, PFLine diagonalLine,
+	public static String backgroundImg(Dimension backgroundSize, Image image1, Dimension imgSize, SGLine diagonalLine,
 			Color backgroundColor, Boolean flip) {
 
 		if (image1 instanceof BufferedImage && imgSize == null) {
@@ -9281,7 +9307,7 @@ public static String escapeCsv3(String input) {
 		Graphics ctx1 = canvas.getGraphics();
 		int w = imgSize.width;
 		int h = imgSize.height;
-		PFLine line = diagonalLine;
+		SGLine line = diagonalLine;
 		double l = Math.sqrt(Math.pow((line.e.x - line.s.x), 2.0D) + Math.pow((line.e.y - line.s.y), 2.0D));
 		DebugPrint("l:" + l);
 		int wWidth = 0;
@@ -9346,13 +9372,48 @@ public static String escapeCsv3(String input) {
 			return null;
 		}
 	}
-
+	/**
+	 * 图片(源图)转为背景图(目标输出图)规格的通用方法,参照线转换法
+	 * 
+	 * 转换图片的原理:
+	 * [image1]				--------->		[backgroundImg]
+	 * imgSize(可空)							backgroundSize
+	 * diagonalLine(参照线)	对齐------>		backgroundDiagonalLine(参照线)
+	 * 
+使用方法:
+	SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
+	SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
+	BufferedImage paintBi = null;
+	paintBi = SGDataHelper.backgroundImgInBuffer(
+			canvasRef, ctx1Ref, null, 
+			new Dimension(backW, backH), image, null,
+			backLine,imgLine, 
+			Color.RED, false);
+					
+参照线的一些例子:
+	1. img左上右下 对齐 back左上右下.如果转换后图片长宽比不一样,会少许旋转
+		PFLine imgLine=new PFLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent();
+		PFLine backLine=new PFLine(new PFPoint(0, 0), new PFPoint(backW, backH));
+	2. 按高对齐，水平居中
+		PFLine imgLine=PFLine.FitHeightAndCenterHorizontally();
+		PFLine backLine=new PFLine(new PFPoint(0, 0), new PFPoint(backW, backH));
+			
+	 * @param canvasRef
+	 * @param ctx1Ref
+	 * @param paintBi
+	 * @param backgroundSize 必然为输出图的长宽
+	 * @param image1
+	 * @param imgSize
+	 * @param backgroundDiagonalLine 背景参照线,暂时不支持isPercent
+	 * @param diagonalLine 图片参照线,支持isPercent
+	 * @param backgroundColor 背景颜色,null为透明
+	 * @param flip
+	 * @return
+	 */
 	public static BufferedImage backgroundImgInBuffer(
-//			Canvas canvas,
-//			Graphics ctx1,
 			SGRef<Canvas> canvasRef, SGRef<Graphics> ctx1Ref, BufferedImage paintBi, Dimension backgroundSize,
-			Image image1, Dimension imgSize, PFLine backgroundDiagonalLine, // 改进后可以指定背景的对齐线(旧版本是左上角和右下角2个点)
-			PFLine diagonalLine, Color backgroundColor, Boolean flip) {
+			Image image1, Dimension imgSize, SGLine backgroundDiagonalLine, // 改进后可以指定背景的对齐线(旧版本是左上角和右下角2个点)
+			SGLine diagonalLine, Color backgroundColor, Boolean flip) {
 
 		if (image1 instanceof BufferedImage && imgSize == null) {
 			BufferedImage bfImg = SGDataHelper.ObjectAs(image1);
@@ -9395,7 +9456,7 @@ public static String escapeCsv3(String input) {
 //		}
 		int w = imgSize.width;
 		int h = imgSize.height;
-		PFLine line = diagonalLine;
+		SGLine line = diagonalLine;
 		// a图片参照线长度
 		double l = Math.sqrt(Math.pow((line.e.x - line.s.x), 2.0D) + Math.pow((line.e.y - line.s.y), 2.0D));
 		DebugPrint("l:" + l);
