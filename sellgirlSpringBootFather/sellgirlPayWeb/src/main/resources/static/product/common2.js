@@ -140,7 +140,9 @@ function getSignStatus() {
     const today = getTodayStr();
     return {
         signedToday: user.lastSignDate === today,
-        signDays: user.signDays || 0
+        signDays: user.signDays || 0,
+        consecutiveDays: user.signDays || 0,
+        points: user.points || 0
     };
 }
 

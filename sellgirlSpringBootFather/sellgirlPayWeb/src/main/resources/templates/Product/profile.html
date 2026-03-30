@@ -109,8 +109,6 @@
 
     <script type="text/javascript" th:inline="javascript">
         (function() {
-            const isVip=[[${isVip}]];
-            const point=[[${point}]];
             
             const user = getCurrentUser();
             if (!user) {
@@ -118,9 +116,19 @@
                 return;
             }
             
-            user.isVip=isVip;
-            user.points=point;
-            setCurrentUser(user);
+            const serverLogged=[[${logged}]];
+            
+            if(serverLogged){
+	            const isVip=[[${isVip}]];
+	            const point=[[${point}]];
+	            const signDay=[[${signDay}]];
+	            
+            	user.signedToday=[[${signedToday}]];
+	            user.isVip=isVip;
+	            user.points=point;
+	            user.signDays=signDay;
+	            setCurrentUser(user);
+            }
 
             const brandLink = document.getElementById('brandLink');
             const userInfoDiv = document.getElementById('userInfo');
