@@ -25,8 +25,8 @@ public class ConcurrentSftpUpload2 {
     private static final String USER ="root";// "ubuntu";
 //    private static final String SSH="C:\\Users\\Administrator\\.ssh\\id_rsa.pub";
   //"C:/Users/Administrator/.ssh/id_rsa";
-    private static final String SSH=null;//"C:\\Users\\Administrator\\.ssh\\id_rsa";
-    private static final String PASSWORD = "x96rNe9e1D";
+    private static final String SSH="C:\\Users\\Administrator\\.ssh\\id_rsa";
+//    private static final String PASSWORD = "";
     
 //    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg";          // 本地根目录
 //    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg"; // 远程根目录
@@ -124,9 +124,10 @@ public class ConcurrentSftpUpload2 {
         ChannelSftp channel = null;
 
         try {
+        	jsch.addIdentity(SSH);
             // 初始化连接
             session = jsch.getSession(USER, HOST, PORT);
-            session.setPassword(PASSWORD);
+//            session.setPassword(PASSWORD);
             session.setConfig("StrictHostKeyChecking", "no");
             session.setTimeout(30000);      // 连接超时
             session.connect();

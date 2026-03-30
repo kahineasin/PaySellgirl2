@@ -109,7 +109,7 @@ public class UncheckUpload extends TestCase {
 //    private static final String SSH="C:\\Users\\Administrator\\.ssh\\id_rsa.pub";
   //"C:/Users/Administrator/.ssh/id_rsa";
     private static final String SSH=null;//"C:\\Users\\Administrator\\.ssh\\id_rsa";
-    private static final String PASSWORD = "x96rNe9e1D";
+    private static final String PASSWORD = "";
 
     //ok
 	public void testSSH() {
