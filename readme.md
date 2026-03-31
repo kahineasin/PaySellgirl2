@@ -166,6 +166,52 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 			e.printStackTrace();
 		}
 ```
+### 批量更新
+```
+	public void testMySqlDriverUpdateSpeed() throws Exception {
+		initPFHelper();
+		ISGJdbc dstJdbc = JdbcHelperTest.GetMySqlTest2Jdbc();//ok
+		SGSpeedCounter[] speed=new SGSpeedCounter[]{null};
+		int[] startCnt=new int[]{0};
+		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
+			myResource.GetConn().setAutoCommit(false);
+			myResource.SetInsertOption(a->a.setProcessBatch(50000));
+			int insertCnt=1000000;//1000000;
+			int[] idx= new int[]{0};
+			boolean b =
+					myResource.doUpdateList(
+							Arrays.asList(new String[]{"id","col1","col2"}),
+							"test_tb_04",
+							new String[]{"id"},
+							(a, b2, c) -> a < insertCnt,
+							(a) -> {
+								Map<String,Object> map=new HashMap<>();
+								map.put("id", idx[0]);
+								map.put("col1", String.valueOf(idx[0]));
+								map.put("col2", String.valueOf(idx[0]*100));
+								idx[0]++;
+								return map;
+							},
+							null,
+							a -> {
+								// 测试速度
+								if(null==speed[0]){
+									speed[0]=new SGSpeedCounter(com.sellgirl.sgJavaHelper.SGDate.Now());
+									startCnt[0]=a;
+								}
+								System.out.println(speed[0].getSpeed(a-startCnt[0],com.sellgirl.sgJavaHelper.SGDate.Now()));
+								System.out.println("ProcessBatch:"+myResource.GetInsertOption().getProcessBatch());
+							},
+							null);
+		} catch (Exception e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+		Thread.sleep(2000);//写日志的时间
+	}
+```
+
 
 ## 写日志
 1. 实现ISGLog 

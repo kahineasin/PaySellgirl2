@@ -307,95 +307,9 @@ public class UncheckImportResource extends TestCase {
 //		        			);
 //					}
 					
-//					//子表				
-//
-//			        //for(File j:i.listFiles(new ChapFileFilter())) {
-//					int idx=0;
-//			        while(true) {
-////			        	String chapName=j.getName();
-////			        	String content=SGDataHelper.ReadFileToString2(j);
-//			        	idx++;
-//			        	String p=Paths.get(i.getAbsolutePath(), "text"+idx+".txt").toString();
-//			        	File j=new File(p);
-//			        	if(!j.exists()) { break;}
-////			        	String chapName="text"+idx;
-//			        	String chapName=chap.get(idx-1);
-//			        	
-//			        	String content=SGDataHelper.ReadFileToString2(j);
-//			        	
-////			        	content=content.replaceAll("\r\n", "aabb"); varchar才要转，TEXT字段格式不需要
-//			        	
-//
-//						int wordCnt=SGDataHelper.GetWordsCharLength(content);
-//						if(maxLen<wordCnt) {
-//			        		if(printBug) {
-//							System.out.println("content len:"+wordCnt+" folder:"+i.getName()+" chapName:"+chapName);
-//			        		}
-////							deny.append(i.getName()+"->"+chapName+"\r\n");
-////							continue;
-//							deny.append(i.getName()+"-->"+chapName+" ? words over "+maxLen+"\r\n");
-//							this.doDeleteByIds(new long[] {resourceId});
-//							File copedCover=new File(Paths.get(outImgPath, resourceId+".jpg").toUri());
-//							if(copedCover.exists()) {copedCover.delete();}
-//							File copedImg=new File(Paths.get(outImgPath2, ""+resourceId).toUri());
-//							if(copedImg.exists()) {copedImg.delete();}
-//							break;
-//						}
-//
-//						content=content.replaceAll("<img src=\"", "<img src=\"resourceImg/content/"+resourceId+"/");
-//						resourceChapCreate model2=new resourceChapCreate();
-////						model2.setResource_chap_id(0);
-//						model2.setResource_chap_name(chapName);
-//						model2.setResource_id(((Long)resourceId).intValue());
-//						model2.setContent(content);
-//						model2.setCreate_date(SGDate.Now());	
-//						if(null==insert2) {
-//							insert2=dstExec.getInsertCollection();			
-//							insert2.InitItemByModel(model2);
-//						}else {
-//							insert2.UpdateModelValueAutoConvert(model2);
-//						}
-//						
-//						SGSqlCommandString sql2=new SGSqlCommandString(
-//								SGDataHelper.FormatString(
-//										"insert into sg_resource_chap ({0}) values ({1})",
-//										insert2.ToKeysSql(),
-//										insert2.ToValuesSql())
-//								);
-////						try {
-////							int r2=dstExec.ExecuteSqlInt(sql2, null, false);
-////							if(1>r2) {
-////								if(printBug) {
-////								System.out.println("content len:"+SGDataHelper.GetWordsCharLength(content)+" folder:"+i.getName()+" chapName:"+chapName);
-////								}
-////								if(null!=dstExec.GetErrorLine()&&-1<dstExec.GetErrorLine().toString().indexOf("Data truncation")) {
-//////									 wordCnt=SGDataHelper.GetWordsCharLength(content);
-////									deny.append(i.getName()+"-->"+chapName+" ? words over "+wordCnt+"\r\n");
-////									break;
-////								}else {
-////									
-////								}
-////								this.doDeleteByIds(new long[] {resourceId});
-////								File copedCover=new File(Paths.get(outImgPath, resourceId+".jpg").toUri());
-////								if(copedCover.exists()) {copedCover.delete();}
-////								File copedImg=new File(Paths.get(outImgPath2, ""+resourceId).toUri());
-////								if(copedImg.exists()) {copedImg.delete();}
-////							}
-////						}catch(Exception e) {
-////							if(printBug) {
-////							System.out.println("content len:"+SGDataHelper.GetWordsCharLength(content));
-////							}
-////							err++;
-////						}
-//			        }
 
-//					SGDirectory.EnsureExists(Paths.get(outImgPath2, ""+resourceId).toString());
-//			        for(File j:i.listFiles(new ContentImgFilter())) {
-//						SGPath.copyFile(
-//		        			j,
-//		        			new File(Paths.get(outImgPath2, ""+resourceId,j.getName()).toUri())
-//		        			);	
-//			        }
+
+
 			        
 			        if(printProgress&&waiter.isOK()) {
 					System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
@@ -405,7 +319,6 @@ public class UncheckImportResource extends TestCase {
 				
 				dstExec.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				err++;
 			}
@@ -424,7 +337,7 @@ public class UncheckImportResource extends TestCase {
 	
 	public void testGenerateSmallImg() {
 		int size=80;
-		ResourceType resourceType=ResourceType.comic;
+		ResourceType resourceType=ResourceType.image;
 		String srcImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
 		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+size;
 		SGDirectory.eachFile(
@@ -486,7 +399,139 @@ public class UncheckImportResource extends TestCase {
 			}
 		);
 	}
+	/**
+	 * ok
+	 * excel的netdisk和extradeCode列有更新
+	 * @throws Exception 
+	 */
+	public void testUpdateResource() throws Exception {
 
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();//
+		SGSpeedCounter[] speed=new SGSpeedCounter[]{null};
+		int[] startCnt=new int[]{0};
+		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
+			myResource.GetConn().setAutoCommit(false);
+			myResource.SetInsertOption(a->a.setProcessBatch(50000));
+
+			ResourceService service=new ResourceService();
+			ResourceType resourceType=ResourceType.movie;
+			String excelPath="D:\\cache\\html1\\20260324mix2\\最新表格整合\\"+resourceType+".xlsx";			
+			Workbook wb1 = SGExcelHelper.create(new FileInputStream(new File(excelPath)));
+			List<Map<String, Object>> list1=SGExcelHelper.ExcelToDictList(wb1);
+			
+			int[] idx= new int[]{0};
+			int insertCnt=list1.size();//1000000;
+			
+			//comic名字可能重复,文件名没导入数据库,刚好顺序一样,用id吧,需要先核对excel顺序
+			boolean b =
+					myResource.doUpdateList(
+							Arrays.asList(new String[]{
+									"resource_id"
+//									"resource_name"
+									,
+									"netdisk","extract_code"}),
+							service.getTableName(resourceType),
+							new String[]{
+									"resource_id"
+//									"resource_name"									
+							},
+							(a, b2, c) -> a < insertCnt,
+							(a) -> {
+								Map<String, Object> row=list1.get(idx[0]);
+								Map<String,Object> map=new HashMap<>();
+//								map.put("resource_name", row.get("文件名"));
+								map.put("resource_id", idx[0]+1);
+								map.put("netdisk", row.get("链接"));
+								map.put("extract_code", row.get("提取码"));
+								idx[0]++;
+								return map;
+							},
+							null,
+							a -> {
+								// 测试速度
+								if(null==speed[0]){
+									speed[0]=new SGSpeedCounter(com.sellgirl.sgJavaHelper.SGDate.Now());
+									startCnt[0]=a;
+								}
+								System.out.println(speed[0].getSpeed(a-startCnt[0],com.sellgirl.sgJavaHelper.SGDate.Now()));
+								System.out.println("ProcessBatch:"+myResource.GetInsertOption().getProcessBatch());
+							},
+							null);
+		} catch (Exception e) {
+			throw e;
+		} catch (Throwable e) {
+			throw new RuntimeException(e);
+		}
+		Thread.sleep(2000);//写日志的时间
+		
+//		//-------------------------
+//		  SGSpeedCounter speed=null;
+//		  SGWaiter waiter=null;
+//		  int total=0;
+//		
+//		int err=0;
+//		StringBuilder deny=new StringBuilder(); 
+////		initresource();
+//		try {
+////			ISGJdbc srcJdbc = JdbcHelperTest.GetLiGeOrderProdJdbc();
+//			ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();
+////			ISGJdbc lrJdbc = JdbcHelperTest.GetMySqlTest2Jdbc();
+//
+////			String resourcePath="D:\\cache\\html1\\resource_data\\提取示例";
+////			String resourcePath="D:\\cache\\html1\\1";
+////			String resourcePath="D:\\cache\\html1\\电子书资源成品\\电子书资源成品\\电子书资源成品\\电子书资源成品";
+//			//String resourcePath="D:\\cache\\html1\\resource_data\\bugData";
+//			
+////			String resourcePath="D:\\cache\\html1\\20260324mix2\\1-2500预览图\\1-2500预览图";
+////			String resourcePath="D:\\cache\\html1\\20260324mix2\\漫画\\漫画预览图";
+//			String resourcePath="D:\\cache\\html1\\20260324mix2\\图片\\P预览图";
+//			
+////			String outImgPath="D:\\cache\\html1\\resourceImg\\cover";
+////			String outImgPath2="D:\\cache\\html1\\resourceImg\\content";
+//			ResourceType resourceType=ResourceType.image;
+//			String outImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
+//			//String outImgPath2="D:\\cache\\html1\\resourceImg\\content";
+//
+////			String excelPath="D:\\cache\\html1\\20260324mix2\\视频信息(1).csv";
+//			String excelPath="D:\\cache\\html1\\20260324mix2\\"+resourceType+".xlsx";
+//			
+//			Workbook wb1 = SGExcelHelper.create(new FileInputStream(new File(excelPath)));
+//
+////			ResourceType resourceType=ResourceType.movie;
+//			
+//			SGDirectory.EnsureExists(outImgPath);
+//			//SGDirectory.EnsureExists(outImgPath2);
+//			File root=new File(resourcePath);
+//	        File[] files = new File(resourcePath).listFiles();
+//	        SGSqlInsertCollection insert=null;
+//	        SGSqlInsertCollection insert2=null;
+//
+//	        //ArrayList<File> covers=new ArrayList<File>();
+//			try (ISqlExecute dstExec = SGSqlExecute.Init(dstJdbc)) {
+//				dstExec.AutoCloseConn(false);
+//
+//				ResourceService service=new ResourceService();
+////				service.setResourceType(resourceType);
+//				
+//				dstExec.HugeUpdateReader(null, null, excelPath, null, null, null)
+//				
+//				dstExec.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				err++;
+//			}
+//			System.out.println("total err: "+err);
+//			if(0<deny.length()) {System.out.println("deny: "+deny);}
+//
+//
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		if(printProgress) {
+//			System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
+//		}
+	}
     String[] uploaderNames = new String[] {
                            "深海里的鱼", "云中漫步", "星空下的猫", "风一样的男子", "雨夜带刀",
                            "书虫小七", "影视收藏家", "资源搬运工", "分享快乐", "逍遥客",

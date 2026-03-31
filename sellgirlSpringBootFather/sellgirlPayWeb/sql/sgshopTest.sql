@@ -90,10 +90,15 @@ update sgshop.sg_user set point=point+1000 where user_id=2
    select user_id,user_name,point from sg_user where user_id=1;
    select * from sg_resource where resource_name like '%2420%'
    select * from sg_resource limit 20;
+   select * from sg_resource where resource_id=423 limit 20;
    select * from sg_comic limit 20;
-   select * from sg_comic where resource_id=411 limit 20;
+   select * from sg_comic where resource_id=423 limit 20;
+   select * from sg_comic where resource_name='C-No.00423'
+   
+   update sg_comic set netdisk='https://pan.baidu.com/s/153A9gYMg6DEiZBYOKMA8-Q',extract_code='4d95' where resource_name='C-No.00423'
    
    select * from sg_img limit 20;
+   select * from sg_img where resource_id=334 limit 20;
    
    select * from sg_resource t INNER JOIN(select resource_id from sg_resource order by create_date desc limit 0,10) tmp ON t.resource_id=tmp.resource_id
    

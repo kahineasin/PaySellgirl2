@@ -97,9 +97,11 @@ extends  YJQueryController
 //		resourceService.setResourceType2(resourceType);
 		ResourceType type= resourceService.productToResource(resourceType);
 		boolean isResourceUnlocked=resourceService.isResourceUnlocked(this.GetUserLongId(), id, resourceType);
-		ModelAndView r=View(resourceService.GetOneResource(id,type),"Product/resource-detail");
+		resource m=resourceService.GetOneResource(id,type);
+		ModelAndView r=View(m,"Product/resource-detail");
 		r.addObject("resourceType", resourceType);
 		r.addObject("isResourceUnlocked", isResourceUnlocked);
+		r.addObject("netdisk",m.getNetdisk());
 		if(isResourceUnlocked) {
 			r.addObject("resourceLock", resourceService.GetOneResourceLock(id,type));
 		}

@@ -438,6 +438,24 @@ public interface ISqlExecute extends AutoCloseable{
 //			Consumer<Integer> sqlRowsCopiedAction,
 //			Predicate<Boolean> stopAction
 //			);
+ 
+ 	/**
+ 	 * 推荐!!
+ 	 * 
+ 	 * 非常适用于根据外部list大量更新目标表的情况(自动分批)
+ 	 * 实测mysql下性能极好
+ 	 * 
+ 	 * @param <T>
+ 	 * @param dstFieldNames
+ 	 * @param tableName
+ 	 * @param primaryKey
+ 	 * @param hasNextAction
+ 	 * @param getItemAction
+ 	 * @param rowAction
+ 	 * @param sqlRowsCopiedAction
+ 	 * @param stopAction
+ 	 * @return
+ 	 */
 	public  <T> boolean doUpdateList(
 			//List<String> srcFieldNames
 			List<String> dstFieldNames//SqlInsertCollection dstInsert

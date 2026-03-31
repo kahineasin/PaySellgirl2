@@ -30,10 +30,10 @@ public class resource {
 		public  String cover ;
 		public  String description ;
 		
-//		/**
-//        * netdisk(这里含有extractCode)
-//         */
-//		public  String netdisk ;
+		/**
+        * netdisk(这里含有extractCode,已经去掉了)
+         */
+		public  String netdisk ;
 		//这是列表模型,密码不要放这,否则很容易暴露到列表的js中
 //        /**
 //        * extractCode
@@ -91,12 +91,12 @@ public class resource {
 		public void setDescription(String description) {
 			this.description = description;
 		}
-//		public  String getNetdisk (){
-//		  return netdisk;
-//		}
-//		public  void setNetdisk (String netdisk){
-//		  this.netdisk=netdisk;
-//		}
+		public  String getNetdisk (){
+		  return netdisk;
+		}
+		public  void setNetdisk (String netdisk){
+		  this.netdisk=netdisk;
+		}
 //		public  String getExtractCode (){
 //		  return extractCode;
 //		}

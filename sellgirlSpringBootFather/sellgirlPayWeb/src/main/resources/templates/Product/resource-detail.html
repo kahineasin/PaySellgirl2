@@ -143,22 +143,27 @@
                             <span class="ms-2" id="detail-duration"></span>
                         </div>
                         <div class="mb-3">
+                            <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">🖼️ 图片数量</span>
+                            <span class="ms-2" id="detail-imageCount"></span>
+                        </div>
+                        <div class="mb-3">
                             <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">💾 文件大小</span>
                             <span class="ms-2" id="detail-size"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <span class="badge bg-primary bg-opacity-10 text-dark p-2 px-3">📎 网盘地址</span>
+                            <div class="mt-2">
+                                <a th:href="${netdisk}" id="detail-netdisk" class="btn netdisk-btn text-white" target="_blank">🔗 立即保存 / 提取</a>
+                            </div>
+                        </div>
+                        
                         <!-- 消耗积分查看网盘信息 -->
                         <div id="consumeArea">
                             <div id="consumeBtnDiv" class="mb-3">
                                 <button id="consumeButton" class="btn consume-btn btn-lg">消耗1积分查看网盘信息</button>
                             </div>
                             <div id="resourceInfo" style="display: none;">
-                                <div class="mb-3">
-                                    <span class="badge bg-primary bg-opacity-10 text-dark p-2 px-3">📎 网盘地址</span>
-                                    <div class="mt-2">
-                                        <a href="#" id="detail-netdisk" class="btn netdisk-btn text-white" target="_blank">🔗 立即保存 / 提取</a>
-                                    </div>
-                                </div>
                                 <div class="mb-3">
                                     <span class="badge bg-secondary bg-opacity-10 text-dark p-2 px-3">🔑 提取码</span>
                                     <span class="ms-2" id="extractCodeValue"></span>
@@ -215,6 +220,7 @@
             const detailDescription = document.getElementById('detail-description');
             const detailUploader = document.getElementById('detail-uploader');
             const detailDuration = document.getElementById('detail-duration');
+            const detailImageCount = document.getElementById('detail-imageCount');
             const detailSize = document.getElementById('detail-size');
             const detailNetdisk = document.getElementById('detail-netdisk');
             const extractCodeSpan = document.getElementById('extractCodeValue');
@@ -278,6 +284,11 @@
                 detailDuration.textContent = foundThread.duration + ' 分钟';
             } else {
                 detailDuration.parentElement.style.display = 'none';
+            }
+            if (foundThread.imageCount) {
+                detailImageCount.textContent = foundThread.imageCount + ' 张';
+            } else {
+                detailImageCount.parentElement.style.display = 'none';
             }
             if (foundThread.size) {
                 //const sizeGB = (foundThread.size / 1024).toFixed(1);
