@@ -161,7 +161,7 @@
                         <!-- 消耗积分查看网盘信息 -->
                         <div id="consumeArea">
                             <div id="consumeBtnDiv" class="mb-3">
-                                <button id="consumeButton" class="btn consume-btn btn-lg">消耗1积分查看网盘信息</button>
+                                <button id="consumeButton" class="btn consume-btn btn-lg"  data-bs-toggle="modal" data-bs-target="#upgradeModal">消耗1积分查看网盘信息</button>
                             </div>
                             <div id="resourceInfo" style="display: none;">
                                 <div class="mb-3">
@@ -188,7 +188,31 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- 升级模态框 -->
+    <div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="upgradeModalLabel">🔓 确定消耗1积分解锁</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>建议先查看网盘连接是否过期</p>
+                    <!--<div class="mb-3">
+                        <label class="form-label">邀请码</label>
+                        <input type="text" class="form-control" id="modalInviteCode" placeholder="请输入邀请码">
+                    </div>-->
+                    <div id="modalUpgradeMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="modalUpgradeBtn">立即升级</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="/product/resource-common.js"></script>
     <script  type="text/javascript" th:inline="javascript">
         (function() {
@@ -352,9 +376,12 @@
                         consumeButton.textContent = '积分不足，请先充值';
                     }
                 }
-
-                consumeButton.addEventListener('click', function() {
-                    consumeButton.disabled = true;
+                const consumeButton2 = document.getElementById('modalUpgradeBtn');
+                consumeButton2//consumeButton //原本. 现加确定框   
+                .addEventListener('click', function() {
+                	//alert('aaaa');
+                	//return;
+                    consumeButton2.disabled = true;
                     const user = getCurrentUser();
                     if (!user) {
                         alert('请先登录');
@@ -363,18 +390,38 @@
                     }
                     // 调用 unlockResource 消耗积分（1分）
                     unlockResource(threadId,parentBoardId,
-                    	function(result){
-                    		if(result.success){
+                    	function(result){    		          	
+			                const msgDiv = document.getElementById('modalUpgradeMessage');
+			                if (result.success) {
+			                		
                     			resourceLock=result.resourceLock;
 		                        showResourceInfo();
 		                        // 更新导航栏积分显示
 		                        const userInfoDiv = document.getElementById('userInfo');
 		                        //const points = getUserPoints();
 		                        userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${result.point} 积分`);
-                    		}else{
-                        		alert(result.message);
-                    			consumeButton.disabled = false;
-                    		}
+		                        
+			                    msgDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+			                    setTimeout(() => {
+			                        location.reload();
+			                    }, 1500);
+			                } else {
+			                    msgDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+                    			consumeButton2.disabled = false;
+			                }
+			                
+                    		//if(result.success){                
+                    		//
+                    		//	resourceLock=result.resourceLock;
+		                    //    showResourceInfo();
+		                    //    // 更新导航栏积分显示
+		                    //    const userInfoDiv = document.getElementById('userInfo');
+		                    //    //const points = getUserPoints();
+		                    //    userInfoDiv.innerHTML = userInfoDiv.innerHTML.replace(/⭐ \d+ 积分/, `⭐ ${result.point} 积分`);
+                    		//}else{
+                        	//	alert(result.message);
+                    		//	consumeButton.disabled = false;
+                    		//}
                     	}
                     );
                     //if (unlockResource(threadId)) {
@@ -426,5 +473,8 @@
         })();
     </script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
+    
+    
+
 </body>
 </html>

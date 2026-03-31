@@ -126,7 +126,7 @@ public class ResourceApiController extends  YJQueryController
 			HashMap<String,Object> r=new HashMap<String,Object>();
 			r.put("point", point);
 			r.put("resourceLock", resourceService.GetOneResourceLock(resourceId,resourceService.productToResource(resourceType)));
-			return AbstractApiResult.success(r);
+			return AbstractApiResult.success("解锁成功",r);
 		}else {
 			return AbstractApiResult.error("解锁失败");
 		}

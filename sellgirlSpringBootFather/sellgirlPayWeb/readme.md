@@ -25,7 +25,6 @@ com.sellgirl.sellgirlPayWeb.shop
 ## 开发待办
 1. book.html等页面需要改为template/product2里面的需要积分才能看的版本
 3. 找回密码的功能(修改密码的功能也没有?)
-4. 换系统邮箱
 5. cloudflare加速
 6. resource-search.html 页面搜索中文后, 如果因为登录失效跳到登录页, 之后回来url变为xxx?q=??
    看看怎么处理好
@@ -60,6 +59,52 @@ application-prod.yml, static/resourceImg/** ...
 		  .complete(function(XMLHttpRequest, textStatus){})
 		  ;
 ```
+
+## 确定弹窗
+1. 见 templates/Product/index.html 升级模态框
+ 
+2. 二
+
+	```
+	<button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#upgradeModal">⭐ 升级资源站</button>
+	```
+3. 三
+
+	```
+	<!-- 升级模态框 -->
+	<div class="modal fade" id="upgradeModal" tabindex="-1" aria-labelledby="upgradeModalLabel" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" id="upgradeModalLabel">🔓 确定消耗1积分解锁</h5>
+	                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	                <p>建议先查看网盘连接是否过期</p>
+	                <!--<div class="mb-3">
+	                    <label class="form-label">邀请码</label>
+	                    <input type="text" class="form-control" id="modalInviteCode" placeholder="请输入邀请码">
+	                </div>-->
+	                <div id="modalUpgradeMessage"></div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+	                <button type="button" class="btn btn-primary" id="modalUpgradeBtn">立即升级</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	```
+4. 关闭弹窗 
+
+	```
+    setTimeout(() => {
+	    location.reload(); //暂不知道怎么关闭模态窗,直接刷新
+	}, 1500);
+	```
+
+	
+
 ## 商品图片
 src/main/resources/static/bookImg/cover/ 这个文件夹的图片不上传到git, 里面的图片名对应mysql的book_id，所以mysql数据不能随便清理，否则图片名对应不上。UncheckImportBook.testImportBook()方法可以把数据导入到book表，同时处理cover图
 

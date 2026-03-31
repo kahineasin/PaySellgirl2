@@ -50,6 +50,20 @@ public enum HostType {
 			return defaults;
 		}
 	},
+	TENCENT2 {//20260331
+		@Override
+		public Properties getProperties() {
+			Properties defaults = new Properties();
+			defaults.put("mail.host", "smtp.qq.com");
+			defaults.put("mail.port", "465");
+			defaults.put("mail.pop3.host", "pop.qq.com");
+			defaults.put("mail.pop3.port", "995");
+			defaults.put("mail.imap.host", "imap.qq.com");
+			defaults.put("mail.imap.port", "465");
+			defaults.put("mail.store.protocol", "pop3"); // 默认使用pop3收取邮件
+			return defaults;
+		}
+	},
 	GMAIL {
 
 		@Override

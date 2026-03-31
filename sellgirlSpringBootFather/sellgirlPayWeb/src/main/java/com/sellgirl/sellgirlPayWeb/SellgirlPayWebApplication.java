@@ -24,16 +24,7 @@ import com.sellgirl.sgJavaHelper.SGEmailSend;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.file.SGEncryptByte;
 
-//import com.sellgirl.sellgirlPayWeb.configuration.Inject001;
-//import com.sellgirl.sellgirlPayWeb.configuration.InjectHelper;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.boot.CommandLineRunner;
-//import org.springframework.context.annotation.Bean;
 
-//import com.sellgirl.sellgirlPayMq.MonthDataCompareCntConsumer;
-//import com.sellgirl.sellgirlPayWeb.controller.PrincessDayController;
-//import com.sellgirl.sellgirlPayMq.PFMqHelper;
 
 @SpringBootApplication
 @MapperScan("com.sellgirl.sellgirlPayDao")
@@ -88,20 +79,20 @@ public class SellgirlPayWebApplication {
 //		
 ////		String aa=SGDataHelper.ReadFileToString("D:\\gitee\\secretKey\\paySellgirl\\key.yml");
 ////		AppKey appKey=Yaml.loadType(aa,AppKey.class);
-//
-//		SGEmailSend.EMAIL_OWNER_ADDR_HOST="";
-//		SGEmailSend.EMAIL_OWNER_ADDR="li@sellgirl.com";
-////		SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailPwd(),"sellgirl19840903");
-//		SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailToken(),getKey());
-//		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY=HostType.SELLGIRL.getProperties();
+
 
 	try {
-		SGEmailSend.EMAIL_OWNER_ADDR_HOST = "";
-		SGEmailSend.EMAIL_OWNER_ADDR = AES.AESDecryptDemo("u8k/Cz5Z9ddjUvNuTeXVVA==",
-				SGDataHelper.decodeBase64(key));
-		SGEmailSend.EMAIL_OWNER_ADDR_PASS = AES.AESDecryptDemo("9Y4YkBmOw1mlrmmx4QHz8wK5E7/ZhZxuvoll2MmCvVc=",
-				SGDataHelper.decodeBase64(key));
-		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY = HostType.SELLGIRL.getProperties();
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST = "";
+//		SGEmailSend.EMAIL_OWNER_ADDR = AES.AESDecryptDemo("u8k/Cz5Z9ddjUvNuTeXVVA==",
+//				SGDataHelper.decodeBase64(key));
+//		SGEmailSend.EMAIL_OWNER_ADDR_PASS = AES.AESDecryptDemo("9Y4YkBmOw1mlrmmx4QHz8wK5E7/ZhZxuvoll2MmCvVc=",
+//				SGDataHelper.decodeBase64(key));
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY = HostType.SELLGIRL.getProperties();
+
+//		SGEmailSend.EMAIL_OWNER_ADDR_HOST=null;//"smtp.qq.com";
+		SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
+		SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
+		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
 	} catch (Exception e) {
 		e.printStackTrace();
 	}

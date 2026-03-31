@@ -33,7 +33,7 @@ public class SGEmailSend {
 //    private static final String EMAIL_OWNER_ADDR_HOST = "smtp.aliyun.com"; //smtp.163.com  smtp.aliyun.com  smtp.qq.com
 //    private static final String EMAIL_OWNER_ADDR = "xxx@aliyun.com";
 //    private static final String EMAIL_OWNER_ADDR_PASS = "xxx";
-    public static  String EMAIL_OWNER_ADDR_HOST = "smtp.perfect99.com"; //smtp.163.com  smtp.aliyun.com  smtp.qq.com
+    public static  String EMAIL_OWNER_ADDR_HOST =null;// "smtp.perfect99.com"; //smtp.163.com  smtp.aliyun.com  smtp.qq.com
     /**
      * 发系统邮件时的系统邮箱.
      * 如果不设置此邮件地址,系统邮件监听的功能可能会受到影响

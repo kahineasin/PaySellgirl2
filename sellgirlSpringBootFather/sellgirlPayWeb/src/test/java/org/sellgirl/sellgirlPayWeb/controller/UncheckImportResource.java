@@ -406,16 +406,18 @@ public class UncheckImportResource extends TestCase {
 	 */
 	public void testUpdateResource() throws Exception {
 
-		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();//
+//		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShopJdbc();//homePad
+		ISGJdbc dstJdbc = JdbcHelperTest.GetSgShop2Jdbc();//ubuntu
+		ResourceType resourceType=ResourceType.movie;
+		String excelPath="D:\\cache\\html1\\20260324mix2\\最新表格整合\\"+resourceType+".xlsx";
+		
 		SGSpeedCounter[] speed=new SGSpeedCounter[]{null};
 		int[] startCnt=new int[]{0};
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
 			myResource.GetConn().setAutoCommit(false);
 			myResource.SetInsertOption(a->a.setProcessBatch(50000));
 
-			ResourceService service=new ResourceService();
-			ResourceType resourceType=ResourceType.movie;
-			String excelPath="D:\\cache\\html1\\20260324mix2\\最新表格整合\\"+resourceType+".xlsx";			
+			ResourceService service=new ResourceService();			
 			Workbook wb1 = SGExcelHelper.create(new FileInputStream(new File(excelPath)));
 			List<Map<String, Object>> list1=SGExcelHelper.ExcelToDictList(wb1);
 			

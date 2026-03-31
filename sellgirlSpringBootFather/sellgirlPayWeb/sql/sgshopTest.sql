@@ -81,6 +81,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
   
   select * from sgshop.sg_vip_order
   select * from sgshop.sg_user order by user_id desc;
+  update sgshop.sg_user set sign_day=9 where user_id=2
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
   
@@ -90,7 +91,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
    select user_id,user_name,point from sg_user where user_id=1;
    select * from sg_resource where resource_name like '%2420%'
    select * from sg_resource limit 20;
-   select * from sg_resource where resource_id=423 limit 20;
+   select * from sg_resource where resource_id=2500 limit 20;
    select * from sg_comic limit 20;
    select * from sg_comic where resource_id=423 limit 20;
    select * from sg_comic where resource_name='C-No.00423'

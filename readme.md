@@ -230,6 +230,10 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 
 ## 发邮件
 1. 配置 SGEmailSend 的public字段
+	//SGEmailSend.EMAIL_OWNER_ADDR_HOST=null;//如果hostType不对,可以指定
+	SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
+	SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
+	SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
 2. SGEmailSend.SendMail()
 
 ## 上传文件到ubuntu(linux)
