@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 //import com.perfect99.right.amsweb.BaseReturnInfo;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
+import com.sellgirl.sgJavaHelper.HostType;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGEmailSend;
@@ -989,8 +990,25 @@ extends YJQueryController
 				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
 			}
 			sb.append("</ol>");
-			SGEmailSend.SendMail(new String[] {email}, "找回密码", sb.toString());
-			sentEmail=true;
+			
+//			//参数完全一样,就是失败..session问题?原来是少了依赖,javax.mail connect时需要service
+			boolean b=SGEmailSend.SendMail(new String[] {email}, "找回密码", sb.toString());
+
+//			SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
+//			SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
+//			SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
+//
+//			String title="测试发邮件20260331_3_"+ SGDate.Now().toString();
+//
+//			String[] emails= new String[]{
+//					//"miuxiaoniao@126.com",
+//					"li@sellgirl.com"
+//					};
+//			boolean b=SGEmailSend.SendMail(emails,
+//					title,  title);
+//			System.out.println("success:"+b);
+			
+			sentEmail=b;
 		}
 		result.addObject("hasError",hasError);
 		result.addObject("sentEmail",sentEmail);

@@ -11,6 +11,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 import java.io.File;
@@ -42,19 +43,22 @@ public class SGEmailSend {
     public static  String EMAIL_OWNER_ADDR_PASS = "";
     public static  Properties EMAIL_OWNER_ADDR_HOST_PROPERTY = HostType.PERFECT.getProperties();
 
-    public static void SendMail(String[] emails,String title,  String content) 
+    private static boolean  isTest=false;
+    public static boolean SendMail(String[] emails,String title,  String content) 
     		//throws MessagingException 
     {
     	try {
             if(SGDataHelper.StringIsNullOrWhiteSpace(EMAIL_OWNER_ADDR)){
-                return;
+                return false;
             }
             Properties prop = new Properties();
 
 //            String hostStr=EMAIL_OWNER_ADDR_HOST_PROPERTY.contains("mail.host")?EMAIL_OWNER_ADDR_HOST_PROPERTY.get("mail.host"):EMAIL_OWNER_ADDR_HOST;
             //String hostStr=EMAIL_OWNER_ADDR_HOST_PROPERTY.getProperty("mail.host",EMAIL_OWNER_ADDR_HOST);
             String hostStr=SGDataHelper.StringIsNullOrWhiteSpace(EMAIL_OWNER_ADDR_HOST)?EMAIL_OWNER_ADDR_HOST_PROPERTY.getProperty("mail.host"):EMAIL_OWNER_ADDR_HOST;
-            //System.out.println(hostStr);
+//            if(isTest) {
+//            	System.out.println(hostStr);
+//            }
             prop.put("mail.host",hostStr );
             prop.put("mail.transport.protocol", "smtp");
             prop.put("mail.smtp.auth", "true");
@@ -63,13 +67,26 @@ public class SGEmailSend {
             //使用java发送邮件5步骤
             //1.创建sesssion
             Session session = Session.getInstance(prop);
+            if(isTest) {
+            	System.out.println(prop);
+//            	System.out.println(JSON.toJSONString(session) );
+            }
             //开启session的调试模式，可以查看当前邮件发送状态
             //session.setDebug(true);
 
             //2.通过session获取Transport对象（发送邮件的核心API）
             Transport ts = session.getTransport();
             //3.通过邮件用户名密码链接，阿里云默认是开启个人邮箱pop3、smtp协议的，所以无需在阿里云邮箱里设置
-            ts.connect(EMAIL_OWNER_ADDR, EMAIL_OWNER_ADDR_PASS);
+
+            if(isTest) {
+            	System.out.println(EMAIL_OWNER_ADDR);
+            	System.out.println(EMAIL_OWNER_ADDR_PASS);
+            }
+            ts.connect(EMAIL_OWNER_ADDR, EMAIL_OWNER_ADDR_PASS);//报错
+
+            if(isTest) {
+            	System.out.println("-----------------------");
+            }
 
             //4.创建邮件
             //创建邮件对象
@@ -127,10 +144,11 @@ public class SGEmailSend {
             //5.发送电子邮件
 
             ts.sendMessage(mm, mm.getAllRecipients());
-    		
+    		return true;
     	}catch(Exception e) {
     		//PFDataHelper.WriteError(new Throwable(),e);
     		SGDataHelper.WriteError(e);
+    		return false;
     	}
     }
     /**

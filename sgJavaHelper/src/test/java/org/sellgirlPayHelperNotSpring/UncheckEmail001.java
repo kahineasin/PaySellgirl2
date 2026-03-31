@@ -172,11 +172,15 @@ public class UncheckEmail001 extends TestCase {
 		SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
 		SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
 
-		String title="测试发邮件20260331_2_"+ SGDate.Now().toString();
+		String title="测试发邮件20260331_3_"+ SGDate.Now().toString();
 
-		String[] emails= new String[]{"miuxiaoniao@126.com"};
-		SGEmailSend.SendMail(emails,
+		String[] emails= new String[]{
+				//"miuxiaoniao@126.com",
+				"li@sellgirl.com"
+				};
+		boolean b=SGEmailSend.SendMail(emails,
 				title,  title);
+		System.out.println("success:"+b);
 		Thread.sleep(2000);
 		//System.out.println("测试通过");
 	}

@@ -53,6 +53,7 @@
 
 		<fasterxml.jackson.version>2.10.0</fasterxml.jackson.version>
 		<swagger.version>2.6.1</swagger.version>
+		<javax.mail.version>1.6.2</javax.mail.version>
 	</properties>
 	<repositories>
 		<!--<repository>
@@ -204,6 +205,20 @@
 			<version>${swagger.version}</version>
 		</dependency>
 
+		<dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javax.mail.version}</version>
+			<scope>provided</scope>
+        </dependency>
+        <!-- 注意,此版本很低,引用了javax.mail:mail:1.4.5,很容易跟android的email库冲突-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.sellgirl</groupId>
 			<artifactId>sgJavaHelper</artifactId>
