@@ -337,7 +337,7 @@ public class UncheckImportResource extends TestCase {
 	
 	public void testGenerateSmallImg() {
 		int size=80;
-		ResourceType resourceType=ResourceType.image;
+		ResourceType resourceType=ResourceType.movie;
 		String srcImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
 		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+size;
 		SGDirectory.eachFile(

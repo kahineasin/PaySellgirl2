@@ -94,6 +94,9 @@ public class UncheckUpload extends TestCase {
 //		SftpUpload2.main(null);
 		try {
 //			ConcurrentSftpUpload.main(null);
+			ResourceType type=ResourceType.movie;
+			ConcurrentSftpUpload2.LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\"+type+"60";    //全部上传完成，总耗时 167 秒 
+			ConcurrentSftpUpload2.REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/"+type+"60"; // 
 			ConcurrentSftpUpload2.main(null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

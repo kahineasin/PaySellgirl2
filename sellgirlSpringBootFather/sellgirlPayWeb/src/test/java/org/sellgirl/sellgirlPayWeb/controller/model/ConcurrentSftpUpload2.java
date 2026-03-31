@@ -35,8 +35,8 @@ public class ConcurrentSftpUpload2 {
 //    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\movie60";          // 本地根目录
 //    private static final String REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/movie60"; // 远程根目录
 
-    private static final String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\comic60";    //全部上传完成，总耗时 167 秒 
-    private static final String REMOTE_ROOT = "/root/download/aaa"; // 
+    public static  String LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\comic60";    //全部上传完成，总耗时 167 秒 
+    public static  String REMOTE_ROOT = "/root/download/aaa"; // 
     
     private static final int THREAD_COUNT = 5;                      // 上传线程数
     private static final int QUEUE_CAPACITY = 1000;                 // 队列容量，防止内存爆炸
