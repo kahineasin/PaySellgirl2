@@ -1,0 +1,947 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "简单优雅的restfun风格",
+        "version": "1.0",
+        "title": "springboot利用swagger构建api文档",
+        "termsOfService": "http://blog.csdn.net/forezp"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "home-api-controller",
+            "description": "Home Api Controller"
+        },
+        {
+            "name": "yj-query-local-controller",
+            "description": "YJ Query Local Controller"
+        },
+        {
+            "name": "sample-api-controller",
+            "description": "Sample Api Controller"
+        },
+        {
+            "name": "crm-controller",
+            "description": "Crm Controller"
+        },
+        {
+            "name": "pay-2-controller",
+            "description": "Pay 2 Controller"
+        }
+    ],
+    "paths": {
+        "/alive": {
+            "get": {
+                "tags": [
+                    "home-api-controller"
+                ],
+                "summary": "alive",
+                "operationId": "aliveUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/crm/getusersmodify": {
+            "get": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "GetUsersModify",
+                "operationId": "GetUsersModifyUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "userid",
+                        "in": "query",
+                        "description": "userid",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UsersModify"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/crm/getsalesday": {
+            "get": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "GetSalesDay",
+                "operationId": "GetSalesDayUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "sfNo",
+                        "in": "query",
+                        "description": "sfNo",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SalesDay"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/sample/eval": {
+            "post": {
+                "tags": [
+                    "sample-api-controller"
+                ],
+                "summary": "SellgirlPay",
+                "operationId": "SellgirlPayUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "code",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/pay/checkapiarray": {
+            "post": {
+                "tags": [
+                    "pay-2-controller"
+                ],
+                "summary": "CheckApiArray",
+                "operationId": "CheckApiArrayUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "a",
+                        "in": "query",
+                        "description": "a",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/pay/sellgirlpay": {
+            "get": {
+                "tags": [
+                    "pay-2-controller"
+                ],
+                "summary": "SellgirlPay",
+                "operationId": "SellgirlPayUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "code",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/sample/test": {
+            "get": {
+                "tags": [
+                    "sample-api-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingGET_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/Bonus/PerformanceAnalysis/GetMonth": {
+            "post": {
+                "tags": [
+                    "yj-query-local-controller"
+                ],
+                "summary": "GetMonth",
+                "operationId": "GetMonthUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PFJsonDataLocalT«object»"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/pay/checkapiparamtype": {
+            "get": {
+                "tags": [
+                    "pay-2-controller"
+                ],
+                "summary": "CheckApiParamType",
+                "operationId": "CheckApiParamTypeUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "date",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/config": {
+            "get": {
+                "tags": [
+                    "home-api-controller"
+                ],
+                "summary": "appConfig",
+                "operationId": "appConfigUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/crm/test1": {
+            "get": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingGET",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "head": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingHEAD",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingDELETE",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "options": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingOPTIONS",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "test",
+                "operationId": "testUsingPATCH",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/crm/addhyzlchange": {
+            "post": {
+                "tags": [
+                    "crm-controller"
+                ],
+                "summary": "AddHyzlChange",
+                "operationId": "AddHyzlChangeUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "hyzlChange",
+                        "description": "hyzlChange",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/HyzlChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ResultModel"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/Bonus/Home/GetSfOfAllFgs": {
+            "post": {
+                "tags": [
+                    "yj-query-local-controller"
+                ],
+                "summary": "GetSfOfAllFgs",
+                "operationId": "GetSfOfAllFgsUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PFJsonDataLocalT«object»"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/pay/checkapibodyarray": {
+            "post": {
+                "tags": [
+                    "pay-2-controller"
+                ],
+                "summary": "CheckApiBodyArray",
+                "operationId": "CheckApiBodyArrayUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "a",
+                        "description": "a",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/AbstractApiResult«object»"
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "AbstractApiResult«object»": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "PFJsonDataLocalT«object»": {
+            "type": "object",
+            "properties": {
+                "Data": {
+                    "type": "object"
+                },
+                "Result": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "ResultModel": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "SalesDay": {
+            "type": "object",
+            "properties": {
+                "CDay": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "FgsName": {
+                    "type": "string"
+                },
+                "FgsNo": {
+                    "type": "string"
+                },
+                "InvTypeName": {
+                    "type": "string"
+                },
+                "InvTypeNo": {
+                    "type": "string"
+                },
+                "SalesDayId": {
+                    "type": "string"
+                },
+                "SfName": {
+                    "type": "string"
+                },
+                "SfNo": {
+                    "type": "string"
+                },
+                "TotalMoney": {
+                    "type": "number"
+                },
+                "TotalPv": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "cday": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "fgsName": {
+                    "type": "string"
+                },
+                "fgsNo": {
+                    "type": "string"
+                },
+                "invTypeName": {
+                    "type": "string"
+                },
+                "invTypeNo": {
+                    "type": "string"
+                },
+                "salesDayId": {
+                    "type": "string"
+                },
+                "sfName": {
+                    "type": "string"
+                },
+                "sfNo": {
+                    "type": "string"
+                },
+                "totalMoney": {
+                    "type": "number"
+                },
+                "totalPv": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "UsersModify": {
+            "type": "object",
+            "properties": {
+                "alertContent": {
+                    "type": "string"
+                },
+                "modificationTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "modifier": {
+                    "type": "string"
+                },
+                "sellerno": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "sfz": {
+                    "type": "string"
+                },
+                "userid": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "HyzlChange": {
+            "type": "object",
+            "properties": {
+                "cdate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "hybh": {
+                    "type": "string"
+                },
+                "hyxm": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "sex": {
+                    "type": "string"
+                },
+                "sfzh": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ package com.sellgirl.sellgirlPayWeb.pay;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.sellgirl.sellgirlPayWeb.PayShopSwaggerAttr;
 import com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus;
 import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
 import com.sellgirl.sellgirlPayWeb.pay.model.vipOrderCreate;
@@ -21,6 +22,10 @@ import com.sellgirl.sgJavaHelper.SGRequestResult;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 //import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +74,12 @@ public class Pay3ApiController extends YJQueryController {
      * 微信支付结果回调
      */
     @GetMapping("/notify")
-//  @RequestMapping("/notify")
+	@PayShopSwaggerAttr
+	@ApiOperation(value="微信支付结果回调")
+    @ApiResponses({
+    @ApiResponse(code=200,message="成功",response=String.class),
+    @ApiResponse(code=333,message="成功",response=String.class)
+    })
   public String payNotify(long pid,
 		  String name,
 		  String money,

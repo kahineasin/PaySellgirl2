@@ -41,6 +41,9 @@ import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
+
+import io.swagger.annotations.ApiOperation;
+
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
@@ -48,6 +51,8 @@ import com.sellgirl.sgJavaMvcHelper.HtmlHelperT;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
 import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
+import com.sellgirl.sellgirlPayWeb.PayShopSwaggerAttr;
+import com.sellgirl.sellgirlPayWeb.PrincessSwaggerAttr;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -777,6 +782,8 @@ extends YJQueryController
     }
 	
 
+	@PayShopSwaggerAttr
+//    @ApiOperation(value = "根据id查消费者")
 	@SGAllowAnonymous
 //	@GetMapping(value = { "/AddUser" })
 	@PostMapping(value = { "/LoginUser" })

@@ -166,7 +166,23 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 			e.printStackTrace();
 		}
 ```
-### 批量更新
+
+### 批量插入(bulk)
+
+```
+			b = HugeBulkList(null, thisMonthNotUpdateList, tableName, null, null, null);
+```
+或者更可控的
+
+```
+        int insertCnt = list.size();
+        return this.doInsertList( 
+                null, tableName,
+                (a, b, c) -> a < insertCnt, (a) -> list.get(a), 
+                rowAction, sqlRowsCopiedAction, stopAction);
+```
+### 批量更新(bulk)
+
 ```
 	public void testMySqlDriverUpdateSpeed() throws Exception {
 		initPFHelper();
@@ -241,6 +257,23 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 org.sellgirl.sellgirlPayWeb.controller.model.ConcurrentSftpUpload
 此方法未移到helper,因为有额外的小型库引用
 
+## swagger文档
+1. 参考PrincessSwagger配置
+2. 控制器方法
+
+```
+    @GetMapping("/notify")
+	@PayShopSwaggerAttr
+	@ApiOperation(value="微信支付结果回调")
+    @ApiResponses({
+    @ApiResponse(code=200,message="成功",response=String.class)
+    })
+  public String payNotify(
+```
+3. 在线文档http://localhost:8080/swagger-ui.html,json版本文档http://127.0.0.1:8080/v2/api-docs
+4. 生成离线文档org.sellgirlPayHelperNotSpring.GenerateApiDocTest,(需要第三步的地址可以访问)
+
+## MQ
 下面是一些测试各类型mq的地址，需要根据情况配置对应消费者的地址才行
 1.http://localhost:28303/sendmq
 2.http://localhost:28303/sendmq2
@@ -384,3 +417,6 @@ keytool -genkeypair -alias pay_sellgirl_com -keyalg RSA -keysize 4096 -keypass s
 要发证书给签名机构?
 https://blog.csdn.net/weixin_39171105/article/details/109054348
 https://blog.csdn.net/sayyy/article/details/78351512
+
+## 端口整理
+sgPayAdminSwt	28611

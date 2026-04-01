@@ -74,6 +74,7 @@ public class UserService
 //		}
 //	}
 
+	
 	public boolean addUser(UserCreate model,SGRef<String> error) {
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
 		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
@@ -120,6 +121,8 @@ public class UserService
 			//throw new RuntimeException(e);
 		}
 	}
+	
+	
 
     public boolean updateUserVip(long userId,
     		Boolean vip1,SGDate vip1_expire,

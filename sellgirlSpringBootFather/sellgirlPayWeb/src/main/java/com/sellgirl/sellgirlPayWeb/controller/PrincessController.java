@@ -4,6 +4,8 @@ import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 import com.sellgirl.sgJavaHelper.file.SGDirectory;
 
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.perfect.demo.model.PcDeskImgNameResult;
 import com.perfect.demo.pfTest.Rgbtocmyk;
-//import com.perfect.demo.pfTest.Rgbtocmyk;
 import com.sellgirl.sellgirlPayWeb.PrincessSwaggerAttr;
 import com.sellgirl.sellgirlPayWeb.model.PcDeskImgType;
 
@@ -120,6 +121,7 @@ public class PrincessController // extends AbstractController
 	@GetMapping(value = { "/sashathumbnail" }, produces = { "image/jpeg" })
 	@ResponseBody
 	@PrincessSwaggerAttr
+//    @ApiOperation(value = "根据id查消费者")
 //    @CrossOrigin
 	public byte[] SasaThumbnail(int w, int h,SGLine.SGLineType t) throws IOException {
 

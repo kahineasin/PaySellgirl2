@@ -401,6 +401,10 @@ public interface ISqlExecute extends AutoCloseable{
 ////			Predicate<Boolean> stopAction
 			);
  /**
+  * 推荐!!
+  * 
+  * bulk insert非常高效
+  * 
   * 插入列.
   * 最后更新 20220903
   * @param <T>

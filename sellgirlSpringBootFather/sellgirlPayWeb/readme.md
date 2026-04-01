@@ -116,6 +116,10 @@ src/main/resources/static/bookImg/cover/ 这个文件夹的图片不上传到git
 3. static/assets,static目录下的 announcement.js,common.js,data-,books.js,data-resources.js 是样式和本地json测试数据
 4. 对接百度网盘api(先确定隐私问题,再决定做不做)
 
+## swagger接口文档
+http://127.0.0.1:8080/v2/api-docs	这个是json格式,
+是供单元测试org.sellgirl.sellgirlPayWeb.controller.Doc类使用的
+
 # 运营指南
 电脑需jre1.8环境,
 mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1

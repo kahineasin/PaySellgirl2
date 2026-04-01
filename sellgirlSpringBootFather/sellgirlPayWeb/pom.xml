@@ -348,7 +348,7 @@
 			<version>2.6.0</version>
 		</dependency>-->
 		<!-- https://blog.csdn.net/qq_30059235/article/details/106690848 -->
-		<!--         <dependency>
+<!--		 <dependency>
             <groupId>io.github.swagger2markup</groupId>
             <artifactId>swagger2markup</artifactId>
             <version>1.3.3</version>
@@ -444,7 +444,27 @@
                     </attributes>
                 </configuration>
             </plugin> -->
-		</plugins>
+            
+        <!-- <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>2.4.46</version> 
+            <executions>
+                <execution>
+                    <id>generate-html-docs</id>
+                    <phase>prepare-package</phase> 
+                    <goals>
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <inputSpec>http://127.0.0.1:8080/v2/api-docs</inputSpec>
+                        <language>html2</language>
+                        <output>${project.basedir}/docs</output>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin> -->
+		</plugins> 
 	</build>
 	
        <!-- 其他配置 -->

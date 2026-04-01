@@ -1,4 +1,4 @@
-package com.sellgirl.sellgirlPayWeb;
+package com.sellgirl.sellgirlPayWeb.configuration;
 
 
 import org.springframework.context.annotation.Bean;
@@ -13,6 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by fangzhipeng on 2017/4/17.
+ * 访问http://127.0.0.1:8080/v2/api-docs
  */
 @Configuration
 @EnableSwagger2

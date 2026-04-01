@@ -139,8 +139,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             //HttpUtils.responseJsonData(response,new HashMap());
         }
-        //不放行
-        return false;
+//        //不放行
+//        return false;
+        //所有拦截器应该不在其管理范围就默认放心,否则会错误拦截swagger之类的
+        return true;
     }
 
 //    public Object authorize(HttpServletRequest request) throws Exception {

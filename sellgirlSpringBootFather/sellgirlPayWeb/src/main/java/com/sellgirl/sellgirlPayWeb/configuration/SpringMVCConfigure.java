@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
@@ -96,5 +97,24 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
 //        registry.addResourceHandler(deftConfig.getStaticPrefix()+ "**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }*/
+//	  @Override
+//	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//	        // 配置 Swagger UI 资源路径
+//	        registry.addResourceHandler("/swagger-ui/**")
+//	                .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/5.17.14/")
+//	                .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/2.6.1/")
+//	                ;
+//	    }
+    //如果swagger无效,试试这样
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        // 映射 swagger-ui.html 页面
+//        registry.addResourceHandler("swagger-ui.html")
+//                .addResourceLocations("classpath:/META-INF/resources/");
+//        
+//        // 映射页面依赖的 JS/CSS 等静态资源
+//        registry.addResourceHandler("/webjars/**")
+//                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+//    }
 }
 
