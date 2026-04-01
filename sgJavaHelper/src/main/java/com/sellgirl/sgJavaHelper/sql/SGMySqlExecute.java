@@ -1177,12 +1177,12 @@ public class SGMySqlExecute extends SGSqlExecuteBase {// PFSqlExecute {
     }
 
     @Override
-    public Boolean PreValidTransferReader(ResultSet rdr, String tableName, Function<BaseSqlUpdateCollection, List<PFDataTableFieldValidModel>> PreValidAction, SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction) {
+    public Boolean PreValidTransferReader(ResultSet rdr, String tableName, Function<BaseSqlUpdateCollection, List<SGDataTableFieldValidModel>> PreValidAction, SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction) {
         return null;
     }
 
     @Override
-    public Boolean PreValidTransferTable(SGSqlTransferItem transferItem, SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction) {
+    public Boolean PreValidTransferTable(SGSqlTransferItem transferItem, SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction) {
         return null;
     }
     

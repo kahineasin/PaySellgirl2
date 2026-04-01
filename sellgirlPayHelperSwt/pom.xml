@@ -8,9 +8,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<!--<groupId>pf.java</groupId>-->
-	<artifactId>pfHelperSwt</artifactId>
+	<artifactId>sgSwtHelper</artifactId>
 	<version>0.0.1</version>
-	<name>pfHelperSwt</name>
+	<name>sgSwtHelper</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

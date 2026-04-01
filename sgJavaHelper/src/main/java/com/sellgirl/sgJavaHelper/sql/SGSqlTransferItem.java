@@ -11,7 +11,7 @@ import com.sellgirl.sgJavaHelper.ISGSqlTransferItem;
 import com.sellgirl.sgJavaHelper.SGAction1;
 import com.sellgirl.sgJavaHelper.PFCmonth;
 import com.sellgirl.sgJavaHelper.PFDataRow;
-import com.sellgirl.sgJavaHelper.PFDataTableFieldValidModel;
+import com.sellgirl.sgJavaHelper.SGDataTableFieldValidModel;
 import com.sellgirl.sgJavaHelper.SGFunc;
 import com.sellgirl.sgJavaHelper.PFSqlCommandTimeoutSecond;
 import com.sellgirl.sgJavaHelper.PFSqlType;
@@ -118,7 +118,7 @@ public class SGSqlTransferItem extends DirectNode implements ISGSqlTransferItem,
 	 * 把null转为默认值.
 	 */
 	public boolean convertNullTo0=true;
-	public Function<BaseSqlUpdateCollection, List<PFDataTableFieldValidModel>> PreValidAction = null;
+	public Function<BaseSqlUpdateCollection, List<SGDataTableFieldValidModel>> PreValidAction = null;
 	/**
 	 * 迁移后的完整性验证
 	 */

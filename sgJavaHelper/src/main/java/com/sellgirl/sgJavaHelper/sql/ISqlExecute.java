@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 import com.sellgirl.sgJavaHelper.SGAction;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTable;
-import com.sellgirl.sgJavaHelper.PFDataTableFieldValidModel;
+import com.sellgirl.sgJavaHelper.SGDataTableFieldValidModel;
 import com.sellgirl.sgJavaHelper.SGFunc;
 import com.sellgirl.sgJavaHelper.PFFunc3;
 import com.sellgirl.sgJavaHelper.PFModelConfig;
@@ -268,8 +268,8 @@ public interface ISqlExecute extends AutoCloseable{
      @Deprecated
  Boolean PreValidTransferReader(//SqlInsertCollection insert, 
 		ResultSet rdr, String tableName,
-		Function<BaseSqlUpdateCollection,List<PFDataTableFieldValidModel>> PreValidAction,
-		SGRef<List<PFDataTableFieldValidModel>> validRef,
+		Function<BaseSqlUpdateCollection,List<SGDataTableFieldValidModel>> PreValidAction,
+		SGRef<List<SGDataTableFieldValidModel>> validRef,
 		 Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction
 //		//Consumer<BatchInsertOption> insertOptionAction,
 //		Consumer<BaseSqlUpdateCollection> rowAction,
@@ -277,7 +277,7 @@ public interface ISqlExecute extends AutoCloseable{
 		);
  Boolean PreValidTransferTable(
  SGSqlTransferItem transferItem,
-			SGRef<List<PFDataTableFieldValidModel>> validRef,
+			SGRef<List<SGDataTableFieldValidModel>> validRef,
 			 Consumer<Integer> alreadyAction, Predicate<Boolean> stopAction
 //			//Consumer<BatchInsertOption> insertOptionAction,
 //			Consumer<BaseSqlUpdateCollection> rowAction,

@@ -1,15 +1,15 @@
-package com.sellgirl.sgJavaSpringHelper;
+package com.sellgirl.sgJavaHelper;
 
 /**
  * 导入Table前可以在测试环境中验证
  * @author Administrator
  *
  */
-public class PFDataTableFieldValidModel {
+public class SGDataTableFieldValidModel {
 	private String fieldName;
 	private Boolean isValid;
 	private String errMsg;
-	public PFDataTableFieldValidModel(String fieldName,Boolean isValid,String errMsg) {
+	public SGDataTableFieldValidModel(String fieldName,Boolean isValid,String errMsg) {
 		this.fieldName=fieldName;
 		this.isValid=isValid;
 		this.errMsg=errMsg;

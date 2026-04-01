@@ -20,7 +20,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerBulkCopy;
 import com.microsoft.sqlserver.jdbc.SQLServerBulkCopyOptions;
 import com.sellgirl.sgJavaHelper.SGAction;
 import com.sellgirl.sgJavaHelper.SGDataTable;
-import com.sellgirl.sgJavaHelper.PFDataTableFieldValidModel;
+import com.sellgirl.sgJavaHelper.SGDataTableFieldValidModel;
 import com.sellgirl.sgJavaHelper.SGFunc;
 import com.sellgirl.sgJavaHelper.PFFunc3;
 import com.sellgirl.sgJavaHelper.PFModelConfig;
@@ -2036,8 +2036,8 @@ numeric[19]及以上是BigDecimal
 	@Override
 	public Boolean PreValidTransferReader(// SqlInsertCollection insert,
 			ResultSet rdr, String tableName,
-			Function<BaseSqlUpdateCollection, List<PFDataTableFieldValidModel>> PreValidAction,
-			SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
+			Function<BaseSqlUpdateCollection, List<SGDataTableFieldValidModel>> PreValidAction,
+			SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
 			Predicate<Boolean> stopAction
 //		//Consumer<BatchInsertOption> insertOptionAction,
 //		Consumer<BaseSqlUpdateCollection> rowAction,
@@ -2155,9 +2155,9 @@ numeric[19]及以上是BigDecimal
 				dstInsert.UpdateByDataReader(rdr);
 
 				if (PreValidAction != null) {
-					List<PFDataTableFieldValidModel> validModel = PreValidAction.apply(dstInsert);
+					List<SGDataTableFieldValidModel> validModel = PreValidAction.apply(dstInsert);
 					if (validModel != null) {
-						for (PFDataTableFieldValidModel i : validModel) {
+						for (SGDataTableFieldValidModel i : validModel) {
 							if (SGDataHelper.ListAny(validRef.GetValue(),
 									a -> a.getFieldName().equals(i.getFieldName()))) {
 
@@ -2201,14 +2201,14 @@ numeric[19]及以上是BigDecimal
 //												
 //											}
 											validRef.GetValue()
-													.add(new PFDataTableFieldValidModel(i.getFieldName(), false,
+													.add(new SGDataTableFieldValidModel(i.getFieldName(), false,
 															SGDataHelper.FormatString("字段[{0}]超长,值为[{1}].最大长度[{2}]",
 																	i.getFieldName(), val, i.getFieldSqlLength())));
 										}
 										if ("varchar".equals(i.getFieldType())
 												&& SGDataHelper.StringHasChineseChar(val)) {
 											validRef.GetValue()
-													.add(new PFDataTableFieldValidModel(i.getFieldName(), false,
+													.add(new SGDataTableFieldValidModel(i.getFieldName(), false,
 															SGDataHelper.FormatString("字段[{0}]有中文,值为[{1}].只允许英文",
 																	i.getFieldName(), val, i.getFieldSqlLength())));
 										}
@@ -2222,7 +2222,7 @@ numeric[19]及以上是BigDecimal
 					String tmpPKeyStr = String.join("_", tmpPKey);
 					if (pKeys.contains(tmpPKeyStr)) {
 						String keys = String.join(",", keyFields);
-						validRef.GetValue().add(new PFDataTableFieldValidModel(keys, false,
+						validRef.GetValue().add(new SGDataTableFieldValidModel(keys, false,
 								SGDataHelper.FormatString("主键[{0}]复,值为[{1}].", keys, tmpPKeyStr)));
 					} else {
 						pKeys.add(tmpPKeyStr);
@@ -2352,7 +2352,7 @@ numeric[19]及以上是BigDecimal
 	 */
 	@Override
 	public Boolean PreValidTransferTable(SGSqlTransferItem transferItem,
-			SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
+			SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
 			Predicate<Boolean> stopAction
 //		//Consumer<BatchInsertOption> insertOptionAction,
 //		Consumer<BaseSqlUpdateCollection> rowAction,
@@ -2379,7 +2379,7 @@ numeric[19]及以上是BigDecimal
 
 		ResultSet rdr = srcExec.GetHugeDataReader(sql);
 		String tableName = transferItem.DstTableName;
-		Function<BaseSqlUpdateCollection, List<PFDataTableFieldValidModel>> PreValidAction = transferItem.PreValidAction;
+		Function<BaseSqlUpdateCollection, List<SGDataTableFieldValidModel>> PreValidAction = transferItem.PreValidAction;
 
 		List<SGSqlFieldInfo> targetFields = GetTableFields(tableName);
 
@@ -2491,9 +2491,9 @@ numeric[19]及以上是BigDecimal
 				dstInsert.UpdateByDataReader(rdr);
 
 				if (PreValidAction != null) {
-					List<PFDataTableFieldValidModel> validModel = PreValidAction.apply(dstInsert);
+					List<SGDataTableFieldValidModel> validModel = PreValidAction.apply(dstInsert);
 					if (validModel != null) {
-						for (PFDataTableFieldValidModel i : validModel) {
+						for (SGDataTableFieldValidModel i : validModel) {
 							if (SGDataHelper.ListAny(validRef.GetValue(),
 									a -> a.getFieldName().equals(i.getFieldName()))) {
 
@@ -2541,14 +2541,14 @@ numeric[19]及以上是BigDecimal
 //											valid.setIsValid(false);
 //											valid.setErrMsg(errMsg);
 											validRef.GetValue()
-													.add(new PFDataTableFieldValidModel(i.getFieldName(), false,
+													.add(new SGDataTableFieldValidModel(i.getFieldName(), false,
 															SGDataHelper.FormatString("字段[{0}]超长,值为[{1}].最大长度[{2}]",
 																	i.getFieldName(), val, i.getFieldSqlLength())));
 										}
 										if ("varchar".equals(i.getFieldType())
 												&& SGDataHelper.StringHasChineseChar(val)) {
 											validRef.GetValue()
-													.add(new PFDataTableFieldValidModel(i.getFieldName(), false,
+													.add(new SGDataTableFieldValidModel(i.getFieldName(), false,
 															SGDataHelper.FormatString("字段[{0}]有中文,值为[{1}].只允许英文",
 																	i.getFieldName(), val, i.getFieldSqlLength())));
 										}
@@ -2563,7 +2563,7 @@ numeric[19]及以上是BigDecimal
 					String tmpPKeyStr = String.join("_", tmpPKey);
 					if (pKeys.contains(tmpPKeyStr)) {
 						String keys = String.join(",", keyFields);
-						validRef.GetValue().add(new PFDataTableFieldValidModel(keys, false,
+						validRef.GetValue().add(new SGDataTableFieldValidModel(keys, false,
 								SGDataHelper.FormatString("主键[{0}]复,值为[{1}].", keys, tmpPKeyStr)));
 					} else {
 						pKeys.add(tmpPKeyStr);

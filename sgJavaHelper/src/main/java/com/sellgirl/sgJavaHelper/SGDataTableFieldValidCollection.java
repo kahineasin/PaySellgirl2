@@ -2,7 +2,7 @@ package com.sellgirl.sgJavaHelper;
 
 import java.util.ArrayList;
 
-public class PFDataTableFieldValidCollection extends ArrayList<PFDataTableFieldValidModel>{
+public class SGDataTableFieldValidCollection extends ArrayList<SGDataTableFieldValidModel>{
     /**
 	 * 
 	 */
@@ -10,7 +10,7 @@ public class PFDataTableFieldValidCollection extends ArrayList<PFDataTableFieldV
 
 	public void addError(String field,String msg) {
 
-    	add(new PFDataTableFieldValidModel(
+    	add(new SGDataTableFieldValidModel(
     			field,false,
     			msg)   
 				);

@@ -81,7 +81,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
   
   select * from sgshop.sg_vip_order
   select * from sgshop.sg_user order by user_id desc;
-  update sgshop.sg_user set sign_day=9 where user_id=2
+  update sgshop.sg_user set sign_day=19,last_sign='2026-03-30 17:37:26.0' where user_id=2
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
   

@@ -855,8 +855,8 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 
 	@Override
 	public Boolean PreValidTransferReader(ResultSet rdr, String tableName,
-			Function<BaseSqlUpdateCollection, List<PFDataTableFieldValidModel>> PreValidAction,
-			SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
+			Function<BaseSqlUpdateCollection, List<SGDataTableFieldValidModel>> PreValidAction,
+			SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
 			Predicate<Boolean> stopAction) {
 		// TODO Auto-generated method stub
 		return null;
@@ -864,7 +864,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 
 	@Override
 	public Boolean PreValidTransferTable(SGSqlTransferItem transferItem,
-			SGRef<List<PFDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
+			SGRef<List<SGDataTableFieldValidModel>> validRef, Consumer<Integer> alreadyAction,
 			Predicate<Boolean> stopAction) {
 		return null;
 	}
