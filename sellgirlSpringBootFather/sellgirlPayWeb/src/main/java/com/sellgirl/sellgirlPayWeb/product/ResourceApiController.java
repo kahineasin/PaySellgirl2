@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 //import com.perfect99.right.amsweb.BaseReturnInfo;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
+import com.sellgirl.sgJavaHelper.ErrorApiResult;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGCaching;
@@ -34,11 +35,17 @@ import com.sellgirl.sgJavaSpringHelper.PFObject;
 //import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
 import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
+import com.sellgirl.sellgirlPayWeb.PayShopSwaggerAttr;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -56,6 +63,7 @@ import com.sellgirl.sellgirlPayWeb.product.model.userBuyCreate;
 import com.sellgirl.sellgirlPayWeb.product.service.BookService;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
+import com.sellgirl.sellgirlPayWeb.shop.model.SuccessApiResult2;
 import com.sellgirl.sellgirlPayWeb.user.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 import com.sellgirl.sellgirlPayWeb.user.model.UserQuery;
@@ -100,6 +108,12 @@ public class ResourceApiController extends  YJQueryController
 
 
 	@PostMapping(value = { "/api/resource/unlock" })
+	@PayShopSwaggerAttr
+	@ApiOperation(value="扣积分解锁资源")
+    @ApiResponses({
+    @ApiResponse(code=200,message="成功",response=SuccessApiResult2.class),
+    @ApiResponse(code=333,message="业务自定义错误",response=ErrorApiResult.class)
+    })
     public AbstractApiResult<?> unlockResource(
     		ProductType resourceType,
     		long resourceId

@@ -2,7 +2,8 @@ package org.sellgirlPayHelperNotSpring;
 
 import junit.framework.TestCase;
 
-import org.sellgirlPayHelperNotSpring.model.GenerateApiDocTest;
+import org.sellgirlPayHelperNotSpring.model.SwaggerToClearHtml;
+import org.sellgirlPayHelperNotSpring.model.*;
 import org.sellgirlPayHelperNotSpring.model.GenerateApiDocTest2;
 import org.sellgirlPayHelperNotSpring.model.GenerateApiDocTest3;
 import org.sellgirlPayHelperNotSpring.model.PFConfigTestMapper;
@@ -60,17 +61,18 @@ public class UncheckSwaggerDocs extends TestCase {
 	public void testGenDocs()  {
 		try {
 			SGRequestResult r=SGHttpHelper.HttpGet(
-					"http://localhost:8080/v2/api-docs?group=princess"
-//					"http://localhost:8080/v2/api-docs?group=shop"
+//					"http://localhost:8080/v2/api-docs?group=princess"
+					"http://localhost:8080/v2/api-docs?group=shop"
 //					"http://localhost:8080/v2/api-docs"
 					, null);
 	        if(!r.success) {
 	        	throw new Exception("文档地址异常");
 	        }
 	        String swaggerJson=r.content;
-			GenerateApiDocTest.generateHtml(swaggerJson);
-//			GenerateApiDocTest2.generateHtml(swaggerJson);
-			GenerateApiDocTest3.generateHtml(swaggerJson);
+			SwaggerToClearHtml.generateHtml(swaggerJson,"docs/index.html");
+//			SwaggerToClearHtml2.generateHtml(swaggerJson,"docs/index.html");
+////			GenerateApiDocTest2.generateHtml(swaggerJson);
+//			GenerateApiDocTest3.generateHtml(swaggerJson);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

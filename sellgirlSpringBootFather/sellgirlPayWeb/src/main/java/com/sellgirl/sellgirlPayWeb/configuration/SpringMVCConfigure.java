@@ -79,7 +79,9 @@ public class SpringMVCConfigure /*    @Autowired(required = false)
             		"/demo/**",
             		"/common.js","/announcement.js","/data-books.js",
             		"/data-resources.js","/product/*.js",
-            		"/bookImg/**","/resourceImg/**","/error"
+            		"/bookImg/**","/resourceImg/**","/error",
+            		//swagger
+            		"/webjars/springfox-swagger-ui/**"
             		);
             // 拦截配置
             addInterceptor.addPathPatterns("/**");
