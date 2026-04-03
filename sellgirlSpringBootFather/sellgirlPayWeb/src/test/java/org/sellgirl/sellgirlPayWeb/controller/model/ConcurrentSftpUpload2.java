@@ -52,7 +52,19 @@ public class ConcurrentSftpUpload2 {
 
     // 扫描线程标志
     private static volatile boolean scanningDone = false;
+    public void upload(String local,String remote) {
+    	try {
+			main(new String[] {local,remote});
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
     public static void main(String[] args) throws Exception {
+    	if(null!=args&&1<args.length) {
+    		LOCAL_ROOT=args[0];
+    		REMOTE_ROOT=args[1];
+    	}
         long start = System.currentTimeMillis();
 
         // 启动扫描线程

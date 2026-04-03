@@ -145,11 +145,9 @@
                 let latestHtml = '';
                 latestThreads.forEach(thread => {
                     const imgPath = thread.previewImg;
-                    const imgPath120 =null==imgPath?null: thread.previewImg.replace(board.id+'60',board.id+'120');
-                    const imgPath200 =null==imgPath?null: thread.previewImg.replace(board.id+'60',board.id+'200');
                     latestHtml += `
                         <a href="resource-detail.html?id=${thread.id}&resourceType=${board.id}" class="latest-item">
-                            <img src="${imgPath120}" srcset="${imgPath120} 120w, ${imgPath200} 200w" sizes="(max-width: 768px) 50vw, 80px" alt="${thread.title}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
+                            <img src="${imgPath}" alt="${thread.title}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/placeholder.jpg'">
                             <span>${thread.title}</span>
                         </a>
                     `;

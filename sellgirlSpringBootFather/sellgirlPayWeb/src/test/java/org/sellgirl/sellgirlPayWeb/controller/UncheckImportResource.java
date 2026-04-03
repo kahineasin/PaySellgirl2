@@ -334,9 +334,127 @@ public class UncheckImportResource extends TestCase {
 			System.out.println(speed.getEnSpeed(total,com.sellgirl.sgJavaHelper.SGDate.Now()));
 		}
 	}
-	
+
+	/**
+	 * 生成单张不同尺寸的,便于测试缩略图清晰度
+	 * @throws IOException 
+	 */
+	public void testImgSize() throws IOException {
+//		int size=80;
+//		ResourceType resourceType=ResourceType.movie;
+		String srcImgPath="D:\\cache\\html1\\resourceImg\\image\\334\\1.jpg";
+		String dstImgPath="D:\\cache\\html1\\testImg";
+		int[] sizes=new int[] {90,100,110,120,130,140,150};
+		
+		for(int i=0;sizes.length>i;i++) {
+			int size=sizes[i];
+			
+			File file=new File(srcImgPath);
+			String path=Paths.get(dstImgPath,String.valueOf( sizes[i]),"1.jpg").toString();
+
+			SGDirectory.EnsureExists(Paths.get(dstImgPath,String.valueOf( sizes[i])).toString());
+
+			//方法2. 20秒 (推荐)
+			int backW = size; // 1920;
+			int backH = size;// 1080;
+			SGLine imgLine=SGLine.FitHeightAndCenterHorizontally();
+			SGLine backLine=new SGLine(new PFPoint(0, 0), new PFPoint(backW, backH));
+			
+			SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
+			SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
+			BufferedImage paintBi = null;
+			Image image = ImageIO.read(file);
+			paintBi = SGDataHelper.backgroundImgInBuffer(
+					canvasRef, ctx1Ref, null, 
+					new Dimension(backW, backH), image, null,
+					backLine,imgLine, 
+					//Color.RED
+					null
+					, false);
+			File file2 = new File(path);
+			ImageIO.write(paintBi, SGPath.getFileExtension(path), file2);
+		}
+	}
+
+	/**
+	 * 生成少量几张测试图(看手机200图效果)
+	 * @throws IOException
+	 */
+	public void testGenSomeSmallImg() throws IOException {
+//		int size=80;
+//		ResourceType resourceType=ResourceType.movie;
+		String[] imgs=new String[] {
+				"movie\\2500\\1.jpg",
+				"movie\\2499\\1.jpg",
+				"movie\\2498\\1.jpg",
+				"movie\\2497\\1.jpg",
+				"image\\334\\1.jpg",
+				"image\\333\\1.jpg",
+				"image\\332\\1.jpg",
+				"image\\331\\1.jpg",
+				"comic\\423\\1.jpg",
+				"comic\\422\\1.jpg",
+				"comic\\421\\1.jpg",
+				"comic\\420\\1.jpg"
+		}; 
+		String[] outImgs=new String[] {
+				"movie200\\2500\\1.jpg",
+				"movie200\\2499\\1.jpg",
+				"movie200\\2498\\1.jpg",
+				"movie200\\2497\\1.jpg",
+				"image200\\334\\1.jpg",
+				"image200\\333\\1.jpg",
+				"image200\\332\\1.jpg",
+				"image200\\331\\1.jpg",
+				"comic200\\423\\1.jpg",
+				"comic200\\422\\1.jpg",
+				"comic200\\421\\1.jpg",
+				"comic200\\420\\1.jpg"
+		}; 
+		int size=120;
+		for(int i=0;outImgs.length>i;i++) {
+			outImgs[i]=outImgs[i].replace(ResourceType.movie.toString()+"200", ResourceType.movie.toString()+size);
+			outImgs[i]=outImgs[i].replace(ResourceType.image.toString()+"200", ResourceType.image.toString()+size);
+			outImgs[i]=outImgs[i].replace(ResourceType.comic.toString()+"200", ResourceType.comic.toString()+size);
+		}
+//		String srcImgPath="D:\\cache\\html1\\resourceImg\\image\\334\\1.jpg";
+//		String dstImgPath="D:\\cache\\html1\\testImg";
+		//int[] sizes=new int[] {90,100,110,120,130,140,150};
+		
+		for(int i=0;imgs.length>i;i++) {
+//			int size=sizes[i];
+			String srcImgPath=Paths.get("D:\\cache\\html1\\resourceImg",imgs[i]).toString();
+			String dstImgPath=Paths.get("D:\\cache\\html1\\resourceImg",outImgs[i]).toString();
+			File file=new File(srcImgPath);
+//			String path=Paths.get(dstImgPath,String.valueOf( sizes[i]),"1.jpg").toString();
+
+			SGDirectory.EnsureFilePath(dstImgPath);
+
+			//方法2. 20秒 (推荐)
+			int backW = size; // 1920;
+			int backH = size;// 1080;
+			SGLine imgLine=SGLine.FitHeightAndCenterHorizontally();
+			SGLine backLine=new SGLine(new PFPoint(0, 0), new PFPoint(backW, backH));
+			
+			SGRef<Canvas> canvasRef = new SGRef<Canvas>(null);
+			SGRef<Graphics> ctx1Ref = new SGRef<Graphics>(null);
+			BufferedImage paintBi = null;
+			Image image = ImageIO.read(file);
+			paintBi = SGDataHelper.backgroundImgInBuffer(
+					canvasRef, ctx1Ref, null, 
+					new Dimension(backW, backH), image, null,
+					backLine,imgLine, 
+					//Color.RED
+					null
+					, false);
+			File file2 = new File(dstImgPath);
+			ImageIO.write(paintBi, SGPath.getFileExtension(dstImgPath), file2);
+		}
+	}
 	public void testGenerateSmallImg() {
-		int size=80;
+		//80在resource-board够清,但在resource-index模糊;
+		//120够清, 在浏览器80px样式中,决定电脑统一用120图
+		int size=120;
 		ResourceType resourceType=ResourceType.movie;
 		String srcImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType;
 		String dstImgPath="D:\\cache\\html1\\resourceImg\\"+resourceType+size;
@@ -399,6 +517,7 @@ public class UncheckImportResource extends TestCase {
 			}
 		);
 	}
+	
 	/**
 	 * ok
 	 * excel的netdisk和extradeCode列有更新

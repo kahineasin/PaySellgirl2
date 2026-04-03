@@ -95,9 +95,31 @@ public class UncheckUpload extends TestCase {
 		try {
 //			ConcurrentSftpUpload.main(null);
 			ResourceType type=ResourceType.movie;
-			ConcurrentSftpUpload2.LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\"+type+"60";    //全部上传完成，总耗时 167 秒 
-			ConcurrentSftpUpload2.REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/"+type+"60"; // 
-			ConcurrentSftpUpload2.main(null);
+			String[] path=new String[] {
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\comic120",
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\comic200",
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\image120",
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\image200",
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\movie120",
+				"D:\\github\\PaySellgirl2\\sellgirlSpringBootFather\\sellgirlPayWeb\\src\\main\\resources\\static\\resourceImg\\movie200",	
+			};
+			String[] path2=new String[] {
+				"/root/myapp/shop/static/resourceImg/comic120",
+				"/root/myapp/shop/static/resourceImg/comic200",
+				"/root/myapp/shop/static/resourceImg/image120",
+				"/root/myapp/shop/static/resourceImg/image200",
+				"/root/myapp/shop/static/resourceImg/movie120",
+				"/root/myapp/shop/static/resourceImg/movie200",
+			};
+			for(int i=0;path.length>i;i++) {
+
+//				ConcurrentSftpUpload2.LOCAL_ROOT = path[i];    //全部上传完成，总耗时 167 秒 
+//				ConcurrentSftpUpload2.REMOTE_ROOT =path2[i]; //
+				(new ConcurrentSftpUpload2()).upload(path[i], path2[i]);
+			}
+//			ConcurrentSftpUpload2.LOCAL_ROOT = "D:\\cache\\html1\\shop\\static\\resourceImg\\"+type+"60";    //全部上传完成，总耗时 167 秒 
+//			ConcurrentSftpUpload2.REMOTE_ROOT = "/root/myapp/shop/static/resourceImg/"+type+"60"; // 
+//			ConcurrentSftpUpload2.main(null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
