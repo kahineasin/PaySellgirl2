@@ -376,7 +376,7 @@ public class UncheckDynamicLoadJdbc001 extends TestCase {
 //
 //			}
 
-			ISGJdbc jdbc=new PFJdbc();
+			ISGJdbc jdbc=new SGJdbc();
 			jdbc.setDriverVersion(version);
 			jdbc.setDriverClassName(className);
 			jdbc.setUrl("jdbc:mysql://uat-cloud.perfect99.com:10129/test?rewriteBatchedStatements=true");

@@ -7,18 +7,18 @@ import java.util.Map;
  * @author Administrator
  *
  */
-public class PFJdbc extends PFJdbcBase {
+public class SGJdbc extends PFJdbcBase {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 		
-	public PFJdbc() {}
-	public PFJdbc(String sqlType,String host,int port,String db,String username,String password) {
+	public SGJdbc() {}
+	public SGJdbc(String sqlType,String host,int port,String db,String username,String password) {
 		super(sqlType, host, port, db, username, password,null);
 	}
-	public PFJdbc(String sqlType, String host, int port, String db, String username, String password, Map<String,String> urlParam) {
+	public SGJdbc(String sqlType, String host, int port, String db, String username, String password, Map<String,String> urlParam) {
 		super(sqlType,  host,  port,  db,  username,  password,urlParam);
 	}
 //	public PFJdbc(String sqlType,String host,int port,String db,String username,String password,Map<String,String> urlParam) {

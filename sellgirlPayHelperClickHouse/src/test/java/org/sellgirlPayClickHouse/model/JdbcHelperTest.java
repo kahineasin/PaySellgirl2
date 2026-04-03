@@ -2,13 +2,13 @@ package org.sellgirlPayClickHouse.model;
 
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
-import com.sellgirl.sgJavaHelper.sql.PFJdbc;
+import com.sellgirl.sgJavaHelper.sql.SGJdbc;
 import com.sellgirl.sgJavaHelper.sql.PFJdbcBase;
 
 public class JdbcHelperTest {
 	public static ISGJdbc GetYJQueryJdbc() {
 
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("perfect");
 		jdbc.setUsername("sa");
@@ -26,7 +26,7 @@ public class JdbcHelperTest {
 //    	r.setUrl(r.getUrl().replace("{ym}", ym));
 //    	r.setDbName(r.getDbName().replace("{ym}", ym));
 
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("perfect");
 		jdbc.setUsername("sa");
@@ -34,7 +34,7 @@ public class JdbcHelperTest {
     	return jdbc;
     }
 	public static ISGJdbc GetBalanceJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("wm828");
 		jdbc.setUsername("sa");
@@ -52,7 +52,7 @@ public class JdbcHelperTest {
 	 */
 	public static ISGJdbc GetDayJdbc() {
 
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("perfect");
 		jdbc.setUsername("sa");
@@ -76,7 +76,7 @@ public class JdbcHelperTest {
 	}
 	public static ISGJdbc GetDayProdJdbc() {
 
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("perfect");
 		jdbc.setUsername("sa");
@@ -93,7 +93,7 @@ public class JdbcHelperTest {
 	 * @return
 	 */
 	public static ISGJdbc GetBonusJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		jdbc.setPassword("perfect");
 		jdbc.setUsername("sa");
@@ -106,7 +106,7 @@ public class JdbcHelperTest {
 	}
 
 	public static ISGJdbc GetClickHouseShopJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("ru.yandex.clickhouse.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse");
 		jdbc.setUsername("local");
@@ -116,7 +116,7 @@ public class JdbcHelperTest {
 	}
 	@Deprecated
 	public static ISGJdbc GetClickHouseTestJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("ru.yandex.clickhouse.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse");
 		jdbc.setUsername("local");
@@ -130,7 +130,7 @@ public class JdbcHelperTest {
 	 * @return
 	 */
 	public static ISGJdbc GetClickHouseTest2Jdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("ru.yandex.clickhouse.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse");
 		jdbc.setUsername("local");
@@ -147,7 +147,7 @@ public class JdbcHelperTest {
 	 */
 	@Deprecated
 	public static ISGJdbc GetClickHouseTest3Jdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("ru.yandex.clickhouse.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse2020");
 		jdbc.setUsername("default");
@@ -163,7 +163,7 @@ public class JdbcHelperTest {
 	 * @return
 	 */
 	public static ISGJdbc GetClickHouseTest4Jdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("com.github.housepower.jdbc.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse2020");
 		jdbc.setUsername("default");
@@ -178,7 +178,7 @@ public class JdbcHelperTest {
 	 * @return
 	 */
 	public static ISGJdbc GetClickHouseTest5Jdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("com.github.housepower.jdbc.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse2020");
 		jdbc.setUsername("default");
@@ -187,7 +187,7 @@ public class JdbcHelperTest {
 		return jdbc;
 	}
 	public static ISGJdbc GetHiveJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("org.apache.hive.jdbc.HiveDriver");
 		jdbc.setPassword("perfect@Hive");
 		jdbc.setUsername("root");
@@ -216,7 +216,7 @@ public class JdbcHelperTest {
 //		return srcJdbc;
 //	}
 	public static ISGJdbc GetUserProfileJdbc() {
-		ISGJdbc jdbc = new PFJdbc();
+		ISGJdbc jdbc = new SGJdbc();
 		jdbc.setDriverClassName("ru.yandex.clickhouse.ClickHouseDriver");
 		jdbc.setPassword("perfect@ClickHouse");
 		jdbc.setUsername("local");
@@ -240,7 +240,7 @@ public class JdbcHelperTest {
 	 * @return
 	 */
 	public static ISGJdbc GetLiGeShopJdbc() {
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectMALL");
 		srcJdbc.setUsername("root");
@@ -249,7 +249,7 @@ public class JdbcHelperTest {
 		return srcJdbc;
 	}
 	public static ISGJdbc GetLiGeShop10177Jdbc() {
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectMALL");
 		srcJdbc.setUsername("root");
@@ -258,7 +258,7 @@ public class JdbcHelperTest {
 		return srcJdbc;
 	}
 	public static ISGJdbc GetLiGeOrderJdbc() {
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectMALL");
 		srcJdbc.setUsername("root");
@@ -268,7 +268,7 @@ public class JdbcHelperTest {
 	}
 
 	public static ISGJdbc GetLiGeShopUatJdbc() {
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectMALL");
 		srcJdbc.setUsername("root");
@@ -288,7 +288,7 @@ public class JdbcHelperTest {
 //      url: jdbc:mysql://172.100.37.88:3306/prod_trade
 //      username: prod_trade_ro
 //      driverVersion: 5.1.34
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("Ng7_x3_yjK");
 		srcJdbc.setUsername("prod_trade_ro");
@@ -305,7 +305,7 @@ public class JdbcHelperTest {
 //      url: jdbc:mysql://172.100.37.88:3306/prod_trade
 //      username: prod_trade_ro
 //      driverVersion: 5.1.34
-		PFJdbcBase srcJdbc = new PFJdbc();
+		PFJdbcBase srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectTIDB");
 		srcJdbc.setUsername("root");
@@ -328,7 +328,7 @@ public class JdbcHelperTest {
 //      url: jdbc:mysql://172.100.37.88:3306/prod_trade
 //      username: prod_trade_ro
 //      driverVersion: 5.1.34
-		PFJdbcBase srcJdbc = new PFJdbc();
+		PFJdbcBase srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		srcJdbc.setPassword("luluSKIcom");
 		srcJdbc.setUsername("sa");
@@ -350,7 +350,7 @@ public class JdbcHelperTest {
 //      url: jdbc:mysql://172.100.37.88:3306/prod_trade
 //      username: prod_trade_ro
 //      driverVersion: 5.1.34
-		PFJdbcBase srcJdbc = new PFJdbc();
+		PFJdbcBase srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("net.sourceforge.jtds.jdbc.Driver");
 		srcJdbc.setPassword("luluSKIcom");
 		srcJdbc.setUsername("sa");
@@ -366,7 +366,7 @@ public class JdbcHelperTest {
 	}
 	public static ISGJdbc GetLiGeSaleJdbc() {
 
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfectMALL");
 		srcJdbc.setUsername("root");
@@ -382,7 +382,7 @@ public class JdbcHelperTest {
 	@Deprecated
 	public static ISGJdbc GetMySqlTestJdbc() {
 
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfect@AIKF");
 		srcJdbc.setUsername("root");
@@ -396,7 +396,7 @@ public class JdbcHelperTest {
 	 */
 	public static ISGJdbc GetMySqlTest2Jdbc() {
 
-		ISGJdbc srcJdbc = new PFJdbc();
+		ISGJdbc srcJdbc = new SGJdbc();
 		srcJdbc.setDriverClassName("com.mysql.jdbc.Driver");
 		srcJdbc.setPassword("perfect@EAS");
 		srcJdbc.setUsername("root");

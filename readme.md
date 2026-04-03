@@ -304,6 +304,30 @@ org.sellgirl.sellgirlPayWeb.controller.model.ConcurrentSftpUpload
 3. 在线文档http://localhost:8080/swagger-ui.html,json版本文档http://127.0.0.1:8080/v2/api-docs
 4. 生成离线文档org.sellgirlPayHelperNotSpring.GenerateApiDocTest,(需要第三步的地址可以访问)
 
+## 注入
+非Spring项目的注入可以参考:
+D:\gitee\pf-max-well-consumer-father\develop\pf-max-well-consumer-father\pfFlinkCDC\src\main\java\pf\java\pfFlinkCDC\FlinkCdcApp.java
+上面是使用了goole.inject,如果不想用,直接如下写:
+
+```
+        SGDataHelper.SetConfigMapper(new SGConfigMapper());
+        SGDataHelper.setAppArg(args);
+        
+        String s=SGDataHelper.ReadLocalResourceWithEnvironmentVariable("jdbc-config.yml");
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        JdbcConfiguration jdbcConfig=null;
+        try {
+			jdbcConfig= mapper.readValue(s, JdbcConfiguration.class);
+			System.out.println("jdbc__"+ mapper.writeValueAsString(jdbcConfig));
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			return;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return;
+		}
+```
+
 ## MQ
 下面是一些测试各类型mq的地址，需要根据情况配置对应消费者的地址才行
 1.http://localhost:28303/sendmq

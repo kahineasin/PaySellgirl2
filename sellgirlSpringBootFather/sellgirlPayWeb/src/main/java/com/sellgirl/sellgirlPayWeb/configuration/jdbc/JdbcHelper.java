@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
-import com.sellgirl.sgJavaHelper.sql.PFJdbc;
+import com.sellgirl.sgJavaHelper.sql.SGJdbc;
 import com.sellgirl.sgJavaHelper.sql.PFJdbcBase;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
