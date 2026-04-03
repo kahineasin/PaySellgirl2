@@ -227,7 +227,38 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 		Thread.sleep(2000);//写日志的时间
 	}
 ```
+### 原子更新
 
+```
+  SGDataHelper.FormatString(
+          " update {2} set  {3}={3}{0} {1} limit 1",
+          0<point?("+"+point):point,
+          update.ToWhereSql(),
+          tableName,
+          update.GetFormatKey("point")
+  ));
+```
+
+### 修改密码之类的一个参数用2次的情况
+
+```
+SGSqlWhereCollection where = dstExec.getWhereCollection();
+where.setIgnoreNullValue(false);
+where.Add("user_id", userId);
+where.Add("pwd", pwd);
+List<String> srcFieldNames = new ArrayList<String>();
+srcFieldNames.add("pwd");            
+ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
+PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+update.Set("pwd", newPwd);     
+update.UpdateFields("pwd");//别漏
+SGSqlCommandString sql=new SGSqlCommandString(SGDataHelper.FormatString(
+                " update {0} set {1} {2} limit 1",
+                tableName,
+                update.ToSetSql(),
+                where.ToSql()
+        ));
+```
 
 ## 写日志
 1. 实现ISGLog 

@@ -111,6 +111,7 @@ import com.sellgirl.sgJavaHelper.sql.BaseSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.time.SGTimeSpan;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 
 @Component
 public class SGDataHelper {
@@ -5765,23 +5766,23 @@ public class SGDataHelper {
 		SaveStringToFile(s, filePath);
 	}
 
-	//移动sgJavaHelper
-	@Deprecated
-	public enum LocalDataType {
-		/**
-		 * 系统需要使用的本地数据,不可删除,如sql脚本之类(开发环境直接覆盖服务器的文件) 运行系统必需,永远不可清空
-		 */
-		System,
-		/**
-		 * 可删除的(一般是临时测试监听的文件) 非运行系统必需,系统初始化时可清空(应加入到.gitignore)
-		 */
-		Deletable,
-		/**
-		 * 用户使用系统时产生的文件,常作用户数据库之用(不可用开发环境覆盖服务器上的,如果文件格式有变,尽量考虑手工修改服务器上的格式为新格式,实现不行再用开发环境的复盖服务器的)
-		 * 非运行系统必需,系统初始化时可清空(应加入到.gitignore)
-		 */
-		User
-	}
+//	//移动sgJavaHelper
+//	@Deprecated
+//	public enum LocalDataType {
+//		/**
+//		 * 系统需要使用的本地数据,不可删除,如sql脚本之类(开发环境直接覆盖服务器的文件) 运行系统必需,永远不可清空
+//		 */
+//		System,
+//		/**
+//		 * 可删除的(一般是临时测试监听的文件) 非运行系统必需,系统初始化时可清空(应加入到.gitignore)
+//		 */
+//		Deletable,
+//		/**
+//		 * 用户使用系统时产生的文件,常作用户数据库之用(不可用开发环境覆盖服务器上的,如果文件格式有变,尽量考虑手工修改服务器上的格式为新格式,实现不行再用开发环境的复盖服务器的)
+//		 * 非运行系统必需,系统初始化时可清空(应加入到.gitignore)
+//		 */
+//		User
+//	}
 
 	public static void WriteLocalTxt(String s, String fileName, LocalDataType dataType) {
 		String filePath = Paths.get(SGDataHelper.GetBaseDirectory(), dataType.toString() + "LocalData", "Txt", fileName)

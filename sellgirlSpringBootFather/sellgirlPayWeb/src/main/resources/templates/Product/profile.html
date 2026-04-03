@@ -14,7 +14,7 @@
         .favorite-cover { width: 60px; height: 80px; object-fit: cover; border-radius: 6px; }
         .resource-cover { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
         .cancel-fav { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
-        .points-section, .sign-section, .upgrade-section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .points-section, .sign-section, .upgrade-section, .action-section { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
         .upgrade-section { border: 1px solid #ffc107; }
         .announcement-bar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -64,6 +64,12 @@
             <p>连续签到 <span id="consecutiveDays"  th:text="${signDay}">0</span> 天（连续10天可获得1积分）</p>
             <button id="signBtn" class="btn btn-primary">签到</button>
         </div>
+        
+        <!-- 新增：修改密码按钮区域 -->
+		<div class="action-section text-center">
+		    <a href="change-password.html" class="btn btn-outline-primary btn-lg">🔐 修改密码</a>
+		</div>
+        
 
         <div id="upgradeSection" class="upgrade-section" style="display: none;">
             <h5>🔓 升级为资源用户</h5>

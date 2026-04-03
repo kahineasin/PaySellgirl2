@@ -27,7 +27,7 @@ import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
-import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 
@@ -141,7 +141,7 @@ public class UserService
             String tableName="sg_user";
             ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
 
-            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            SGSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
             update.Set("user_id", userId);
             update.Set("vip1", vip1);
             update.Set("vip1_expire", vip1_expire);
@@ -193,9 +193,9 @@ public class UserService
             String tableName="sg_user";
             ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
 
-            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            SGSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
             update.Set("user_id", userId);
-//            update.Set("vip1", vip1);
+//            update.Set("point", point,true);
 //            update.Set("vip1_expire", vip1_expire);
 //            update.Set("vip2", vip2);
 //            update.Set("vip2_expire", vip2_expire);
@@ -209,13 +209,28 @@ public class UserService
 //            update.Set("status", com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus.已支付.ordinal());
             
             
-            SGSqlCommandString sql=new SGSqlCommandString(
-                    SGDataHelper.FormatString(
-                            " update {2} set  point=point{0} {1} limit 1",
-                            0<point?("+"+point):point,
-                            update.ToWhereSql(),
-                            tableName
-                    ));
+//            SGSqlCommandString sql=new SGSqlCommandString(
+//                    SGDataHelper.FormatString(
+//                            " update {2} set  point=point{0} {1} limit 1",
+//                            0<point?("+"+point):point,
+//                            update.ToWhereSql(),
+//                            tableName
+//                    ));
+//            SGSqlCommandString sql=new SGSqlCommandString(
+//                    SGDataHelper.FormatString(
+//                            " update {2} set {0} {1} limit 1",
+//                            update.ToSetSql(),
+//                            update.ToWhereSql(),
+//                            tableName
+//                    ));
+          SGSqlCommandString sql=new SGSqlCommandString(
+          SGDataHelper.FormatString(
+                  " update {2} set  {3}={3}{0} {1} limit 1",
+                  0<point?("+"+point):point,
+                  update.ToWhereSql(),
+                  tableName,
+                  update.GetFormatKey("point")
+          ));
             dstExec.close();
             int r=dstExec.ExecuteSqlInt(sql, null, true);
             dstExec.close();
@@ -356,7 +371,7 @@ public class UserService
             String tableName="sg_user";
             ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
 
-            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            SGSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
             update.Set("user_id", userId);
             update.Set("invitation_code", inviteCode);
             
@@ -372,6 +387,44 @@ public class UserService
                             update.ToWhereSql(),
                             tableName
                     ));
+            dstExec.close();
+            int r=dstExec.ExecuteSqlInt(sql, null, true);
+            dstExec.close();
+            if(0<r) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean changePwd(long userId,
+    		String pwd,String newPwd)
+    {
+        ISGJdbc jdbc=JdbcHelper.GetShop();
+        try (ISqlExecute dstExec = SGSqlExecute.Init(jdbc)) {
+            dstExec.AutoCloseConn(false);
+
+            String tableName="sg_user";
+
+SGSqlWhereCollection where = dstExec.getWhereCollection();
+where.setIgnoreNullValue(false);
+where.Add("user_id", userId);
+where.Add("pwd", pwd);
+List<String> srcFieldNames = new ArrayList<String>();
+srcFieldNames.add("pwd");            
+ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose(tableName, srcFieldNames);
+SGSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+update.Set("pwd", newPwd);     
+update.UpdateFields("pwd");//别漏
+SGSqlCommandString sql=new SGSqlCommandString(SGDataHelper.FormatString(
+                " update {0} set {1} {2} limit 1",
+                tableName,
+                update.ToSetSql(),
+                where.ToSql()
+        ));
+
             dstExec.close();
             int r=dstExec.ExecuteSqlInt(sql, null, true);
             dstExec.close();

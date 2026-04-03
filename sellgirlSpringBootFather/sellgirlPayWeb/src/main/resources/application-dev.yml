@@ -44,7 +44,7 @@ mybatis:
     mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
     typeAliasesPackage: com.sellgirl.*.domain
 server:
-    port: 8080
+    port: 28303
 spring:
     application:
         name: sellgirlPayWeb

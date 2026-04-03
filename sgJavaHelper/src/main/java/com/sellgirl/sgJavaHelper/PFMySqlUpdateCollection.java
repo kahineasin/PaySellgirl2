@@ -1,12 +1,12 @@
 package com.sellgirl.sgJavaHelper;
 
-import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 
 /*
  * ClickHouse也用这个
  */
-public class PFMySqlUpdateCollection extends PFSqlUpdateCollection {
+public class PFMySqlUpdateCollection extends SGSqlUpdateCollection {
 /**
 	 * 
 	 */

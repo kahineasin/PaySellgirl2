@@ -1,3 +1,7 @@
+# 使用文档
+位于父项目../../sgJavaHelperFather/readme.md内
+
+# 安装
 安装包:
 mvn install:install-file -DgroupId=pf.java -DartifactId=pfHelperNotSpring -Dversion=0.0.1-SNAPSHOT -Dfile=pfHelperNotSpring-0.0.1-SNAPSHOT.jar -Dpackaging=jar -DgeneratePom=true
 

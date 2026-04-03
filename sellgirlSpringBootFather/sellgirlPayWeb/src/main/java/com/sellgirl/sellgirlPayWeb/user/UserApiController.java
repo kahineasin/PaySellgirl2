@@ -1,9 +1,11 @@
 package com.sellgirl.sellgirlPayWeb.user;
 
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ import com.sellgirl.sgJavaHelper.PFJsonDataT;
 import com.sellgirl.sgJavaSpringHelper.PFObject;
 //import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
@@ -191,7 +194,15 @@ public class UserApiController extends  YJQueryController
 		double d=Math.random()*10000D;	  
 		DecimalFormat df = new DecimalFormat("0");
 		String s = df.format(d);
-		SGEmailSend.SendMail(new String[] {email}, "欢迎注册bdbook", "bdbook注册验证码为:"+s);
+//		SGEmailSend.SendMail(new String[] {email}, "欢迎注册bdbook", "bdbook注册验证码为:"+s);
+		
+
+		String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","registerValidTML.html").toString(), LocalDataType.System);
+		SGDate now =SGDate.Now();
+		String content=tpl.replace("{validCode}", s)
+				.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
+				.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
+		SGEmailSend.SendMail(new String[] {email}, "注册邮箱验证码", content);
 //		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
 //			return AbstractApiResult.error("签到失败,用户名为空");
 //		}

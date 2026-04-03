@@ -1131,7 +1131,7 @@ public class SGMySqlExecute extends SGSqlExecuteBase {// PFSqlExecute {
 
             List<String> srcFieldNames = new ArrayList<String>(updateList.get(0).keySet());
             ResultSetMetaData dstMd = GetMetaData(tableName, srcFieldNames);
-            PFSqlUpdateCollection update = getUpdateCollection(dstMd);
+            SGSqlUpdateCollection update = getUpdateCollection(dstMd);
 
             //// update.UpdateFields("lm_new_hy_qty", "lm_valid_hy_qty",
             //// "lm_valid_hy_hpos_above_5_qty", "lm_valid_hy_hpos_0_qty");

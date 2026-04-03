@@ -1,10 +1,10 @@
 package com.sellgirl.sgJavaHelper;
 
 
-import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 
-public class MySqlUpdateCollection extends PFSqlUpdateCollection//SqlUpdateCollection<MySqlWhereCollection>
+public class MySqlUpdateCollection extends SGSqlUpdateCollection//SqlUpdateCollection<MySqlWhereCollection>
 {
 	/**
 	 * 

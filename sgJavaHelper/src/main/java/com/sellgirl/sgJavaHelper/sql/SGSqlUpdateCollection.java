@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
-public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateCollection>
+public  class SGSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateCollection>
     //where TWhereCollection : SqlWhereCollection, new()
 {
     /**
@@ -31,11 +31,11 @@ public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateC
     protected  SGSqlWhereCollection GetWhereCollection() {
         return new SGSqlWhereCollection ();
     }
-    public PFSqlUpdateCollection()
+    public SGSqlUpdateCollection()
     {
     	super();
     }
-    public PFSqlUpdateCollection(Object model, String... names
+    public SGSqlUpdateCollection(Object model, String... names
         )
     {
     	super(model,names);
@@ -45,22 +45,22 @@ public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateC
     /// </summary>
     /// <param name="names"></param>
     /// <returns></returns>
-    public  PFSqlUpdateCollection UpdateFields( String... names)
+    public  SGSqlUpdateCollection UpdateFields( String... names)
     {
         _updateFields =Arrays.asList( names);
         return this;
     }
-    /// <summary>
-    /// 主键字段(用于生成where语句)
-    /// </summary>
-    /// <param name="names"></param>
-    /// <returns></returns>
-    public  PFSqlUpdateCollection PrimaryKeyFields(String... names)
+    /**
+     * 主键字段(用于生成where语句)
+     * @param names
+     * @return
+     */
+    public  SGSqlUpdateCollection PrimaryKeyFields(String... names)
     {
         return PrimaryKeyFields(true, names);
 
     }
-    public  PFSqlUpdateCollection PrimaryKeyFields(Boolean checkWhereNotNull, String... names)
+    public  SGSqlUpdateCollection PrimaryKeyFields(Boolean checkWhereNotNull, String... names)
     {
         ////_keyFields = new List<string>();
         //if (_where == null)
@@ -104,14 +104,21 @@ public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateC
         		&&PrimaryFields.containsKey(key))
         {
         	SGDataHelper.ListFirst(_where, a->a.Key.equals(key)).Value=value;
-//            _where.First(a => a.Key == key).Value = value;
         }
         super.Set(key, value);
-        //if (this.ContainsKey(key))
-        //{
-        //    this[key].Value = value;
-        //}
     }
+
+//    //这样做原子更新不值得,1.性能;2.原子更新通常是单列的,直接getFormat()就行了
+//    private HashMap<String,Boolean> atomicMap=null;
+//    public  void Set(String key, Object value,boolean Atomic)
+//    {
+//    	if(Atomic) {
+//    		if(null==atomicMap) {
+//    			atomicMap=new HashMap<String,Boolean>();
+//    		}
+//    		atomicMap.put(key, Atomic);
+//    	}
+//    }
     /// <summary>
     /// 格式如:name1='value1',name2='value2',name3=time3,...
     /// </summary>
@@ -123,16 +130,32 @@ public  class PFSqlUpdateCollection extends BaseSqlUpdateCollection//<SqlUpdateC
         for (String i : _updateFields)
         {
             if (count != 0) { s1 += ","; }
-            //s1 += ("[" + i + "]" + "=");
+//            //s1 += ("[" + i + "]" + "=");
+//            if(null!=atomicMap&&atomicMap.containsKey(i)) {
+//            	s1 += SGDataHelper.FormatString("{0}{1}{2}={0}{1}{2}", GetFieldQuotationCharacterL(), i, GetFieldQuotationCharacterR());
+//            	Object val=this.get(i);//正数加符号+
+//                s1 += GetFormatValue();
+//            }else {
+//            	s1 += SGDataHelper.FormatString("{0}{1}{2}=", GetFieldQuotationCharacterL(), i, GetFieldQuotationCharacterR());
+//                s1 += GetFormatValue(this.get(i));
+//            }
             s1 += SGDataHelper.FormatString("{0}{1}{2}=", GetFieldQuotationCharacterL(), i, GetFieldQuotationCharacterR());
-
-            //s1 += GetFormatValue(this.get(i).Value, this.get(i).VType);
-            //s1 += GetFormatValue(this.get(i).Value, this.get(i).VType,this.get(i).VPFType);
+//            //s1 += GetFormatValue(this.get(i).Value, this.get(i).VType);
+//            //s1 += GetFormatValue(this.get(i).Value, this.get(i).VType,this.get(i).VPFType);
             s1 += GetFormatValue(this.get(i));
             count++;
         }
 
         return s1;
+    }
+    
+    /**
+     * Atomic原子更新时就用此方法拼接吧
+     * @param key
+     * @return
+     */
+    public String GetFormatKey(String key) {
+    	return SGDataHelper.FormatString("{0}{1}{2}", GetFieldQuotationCharacterL(), key, GetFieldQuotationCharacterR());
     }
     /// <summary>
     /// 返回格式如: where xx=xx and ...

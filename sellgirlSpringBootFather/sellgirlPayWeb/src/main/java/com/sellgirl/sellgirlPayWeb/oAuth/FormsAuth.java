@@ -16,7 +16,7 @@ import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.SGRef;
 //import com.sellgirl.sgJavaSpringHelper.config.PFCookieUtils;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
-import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
+//import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
 //import org.springframework.cache.annotation.Caching;
 //import javax.cache.CacheProvider;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
@@ -146,7 +146,8 @@ public class FormsAuth {
         User user=checkUser(userno,password,true);
         if(null!=user) {
         	baseReturnInfo.setIsSuccess(true);
-        	baseReturnInfo.setUserId(user.getUserName());
+//        	baseReturnInfo.setUserId(user.getUserName());
+        	baseReturnInfo.setUserId(String.valueOf(user.getUserId()) );
         	baseReturnInfo.setUserName(user.getUserName());
         	baseReturnInfo.setUserNumber(user.getUserName());
         }else {

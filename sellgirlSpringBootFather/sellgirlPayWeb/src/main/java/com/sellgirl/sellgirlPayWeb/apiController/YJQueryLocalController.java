@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.sellgirl.sellgirlPayWeb.model.*;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
-import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;

@@ -761,7 +761,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 		return true;
 	}
 
-	public Boolean HugeUpdateReader(PFSqlUpdateCollection update, ResultSet rdr, String tableName,
+	public Boolean HugeUpdateReader(SGSqlUpdateCollection update, ResultSet rdr, String tableName,
 			Consumer<BatchInsertOption> insertOptionAction,
 			// Func<MySqlUpdateCollection, DbDataReader,bool> rowAction,
 			SGFunc<BaseSqlUpdateCollection, ResultSet, ?, Boolean> rowAction, Consumer<Integer> sqlRowsUpdatedAction) {

@@ -94,7 +94,7 @@ public interface ISqlExecute extends AutoCloseable{
     SGSqlWhereCollection getWhereCollection();
 	SGSqlInsertCollection getInsertCollection();
     SGSqlInsertCollection getInsertCollection(ResultSetMetaData dstMd);
-    PFSqlUpdateCollection getUpdateCollection(ResultSetMetaData dstMd);
+    SGSqlUpdateCollection getUpdateCollection(ResultSetMetaData dstMd);
     /**
      * 已插入的行数，便于知道sql有没有超出limit的范围
      * @return
@@ -196,7 +196,7 @@ public interface ISqlExecute extends AutoCloseable{
 		    //String[] primaryKeys=null//如果不为空,插入时根据主键删除原有数据
 		    );
 	
-     Boolean HugeUpdateReader(PFSqlUpdateCollection update, ResultSet rdr, String tableName,
+     Boolean HugeUpdateReader(SGSqlUpdateCollection update, ResultSet rdr, String tableName,
     			Consumer<BatchInsertOption> insertOptionAction,
     	    //Func<MySqlUpdateCollection, DbDataReader,bool> rowAction,
     	    SGFunc<BaseSqlUpdateCollection, ResultSet,?, Boolean> rowAction,

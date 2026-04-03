@@ -242,3 +242,31 @@ function upgradeToResource(inviteCode) {
     setCurrentUser(users[index]);
     return { success: true, message: '升级成功！页面即将刷新...' };
 }
+
+// 修改密码
+function changePassword(oldPassword, newPassword) {
+    const user = getCurrentUser();
+    if (!user) return { success: false, message: '请先登录' };
+    if (user.password !== oldPassword) {
+        return { success: false, message: '当前密码错误' };
+    }
+    // 密码复杂度验证（6-20位，字母+数字）
+    if (newPassword.length < 6 || newPassword.length > 20) {
+        return { success: false, message: '新密码长度必须为6-20位' };
+    }
+    const hasLetter = /[a-zA-Z]/.test(newPassword);
+    const hasDigit = /\d/.test(newPassword);
+    if (!hasLetter || !hasDigit) {
+        return { success: false, message: '新密码必须同时包含字母和数字' };
+    }
+    // 更新用户列表中的密码
+    const users = getUsers();
+    const index = users.findIndex(u => u.username === user.username);
+    if (index === -1) return { success: false, message: '用户不存在' };
+    users[index].password = newPassword;
+    saveUsers(users);
+    // 更新当前登录用户
+    user.password = newPassword;
+    setCurrentUser(user);
+    return { success: true, message: '密码修改成功，请重新登录' };
+}

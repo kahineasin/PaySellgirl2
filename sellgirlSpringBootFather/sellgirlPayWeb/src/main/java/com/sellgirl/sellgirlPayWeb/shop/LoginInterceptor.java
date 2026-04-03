@@ -14,6 +14,7 @@ import com.sellgirl.sellgirlPayWeb.product.ResourceApiController;
 import com.sellgirl.sellgirlPayWeb.product.ResourceController;
 import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 import com.sellgirl.sellgirlPayWeb.user.UserApiController;
+import com.sellgirl.sellgirlPayWeb.user.UserController;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
@@ -82,6 +83,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     //判断是否为登录接口实现类
     			if(Pay3Controller.class==controller.getClass()
     				||UserApiController.class==controller.getClass()
+    	    		||UserController.class==controller.getClass()
     				||ResourceApiController.class==controller.getClass()
     				||ResourceController.class==controller.getClass()
     					){

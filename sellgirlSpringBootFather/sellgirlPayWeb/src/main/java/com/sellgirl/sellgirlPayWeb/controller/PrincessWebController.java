@@ -23,7 +23,7 @@ import com.sellgirl.sellgirlPayWeb.model.IXboxPadSetting;
 import com.sellgirl.sellgirlPayWeb.model.game.StreetFighter6Classic;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
-import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

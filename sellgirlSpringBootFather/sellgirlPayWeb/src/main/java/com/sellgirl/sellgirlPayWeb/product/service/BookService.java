@@ -28,7 +28,7 @@ import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
-import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
 import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 

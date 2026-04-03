@@ -480,16 +480,16 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return dstInsert;
     }
 
-    public PFSqlUpdateCollection getUpdateCollection() {
+    public SGSqlUpdateCollection getUpdateCollection() {
         // throw new Exception("Not Declare getConnection()");
         try {
-            PFSqlUpdateCollection r = null;
+            SGSqlUpdateCollection r = null;
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
             if (_jdbc.GetSqlType() == PFSqlType.MySql || _jdbc.GetSqlType() == PFSqlType.ClickHouse
                     || PFSqlType.Tidb == _jdbc.GetSqlType()) {
                 r = new PFMySqlUpdateCollection();
             } else {
-                r = new PFSqlUpdateCollection();
+                r = new SGSqlUpdateCollection();
             }
             r.setSqlType(_jdbc.GetSqlType());
             return r;
@@ -500,8 +500,8 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         return null;
     }
 
-    public PFSqlUpdateCollection getUpdateCollection(ResultSetMetaData dstMd) {
-        PFSqlUpdateCollection dstInsert = getUpdateCollection();
+    public SGSqlUpdateCollection getUpdateCollection(ResultSetMetaData dstMd) {
+        SGSqlUpdateCollection dstInsert = getUpdateCollection();
 
         // 注意这里的insert的valueType应该是目标表的类型(但转换为PFType的
         try {
@@ -1942,7 +1942,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         // return true;
     }
 
-    public <T> boolean HugeUpdateList(PFSqlUpdateCollection update, List<T> list, String tableName,
+    public <T> boolean HugeUpdateList(SGSqlUpdateCollection update, List<T> list, String tableName,
                                       // Action<BatchInsertOption> insertOptionAction,
                                       // Func<MySqlUpdateCollection, T, bool> rowAction,//考虑这个是否必要
                                       // Action<int> sqlRowsUpdatedAction = null
@@ -2764,14 +2764,14 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
      * @param update
      * @return
      */
-    protected String GetUpdateSql(String tableName, PFSqlUpdateCollection update) {
+    protected String GetUpdateSql(String tableName, SGSqlUpdateCollection update) {
 //        return PFDataHelper.FormatString(" update {0} set  {1} {2};", tableName, update.ToSetSql(),
 //                update.ToWhereSql());//自动加分号其实是不好的,后期使用如果必要时再加
         return SGDataHelper.FormatString(" update {0} set  {1} {2}", tableName, update.ToSetSql(),
                 update.ToWhereSql());
     }
 
-    protected String GetDeleteSql(String tableName, PFSqlUpdateCollection update) {
+    protected String GetDeleteSql(String tableName, SGSqlUpdateCollection update) {
         //return PFDataHelper.FormatString(" delete from {0} {1};", tableName, update.ToWhereSql());
         return SGDataHelper.FormatString(" delete from {0} {1}", tableName, update.ToWhereSql());
     }
@@ -2779,7 +2779,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
     /**
      * 此方法是从PFClickHouseSqlExecute中提取,但未测试此版本
      */
-    public Boolean HugeUpdateReader(PFSqlUpdateCollection update, ResultSet rdr, String tableName,
+    public Boolean HugeUpdateReader(SGSqlUpdateCollection update, ResultSet rdr, String tableName,
                                     Consumer<BatchInsertOption> insertOptionAction,
                                     // Func<MySqlUpdateCollection, DbDataReader,bool> rowAction,
                                     SGFunc<BaseSqlUpdateCollection, ResultSet, ?, Boolean> rowAction, Consumer<Integer> sqlRowsUpdatedAction) {
@@ -5671,7 +5671,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction) {
         // SqlInsertCollection dstInsert=null;
-        PFSqlUpdateCollection dstUpdate = null;
+        SGSqlUpdateCollection dstUpdate = null;
 
         BatchInsertOption insertOption = GetInsertOption();
         // BatchInsertOption insertOption = GetSqlUpdateOption();
@@ -5853,7 +5853,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction) {
         // SqlInsertCollection dstInsert=null;
-        PFSqlUpdateCollection dstUpdate = null;
+        SGSqlUpdateCollection dstUpdate = null;
 
         BatchInsertOption insertOption = GetInsertOption();
         // BatchInsertOption insertOption = GetSqlUpdateOption();
@@ -6176,7 +6176,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction) {
         // SqlInsertCollection dstInsert=null;
-        PFSqlUpdateCollection dstUpdate = null;
+        SGSqlUpdateCollection dstUpdate = null;
 
         BatchInsertOption insertOption = GetInsertOption();
         // BatchInsertOption insertOption = GetSqlDeleteOption();
@@ -6368,7 +6368,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
             SGAction<BaseSqlUpdateCollection, Integer, Object> rowAction, Consumer<Integer> sqlRowsCopiedAction,
             Predicate<Boolean> stopAction) {
         // SqlInsertCollection dstInsert=null;
-        PFSqlUpdateCollection dstUpdate = null;
+        SGSqlUpdateCollection dstUpdate = null;
 
         BatchInsertOption insertOption = GetInsertOption();
         // BatchInsertOption insertOption = GetSqlDeleteOption();

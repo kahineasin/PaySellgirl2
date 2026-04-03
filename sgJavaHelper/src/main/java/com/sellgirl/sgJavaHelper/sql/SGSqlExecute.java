@@ -517,7 +517,7 @@ public class SGSqlExecute extends SGSqlExecuteBase implements ISqlExecute {
 //	}
 
 	@Override
-	public Boolean HugeUpdateReader(PFSqlUpdateCollection update, ResultSet rdr, String tableName,
+	public Boolean HugeUpdateReader(SGSqlUpdateCollection update, ResultSet rdr, String tableName,
 			Consumer<BatchInsertOption> insertOptionAction,
 			SGFunc<BaseSqlUpdateCollection, ResultSet, ?, Boolean> rowAction, Consumer<Integer> sqlRowsUpdatedAction) {
 		// TODO Auto-generated method stub

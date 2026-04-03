@@ -537,11 +537,16 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
     /**
      * 考虑共用此方法,改为静态方法
      *
+     * 注意:
+     * 1. 其实,下面这种情况,还不如再new一个where2 --20260403
+     *   update pwd='2' where id=1 and pwd='1' -- pwd用两次的情况
+     *   而且毕竟是每个项目只用一次pwd更新的情况, 不值得为它增加代码
+     * 
      * @return
      */
     public static String GetFormatValue(IPFSqlUpdateField item// ,Object val, Class<?> vtype, PFSqlFieldType pfType
     ) {
-
+//    	return GetFormatValue(item,item.getValue());
         String typeString = item.getDstDataTypeLowercaseName();
         SGSqlFieldTypeEnum srcPFType = item.getSrcDataPFType();
         SGSqlFieldTypeEnum dstPFType = item.getDstDataPFType();
@@ -615,6 +620,91 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
 
         return SGDataHelper.FormatString(" '{0}' ", val);
     }
+
+//    /**
+//     * 其实,下面这种情况,还不如再new一个where2 --20260403
+//     * val可以另外指定,是为了便于 update pwd='2' where id=1 and pwd='1' -- pwd用两次的情况
+//     * @param item
+//     * @param val
+//     * @return
+//     */
+//    @Deprecated
+//    public static String GetFormatValue(IPFSqlUpdateField item,Object val//, Class<?> vtype, PFSqlFieldType pfType
+//    ) {
+//
+//        String typeString = item.getDstDataTypeLowercaseName();
+//        SGSqlFieldTypeEnum srcPFType = item.getSrcDataPFType();
+//        SGSqlFieldTypeEnum dstPFType = item.getDstDataPFType();
+////        Object val = item.getValue();
+//		boolean isDateTime=false;//目标列的类型
+//        boolean isNumber =false;
+//        if(( null!=dstPFType  && SGSqlFieldTypeEnum.DateTime == dstPFType)
+//        ||"datetime".equals(typeString)){
+//            isDateTime=true;
+//        }else if((null != dstPFType && (SGSqlFieldTypeEnum.Int == dstPFType || SGSqlFieldTypeEnum.Decimal == dstPFType || SGSqlFieldTypeEnum.BigDecimal == dstPFType || SGSqlFieldTypeEnum.Long == dstPFType))
+//        || "bigdecimal".equals(typeString) || "decimal".equals(typeString) || "int".equals(typeString) || "double".equals(typeString) || "long".equals(typeString)
+//        ){
+//            isNumber=true;
+//        }else if( null != srcPFType && (SGSqlFieldTypeEnum.Int == srcPFType || SGSqlFieldTypeEnum.Decimal == srcPFType || SGSqlFieldTypeEnum.BigDecimal == srcPFType || SGSqlFieldTypeEnum.Long == srcPFType)
+//				){
+//			isNumber=true;
+//		}else if( srcPFType != null && SGSqlFieldTypeEnum.DateTime == srcPFType
+//				){
+//			isDateTime=true;
+//		}
+//
+//
+//        if (val == null
+//            // || val == DBNull.Value //benjamin20190910
+//        ) {
+//            if (isNumber || "bool".equals(typeString)
+//            ) {
+//                return " null ";
+//            } else if (isDateTime ) {
+//                return " null ";
+//            } else if ("string".equals(typeString)) {
+//                return " '' ";
+//            } else if ("system.dbnull".equals(typeString)) {
+//                return " null ";
+//            } else {
+//                return " '' ";
+//            }
+//        }
+////        var nonnullType = PFDataHelper.GetNonnullType(vtype);
+////        if (nonnullType.IsEnum) { return String.Format(" {0} ", (int)val); }
+//        if (val instanceof String) {
+//            // return String.Format(" '{0}' ", val);
+//            return SGDataHelper.FormatString(" '{0}' ", (val.toString()).replace("'", "''").replace("\\", "\\\\"));// 如果字符串有单引号,会报错--benjamin20200311
+//        }
+//        if (isNumber) {
+//            return SGDataHelper.FormatString(" {0} ", val);
+//        }
+//        if ("bool".equals(typeString)
+//        		||SGSqlFieldTypeEnum.Bool==dstPFType//mysql 中tinyint(1) 插入 'true' 报错，所以加此条件 --benjamin 20260319
+//        		) {
+//            return SGDataHelper.FormatString(" {0} ", SGDataHelper.ObjectToBool0(val) == true ? 1 : 0);
+//        }
+//        if(val.getClass().isEnum()) {//性能高于一切,enum用TINYINT
+//        	return String.valueOf(SGDataHelper.ObjectToEnumInt(val.getClass(), val));
+//        }
+////        if (val instanceof List)//支持String[]的成员
+////        {
+////            var list = val as IList<String>;
+////            return String.Format(" '{0}' ", String.Join(",", list.ToArray()));
+////        }
+////        if (nonnullType == typeof(MySql.Data.Types.MySqlDateTime))
+////        //if(val is MySql.Data.Types.MySqlDateTime)
+////        {
+////            return String.Format(" '{0}' ", ((MySql.Data.Types.MySqlDateTime)val).Value.ToString(PFDataHelper.DateFormat));
+////        }
+//        if (isDateTime)
+//        // if(val is MySql.Data.Types.MySqlDateTime)
+//        {
+//            return SGDataHelper.FormatString(" '{0}' ", SGDataHelper.ObjectToDateString(val, SGDataHelper.DateFormat));
+//        }
+//
+//        return SGDataHelper.FormatString(" '{0}' ", val);
+//    }
 
     private Object getValueByMapI(Map<String, Object> modelDict, IPFSqlUpdateField field) {
         Object v = null;

@@ -40,7 +40,6 @@ import com.sellgirl.sgJavaSpringHelper.PFObject;
 //import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
-import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper.LocalDataType;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -582,15 +581,23 @@ extends YJQueryController
 	@GetMapping(value = { "/logout.html" })
     public ModelAndView Logout()
     {
-      String UserId=GetUserId();
-      if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId)) {
-  		SGCaching.Remove(UserId);
-  		FormsAuth.SingOut();
-      }
+//      String UserId=GetUserId();
+//      if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId)) {
+//  		SGCaching.Remove(UserId);
+//  		FormsAuth.SingOut();
+//      }
+      doLogout();
 	  	ModelAndView result=new ModelAndView();
 	  	result.setViewName("Product/logout");
 	  	return result;
     }
+	private void doLogout() {
+	      String UserId=GetUserId();
+	      if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId)) {
+	  		SGCaching.Remove(UserId);
+	  		FormsAuth.SingOut();
+	      }
+	}
 
 	@SGAllowAnonymous
 	@GetMapping(value = { "/login.html" })
@@ -901,6 +908,7 @@ extends YJQueryController
 	 * @return
 	 */
 	@GetMapping(value = { "/profile.html" })
+	@SGAllowAnonymous
     public ModelAndView Profile()
     {
 
@@ -991,15 +999,35 @@ extends YJQueryController
 			hasError=true;			
 			result.addObject("err","该邮箱未注册");
 		}else {
+//			StringBuilder sb=new StringBuilder();
+//			sb.append("<p>以下是你bdhome的账号:</p><ol>");
+//			for(LinkedHashMap<String,Object> i:list) {
+//				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
+//			}
+//			sb.append("</ol>");
+			//boolean b=SGEmailSend.SendMail(new String[] {email}, "找回密码",content);
+			
+			String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","forgerPwdTML.html").toString(), com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System);
 			StringBuilder sb=new StringBuilder();
-			sb.append("<p>以下是你bdhome的账号:</p><ol>");
 			for(LinkedHashMap<String,Object> i:list) {
-				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
+				sb.append("<div class=\"info-box\">");
+				sb.append("<div class=\"info-item\">");
+				sb.append("<span class=\"info-label\">账 号：</span>");
+				sb.append("<span class=\"info-value\">"+i.get("user_name")+"</span>");
+				sb.append("</div>");
+				sb.append("<div class=\"info-item\">");
+				sb.append("<span class=\"info-label\">密 码：</span>");
+				sb.append("<span class=\"info-value\">"+i.get("pwd")+"</span>");
+				sb.append("</div>");
+				sb.append("</div>");
 			}
-			sb.append("</ol>");
+			SGDate now =SGDate.Now();
+			String content=tpl.replace("{pwd}", sb.toString())
+					.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
+					.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
 			
 //			//参数完全一样,就是失败..session问题?原来是少了依赖,javax.mail connect时需要service
-			boolean b=SGEmailSend.SendMail(new String[] {email}, "找回密码", sb.toString());
+			boolean b=SGEmailSend.SendMail(new String[] {email}, "忘记密码通知",content);
 
 //			SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
 //			SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
@@ -1021,5 +1049,58 @@ extends YJQueryController
 		result.addObject("sentEmail",sentEmail);
 		result.setViewName("Product/forgot-password");
 		return result;
+    }
+
+	@GetMapping(value = { "/change-password.html" })
+    public ModelAndView ChangePassword()
+    {
+
+  	ModelAndView result=new ModelAndView();
+//  	result.addObject("username","cuowu");
+////  	result.addObject("Model",model);
+//  	result.addObject("Html", new HtmlHelperT<TModel>(ViewData));
+  	result.setViewName("Product/change-password");
+  	return result;
+    }
+
+	@PostMapping(value = { "/PostChangePassword" })
+    public ModelAndView PostChangePassword(String oldPassword,
+    		String newPassword,
+    		String confirmPassword)
+    {
+		ModelAndView result=new ModelAndView();
+		boolean hasError=false;
+		boolean success=false;
+		String message=null;
+		
+		result.addObject("oldPassword", oldPassword);
+		result.addObject("newPassword", newPassword);
+		result.addObject("confirmPassword", confirmPassword);
+		if(null==confirmPassword||!confirmPassword.equals(newPassword)) {
+//			result.addObject("confirmPassword","两次输入的密码不一致");
+			hasError=true;	
+			message="两次输入的密码不一致";
+		}else {
+			BaseReturnInfoDto user=FormsAuth.LoginCheckWebApi(this.GetUserName(),oldPassword);
+			if(null!=user&&user.isIsSuccess()) {
+				if(userService.changePwd(Long.valueOf(user.getUserId()), oldPassword,newPassword)) {
+					success= true;
+					message="密码修改成功，请重新登录";
+					doLogout();
+				}else {
+					hasError=true;	
+					message="修改失败";			
+				}
+			}else {
+//				result.addObject("oldPassword", "密码错误");{
+					hasError=true;	
+					message="密码错误";					
+			}
+		}
+		result.addObject("success", success);
+		result.addObject("hasError", hasError);
+		result.addObject("message", message);
+	  	result.setViewName("Product/change-password");
+	  	return result;
     }
 }

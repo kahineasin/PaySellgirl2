@@ -14,7 +14,7 @@ import com.sellgirl.sgJavaHelper.SGSqlCommandString;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
-import com.sellgirl.sgJavaHelper.sql.PFSqlUpdateCollection;
+import com.sellgirl.sgJavaHelper.sql.SGSqlUpdateCollection;
 import com.sellgirl.sgJavaHelper.sql.SGSqlInsertCollection;
 //import com.wechat.pay.java.service.profitsharing.model.OrderStatus;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
@@ -91,7 +91,7 @@ public class OrderService {
             srcFieldNames.add("order_no");
             ResultSetMetaData dstMd = dstExec.GetMetaDataNotClose("sg_vip_order", srcFieldNames);
 
-            PFSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
+            SGSqlUpdateCollection update = dstExec.getUpdateCollection(dstMd);
 
             
             String[] mArray = new String[] {"status","order_no"};
