@@ -54,7 +54,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.bookQuery;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;

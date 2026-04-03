@@ -40,7 +40,7 @@ import com.sellgirl.sgJavaHelper.file.SGEncryptByte;
 		//,"com.sellgirl.sellgirlPayMq.consumer"
 		"com.sellgirl.sellgirlPayDao",
 		"com.sellgirl.sellgirlPayDao.*",
-		"com.sellgirl.sellgirlPayService",
+//		"com.sellgirl.sellgirlPayService",
 		"com.sellgirl.sellgirlPayWeb.service",
 		"com.sellgirl.sellgirlPayWeb.service.*",
 		"com.sellgirl.sellgirlPayWeb.apiController",

@@ -102,6 +102,7 @@ application-prod.yml, static/resourceImg/** ...
 	```
     setTimeout(() => {
 	    location.reload(); //暂不知道怎么关闭模态窗,直接刷新
+	    //upgradeModal.style.display='none'; //好像是这样关;显示是'block'
 	}, 1500);
 	```
 

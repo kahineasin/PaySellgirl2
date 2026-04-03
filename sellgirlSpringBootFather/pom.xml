@@ -58,7 +58,8 @@
 		<sgJavaMvcHelper.version>0.0.3</sgJavaMvcHelper.version>
 		<sgExportHelper.version>0.0.4</sgExportHelper.version>
 		<sellgirlPayDomain.version>0.0.5</sellgirlPayDomain.version>
-		<sellgirlPayService.version>0.0.3</sellgirlPayService.version>
+		<!--<sellgirlPayService.version>0.0.3</sellgirlPayService.version>-->		
+		<sellgirlPayService.version>0.0.5</sellgirlPayService.version>
 		<sellgirlPayDao.version>0.0.3</sellgirlPayDao.version>
 		<sellgirlPayMq.version>0.0.5</sellgirlPayMq.version>
   </properties>
@@ -70,7 +71,7 @@
 <!--		<module>sellgirlPayHelperExport</module>-->
 		<!--<module>sellgirlPayDomain</module>-->
 		<module>sellgirlPayDao</module>
-		<module>sellgirlPayService</module>
+		<!--<module>sellgirlPayService</module>-->
 		<!-- <module>sellgirlPayMq</module> -->
 		<module>sellgirlPayWeb</module>
   </modules>

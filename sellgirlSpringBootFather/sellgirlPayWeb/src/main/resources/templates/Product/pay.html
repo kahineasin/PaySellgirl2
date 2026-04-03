@@ -142,11 +142,13 @@
 
         document.querySelectorAll('[data-points]').forEach(btn => {
             btn.addEventListener('click', function() {
+                btn.disabled = true;
                 selectedPoints = parseInt(this.dataset.points);
                 selectedAmount = parseInt(this.dataset.amount);
-                
-                //正式时要改金额 -- hyaweh TODO
-				window.location.href = '/pay3payPage?plan=point'+selectedPoints+'&amount=0.01';
+                //return;
+                //正式时要改金额 -- hyaweh 
+				window.location.href = '/pay3payPage?plan=point'+selectedPoints+'&amount='+selectedAmount;
+                btn.disabled = false;
 				return;
 				
                 payAmountSpan.textContent = selectedAmount;

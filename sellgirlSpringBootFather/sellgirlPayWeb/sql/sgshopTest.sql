@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `sg_vip_user`(
   select a.book_id,a.book_name,b.* from sg_book a
   left join sg_book_chap b on b.book_id=a.book_id
   where a.book_name ='复活' and b.book_chap_name ='二'
-
+select * from sg_book limit 20
 -- use sellgirlbbs2
 -- drop table sg_user;
 -- drop table sg_book;

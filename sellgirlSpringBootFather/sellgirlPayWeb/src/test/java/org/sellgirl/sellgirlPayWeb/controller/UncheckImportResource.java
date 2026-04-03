@@ -33,7 +33,7 @@ import org.sellgirl.sellgirlPayWeb.controller.model.TestModel001;
 import com.alibaba.fastjson.JSON;
 import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 //import com.sellgirl.sellgirlPayWeb.product.model.resourceChapCreate;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceCreate;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;
@@ -235,8 +235,8 @@ public class UncheckImportResource extends TestCase {
 		        		}
 		        	}
 
-//					String c=new String(new char[] {SGDataHelper.getFirstLetter(title.charAt(0))});
-					String c=ProjHelper.getFirstLetter(title);
+////					String c=new String(new char[] {SGDataHelper.getFirstLetter(title.charAt(0))});
+//					String c=ProjHelper.getFirstLetter(title);
 					
 					resourceCreate model=new resourceCreate();
 					model.setResource_name(title);

@@ -1,10 +1,8 @@
-package com.sellgirl.sellgirlPayWeb.product.model;
+package com.sellgirl.sellgirlPayService.product.model;
 
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 /**

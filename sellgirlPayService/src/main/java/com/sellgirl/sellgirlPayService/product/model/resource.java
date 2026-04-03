@@ -1,16 +1,14 @@
-package com.sellgirl.sellgirlPayWeb.product.model;
+package com.sellgirl.sellgirlPayService.product.model;
 
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 /**
-* 资源
+* 资源 列表通用模型,注意不要放解压密码到这里
 */
-public class resourceQuery {
+public class resource {
         /**
         * resource_id
          */
@@ -30,21 +28,22 @@ public class resourceQuery {
         * cover
          */
 		public  String cover ;
+		public  String description ;
 		
-        /**
-        * netdisk
+		/**
+        * netdisk(这里含有extractCode,已经去掉了)
          */
 		public  String netdisk ;
-		
-        /**
-        * extractCode
-         */
-		public  String extractCode ;
-		
-        /**
-        * unlockPassword
-         */
-		public  String unlockPassword ;
+		//这是列表模型,密码不要放这,否则很容易暴露到列表的js中
+//        /**
+//        * extractCode
+//         */
+//		public  String extractCode ;
+//		
+//        /**
+//        * unlockPassword
+//         */
+//		public  String unlockPassword ;
 		
         /**
         * duration
@@ -60,10 +59,7 @@ public class resourceQuery {
         * create_date
          */
 		public  SGDate create_date ;
-
-		public  ResourceType resourceType ;
-//		public  String sort;
-//		public  boolean desc;
+		
 				public  int getResource_id (){
 		  return resource_id;
 		}
@@ -88,24 +84,31 @@ public class resourceQuery {
 		public  void setCover (String cover){
 		  this.cover=cover;
 		}
+
+        public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
 		public  String getNetdisk (){
 		  return netdisk;
 		}
 		public  void setNetdisk (String netdisk){
 		  this.netdisk=netdisk;
 		}
-		public  String getExtractCode (){
-		  return extractCode;
-		}
-		public  void setExtractCode (String extractCode){
-		  this.extractCode=extractCode;
-		}
-		public  String getUnlockPassword (){
-		  return unlockPassword;
-		}
-		public  void setUnlockPassword (String unlockPassword){
-		  this.unlockPassword=unlockPassword;
-		}
+//		public  String getExtractCode (){
+//		  return extractCode;
+//		}
+//		public  void setExtractCode (String extractCode){
+//		  this.extractCode=extractCode;
+//		}
+//		public  String getUnlockPassword (){
+//		  return unlockPassword;
+//		}
+//		public  void setUnlockPassword (String unlockPassword){
+//		  this.unlockPassword=unlockPassword;
+//		}
 		public  int getDuration (){
 		  return duration;
 		}
@@ -124,27 +127,6 @@ public class resourceQuery {
 		public  void setCreate_date (SGDate create_date){
 		  this.create_date=create_date;
 		}
-
-		
-		public ResourceType getResourceType() {
-	return resourceType;
-}
-public void setResourceType(ResourceType resourceType) {
-	this.resourceType = resourceType;
-}
-
-//public String getSort() {
-//	return sort;
-//}
-//public void setSort(String sort) {
-//	this.sort = sort;
-//}
-//public boolean isDesc() {
-//	return desc;
-//}
-//public void setDesc(boolean desc) {
-//	this.desc = desc;
-//}
 }
 
 

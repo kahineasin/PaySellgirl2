@@ -3,11 +3,19 @@ package com.sellgirl.sellgirlPayWeb.configuration.jdbc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+//import com.sellgirl.sellgirlPayService.IShopJdbc;
 import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.sql.PFJdbcBase;
 
 @Component
-public class ShopJdbc extends PFJdbcBase {
+public class ShopJdbc extends PFJdbcBase 
+//implements IShopJdbc
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	@Value("${jdbc.shop.url:}")

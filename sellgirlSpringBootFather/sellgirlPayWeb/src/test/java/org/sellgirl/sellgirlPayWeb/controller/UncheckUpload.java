@@ -30,7 +30,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 //import com.sellgirl.sellgirlPayWeb.product.model.resourceChapCreate;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceCreate;
 import com.sellgirl.sellgirlPayWeb.product.service.ResourceService;

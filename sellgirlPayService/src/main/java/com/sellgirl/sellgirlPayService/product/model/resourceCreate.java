@@ -1,16 +1,14 @@
-package com.sellgirl.sellgirlPayWeb.product.model;
+package com.sellgirl.sellgirlPayService.product.model;
 
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 /**
 * 资源
 */
-public class resourceQuery {
+public class resourceCreate {
         /**
         * resource_id
          */
@@ -39,12 +37,12 @@ public class resourceQuery {
         /**
         * extractCode
          */
-		public  String extractCode ;
+		public  String extract_code ;
 		
         /**
         * unlockPassword
          */
-		public  String unlockPassword ;
+		public  String unlock_password ;
 		
         /**
         * duration
@@ -60,10 +58,7 @@ public class resourceQuery {
         * create_date
          */
 		public  SGDate create_date ;
-
-		public  ResourceType resourceType ;
-//		public  String sort;
-//		public  boolean desc;
+		
 				public  int getResource_id (){
 		  return resource_id;
 		}
@@ -95,16 +90,16 @@ public class resourceQuery {
 		  this.netdisk=netdisk;
 		}
 		public  String getExtractCode (){
-		  return extractCode;
+		  return extract_code;
 		}
 		public  void setExtractCode (String extractCode){
-		  this.extractCode=extractCode;
+		  this.extract_code=extractCode;
 		}
 		public  String getUnlockPassword (){
-		  return unlockPassword;
+		  return unlock_password;
 		}
 		public  void setUnlockPassword (String unlockPassword){
-		  this.unlockPassword=unlockPassword;
+		  this.unlock_password=unlockPassword;
 		}
 		public  int getDuration (){
 		  return duration;
@@ -124,27 +119,6 @@ public class resourceQuery {
 		public  void setCreate_date (SGDate create_date){
 		  this.create_date=create_date;
 		}
-
-		
-		public ResourceType getResourceType() {
-	return resourceType;
-}
-public void setResourceType(ResourceType resourceType) {
-	this.resourceType = resourceType;
-}
-
-//public String getSort() {
-//	return sort;
-//}
-//public void setSort(String sort) {
-//	this.sort = sort;
-//}
-//public boolean isDesc() {
-//	return desc;
-//}
-//public void setDesc(boolean desc) {
-//	this.desc = desc;
-//}
 }
 
 

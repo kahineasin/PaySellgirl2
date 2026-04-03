@@ -10,10 +10,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//import com.sellgirl.sellgirlPayService.IShopJdbc;
 //import com.sellgirl.sellgirlPayDao.TestDAO;
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
+import com.sellgirl.sellgirlPayWeb.configuration.jdbc.ShopJdbc;
 import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceLock;
 //import com.sellgirl.sellgirlPayWeb.product.model.resourceChap;
@@ -39,7 +41,7 @@ import com.sellgirl.sgJavaHelper.sql.SGSqlWhereCollection;
 import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
 
 @Service
-public class ResourceService
+public class ResourceService extends com.sellgirl.sellgirlPayService.product.ResourceService
 {
 	private final String TAG="ResourceService";
 //	/**
@@ -171,16 +173,16 @@ getTableName(type)
 		}
     }
 
-    public SGDataTable GetResourceById(long id,ResourceType type)
-    {
-		ISGJdbc jdbc=JdbcHelper.GetShop();
-		try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
-		    return sql.GetOneRow(getTableName(type),a->a.Add("resource_id", id));
-		} catch (Throwable e) {
-		    SGDataHelper.getLog().writeException(e, TAG);
-		    return null;
-		}
-    }
+//    public SGDataTable GetResourceById(long id,ResourceType type)
+//    {
+//		ISGJdbc jdbc=JdbcHelper.GetShop();
+//		try (ISqlExecute sql = SGSqlExecute.Init(jdbc)) {
+//		    return sql.GetOneRow(getTableName(type),a->a.Add("resource_id", id));
+//		} catch (Throwable e) {
+//		    SGDataHelper.getLog().writeException(e, TAG);
+//		    return null;
+//		}
+//    }
     private SGDataTable GetResourceLockById(long id,ResourceType type)
     {
 		ISGJdbc jdbc=JdbcHelper.GetShop();
@@ -308,7 +310,7 @@ query.ToSql()
           public resource GetOneResource(long id,ResourceType  type)
           {
               resource model = null;
-              SGDataTable result =GetResourceById(id,type);
+              SGDataTable result =super.GetResourceById(id,type);
               if (result != null && !result.IsEmpty())
               {
                   model = resourceTableToList(result).get(0);
@@ -391,5 +393,10 @@ query.ToSql()
     		default:
     			return ResourceType.movie;
     		}
+         }
+//         @Override
+         @Autowired
+         public void setJdbc2(ShopJdbc jdbc) {
+        	 this.jdbc=jdbc;
          }
 }

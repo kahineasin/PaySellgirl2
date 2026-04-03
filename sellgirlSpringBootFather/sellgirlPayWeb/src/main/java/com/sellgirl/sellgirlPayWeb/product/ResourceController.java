@@ -44,7 +44,8 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.product.model.ProductType;
-import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+//import com.sellgirl.sellgirlPayWeb.product.model.ResourceType;
+import com.sellgirl.sellgirlPayService.product.model.ResourceType;
 import com.sellgirl.sellgirlPayWeb.product.model.book;
 import com.sellgirl.sellgirlPayWeb.product.model.resource;
 import com.sellgirl.sellgirlPayWeb.product.model.resourceQuery;
@@ -98,6 +99,9 @@ extends  YJQueryController
 		ResourceType type= resourceService.productToResource(resourceType);
 		boolean isResourceUnlocked=resourceService.isResourceUnlocked(this.GetUserLongId(), id, resourceType);
 		resource m=resourceService.GetOneResource(id,type);
+//		com.sellgirl.sellgirlPayService.product.model.ResourceType type2=
+//				com.sellgirl.sellgirlPayService.product.model.ResourceType.valueOf(type.name());
+//		SGDataTable m2=resourceService.GetResourceById2(id,type2);
 		ModelAndView r=View(m,"Product/resource-detail");
 		r.addObject("resourceType", resourceType);
 		r.addObject("isResourceUnlocked", isResourceUnlocked);
