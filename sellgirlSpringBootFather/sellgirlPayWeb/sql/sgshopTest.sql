@@ -98,9 +98,16 @@ update sgshop.sg_user set point=point+1000 where user_id=2
    select * from sg_resource where resource_name like '%2420%'
    select * from sg_resource limit 20;
    select * from sg_resource where resource_id=2500 limit 20;
+   select max(resource_id),count(*) as m from sg_comic limit 1;
+   
    select * from sg_comic limit 20;
+   update sg_comic set create_date='2026-04-03 17:16:33' where resource_id=1
+   select * from sg_comic where resource_id>127 limit 100;
    select * from sg_comic where resource_id=423 limit 20;
-   select * from sg_comic where resource_name='C-No.00423'
+   select * from sg_comic where resource_id=424 limit 20;
+   select * from sg_comic where resource_id=846 limit 20;
+   select * from sg_comic where resource_name like '%放工后%'
+   select * from sg_comic where '2026-04-04 01:01:01'<create_date
    
    update sg_comic set netdisk='https://pan.baidu.com/s/153A9gYMg6DEiZBYOKMA8-Q',extract_code='4d95' where resource_name='C-No.00423'
    

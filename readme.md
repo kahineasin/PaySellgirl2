@@ -82,8 +82,8 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
 			return null;
 		}
 		ISGJdbc dstJdbc=JdbcHelper.GetShop();
-		try (ISqlExecute myResource = SGSqlExecute.Init(dstJdbc)) {
-		  	SGSqlWhereCollection query =myResource.getWhereCollection();
+		try (ISqlExecute sqlExec = SGSqlExecute.Init(dstJdbc)) {
+		  	SGSqlWhereCollection query =sqlExec.getWhereCollection();
 			//query.setIgnoreNullValue(false);
             query.Add("user_id",q.getUserId());
             query.Add("user_name",q.getUserName());
@@ -93,7 +93,7 @@ sellgirlPayWeb->Service  //是spring boot入口(在crm项目里,web反而叫serv
           		, 
           		        query.ToSql()
           		    );
-          	SGDataTable dt= myResource.GetDataTable(SqlString,null);
+          	SGDataTable dt= sqlExec.GetDataTable(SqlString,null);
           	if(null!=dt&&!dt.IsEmpty()) {
 	          	List<User> list= dt.ToList(User.class, (obj,row,c)->{
 	          		obj.setUserName(row.getStringColumn(SqlString));

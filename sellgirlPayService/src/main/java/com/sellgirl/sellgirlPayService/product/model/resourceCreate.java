@@ -12,7 +12,7 @@ public class resourceCreate {
         /**
         * resource_id
          */
-		public  int resource_id ;
+		public  long resource_id ;
 		
         /**
         * resource_name
@@ -59,10 +59,10 @@ public class resourceCreate {
          */
 		public  SGDate create_date ;
 		
-				public  int getResource_id (){
+		public  long getResource_id (){
 		  return resource_id;
 		}
-		public  void setResource_id (int resource_id){
+		public  void setResource_id (long resource_id){
 		  this.resource_id=resource_id;
 		}
 		public  String getResource_name (){

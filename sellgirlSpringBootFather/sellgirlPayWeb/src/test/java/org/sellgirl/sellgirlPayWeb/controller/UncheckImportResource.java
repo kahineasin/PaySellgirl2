@@ -87,7 +87,7 @@ public class UncheckImportResource extends TestCase {
 		new SGDataHelper(new PFAppConfig());
 	}
 
-	private boolean clear=true;
+	private boolean clear=false;
 	private boolean printBug=true;
 	private boolean printProgress=true;
 	private int maxLen=45110;//暂时的阀值

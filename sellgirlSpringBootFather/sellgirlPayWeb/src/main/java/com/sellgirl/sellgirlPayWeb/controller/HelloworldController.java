@@ -4,7 +4,7 @@ import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
 import com.sellgirl.sellgirlPayMq.PFMqHelper;
 import com.sellgirl.sellgirlPayMq.model.CompareCnt;
 import com.sellgirl.sellgirlPayMq.producer.*;
-import com.sellgirl.sellgirlPayService.ServiceTest;
+//import com.sellgirl.sellgirlPayService.ServiceTest;
 import com.sellgirl.sellgirlPayWeb.apiController.CrmController;
 import com.sellgirl.sellgirlPayWeb.model.test.TestBindPModel;
 
@@ -56,11 +56,11 @@ public class HelloworldController {
 		return str;
 	}
 
-	@GetMapping("/webtest")
-	public String WebTest() {
-		ServiceTest daoTest=new ServiceTest();
-		return daoTest.showService()+ ":我是Web!"; 
-	}
+//	@GetMapping("/webtest")
+//	public String WebTest() {
+//		ServiceTest daoTest=new ServiceTest();
+//		return daoTest.showService()+ ":我是Web!"; 
+//	}
 
     @GetMapping(value = "/showerror")
     public AbstractApiResult<?> ShowError() {

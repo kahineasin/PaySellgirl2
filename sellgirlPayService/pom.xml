@@ -81,10 +81,10 @@
             <version>${sellgirlPayDomain.version}</version>
         </dependency>
         <!--service模块 引入dao模块-->
-        <dependency>
+        <!--<dependency>
             <groupId>com.sellgirl</groupId>
             <artifactId>sellgirlPayDao</artifactId>
             <version>${sellgirlPayDao.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>
