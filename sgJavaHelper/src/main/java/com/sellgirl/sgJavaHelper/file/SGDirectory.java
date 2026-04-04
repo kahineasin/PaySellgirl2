@@ -2,6 +2,8 @@ package com.sellgirl.sgJavaHelper.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -21,7 +23,7 @@ public class SGDirectory {
 	/**
 	 * 确保目录存在.
 	 * 
-	 * @param dirPath
+	 * @param dirPath 不要使用URI.toString()作为此参数,无效的. 有重载EnsureExists(URI)
 	 */
 	public static void EnsureExists(String dirPath) {
 		File file = new File(dirPath);
@@ -33,7 +35,7 @@ public class SGDirectory {
 	/**
 	 * 确保文件的所在文件夹存在.
 	 * 
-	 * @param filePath
+	 * @param filePath 不要使用URI.toString()作为此参数,无效的. 有重载EnsureFilePath(URI)
 	 */
 	public static void EnsureFilePath(String filePath) {
 		// PFDirectory.EnsureExists(filePath);
@@ -43,6 +45,27 @@ public class SGDirectory {
 		SGDirectory.EnsureExists(pathWithoutFileName);
 
 	}
+	public static void EnsureFilePath(URI filePath) {
+		// PFDirectory.EnsureExists(filePath);
+
+		String pathWithoutFileName = filePath.toString().replace(SGPath.GetFileName(filePath.toString()), "");// 如果目录不存在先生成目录,否则会报错--wxj20180713
+		
+		SGDirectory.EnsureExists(pathWithoutFileName);
+
+		try {
+			SGDirectory.EnsureExists(new URI(pathWithoutFileName));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+	}
+	public static void EnsureExists(URI dirPath) {
+		File file = new File(dirPath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+	}
+
 
 	public static void DeleteFile(String filePath) {
 		if (SGDirectory.Exists(filePath)) {

@@ -8418,7 +8418,10 @@ public static String escapeCsv3(String input) {
 		// java.net.URL path =
 		// Thread.currentThread().getContextClassLoader().getResource(fileFullPath);//"jdbcconfig.yml");//
 		java.net.URL path = null;
-		if (PFEnvir.release == SGDataHelper.CurrentEnvironmental || PFEnvir.release == null) {
+		if (PFEnvir.release == SGDataHelper.CurrentEnvironmental 
+				//|| PFEnvir.release == null  //以前写错了, benjamin 20260404
+				||null==SGDataHelper.CurrentEnvironmental
+				) {
 			path = Thread.currentThread().getContextClassLoader().getResource(fileFullPath);
 		} else {
 //			path = Thread.currentThread().getContextClassLoader()
@@ -8576,14 +8579,16 @@ public static String escapeCsv3(String input) {
 				StringBuilder sb=new StringBuilder();
 				while ((b = out.readLine()) != null &&(!useTop|| topRow > 0)) {
 //						text += (b + "\r\n");
-					sb.append(b);
+//					sb.append(b);
+					sb.append(b).append("\r\n");
 					if(useTop) {
 						topRow--;
 					}
 				}
 
 				out.close();
-				return String.join("\r\n",sb );
+//				return String.join("\r\n",sb );//注意join(sp,StringBuilder)是无效的
+				return sb.toString();
 			} catch (Exception e) {
 				// e.printStackTrace();
 			}

@@ -451,6 +451,9 @@ public class UncheckImportResource extends TestCase {
 			ImageIO.write(paintBi, SGPath.getFileExtension(dstImgPath), file2);
 		}
 	}
+	/**
+	 * 为整个文件夹内的图片生成缩略图
+	 */
 	public void testGenerateSmallImg() {
 		//80在resource-board够清,但在resource-index模糊;
 		//120够清, 在浏览器80px样式中,决定电脑统一用120图
