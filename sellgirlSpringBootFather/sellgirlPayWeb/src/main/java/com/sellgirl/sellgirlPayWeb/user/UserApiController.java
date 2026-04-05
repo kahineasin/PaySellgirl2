@@ -190,24 +190,35 @@ public class UserApiController extends  YJQueryController
 	@PostMapping(value = { "/GenEmailCode" })
     @SGAllowAnonymous
     public AbstractApiResult<?> GenEmailCode(String email)
-    { 
-		double d=Math.random()*10000D;	  
-		DecimalFormat df = new DecimalFormat("0");
-		String s = df.format(d);
-//		SGEmailSend.SendMail(new String[] {email}, "欢迎注册bdbook", "bdbook注册验证码为:"+s);
-		
+    {
+		SGRef<String> msg=new SGRef<String>(); 
+		if(UserController.canSendEmail("register",email,msg)) {
 
-		String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","registerValidTML.html").toString(), LocalDataType.System);
-		SGDate now =SGDate.Now();
-		String content=tpl.replace("{validCode}", s)
-				.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
-				.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
-		SGEmailSend.SendMail(new String[] {email}, "注册邮箱验证码", content);
-//		if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
-//			return AbstractApiResult.error("签到失败,用户名为空");
-//		}
-		SGCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
-		return AbstractApiResult.success();
+			double d=Math.random()*10000D;	  
+			DecimalFormat df = new DecimalFormat("0");
+			String s = df.format(d);
+//			SGEmailSend.SendMail(new String[] {email}, "欢迎注册bdbook", "bdbook注册验证码为:"+s);
+			
+
+			String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","registerValidTML.html").toString(), LocalDataType.System);
+			SGDate now =SGDate.Now();
+			String content=tpl.replace("{validCode}", s)
+					.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
+					.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
+			boolean b=SGEmailSend.SendMail(new String[] {email}, "注册邮箱验证码", content);
+//			if(SGDataHelper.StringIsNullOrWhiteSpace(username)) {
+//				return AbstractApiResult.error("签到失败,用户名为空");
+//			}
+			if(b) {
+				SGCookieUtils.setCookie("registerEmailCode", s,600);//10分钟
+				SGCaching.Set("register"+email, true,180);
+				return AbstractApiResult.success();
+			}else {
+				return AbstractApiResult.error("发送验证码失败");	
+			}
+		}else {	    		
+			return AbstractApiResult.error(msg.GetValue());	
+		} 
     }
 	
 

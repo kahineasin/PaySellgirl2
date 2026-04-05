@@ -108,18 +108,30 @@
         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 
-		<dependency>
+		<!--删除旧依赖-->
+		<!--<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-<!--			<version>${apache-httpclient.version}</version>-->
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>${apache-httpmime.version}</version><!--4.5.3-->
+			<version>${apache-httpmime.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		-->
+		
+		<!-- 添加新依赖 -->
+		<dependency>
+		    <groupId>org.apache.httpcomponents.client5</groupId>
+		    <artifactId>httpclient5</artifactId>
+		    <version>5.3</version> <!-- 建议使用最新稳定版 -->
+			<scope>provided</scope>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/com.rabbitmq/amqp-client -->
 <!--		<dependency>
 			<groupId>com.rabbitmq</groupId>

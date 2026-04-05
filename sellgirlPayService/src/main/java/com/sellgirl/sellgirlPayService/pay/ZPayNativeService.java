@@ -1,7 +1,8 @@
-package com.sellgirl.sellgirlPayWeb.pay.service;
+package com.sellgirl.sellgirlPayService.pay;
 
 
 import com.aliyun.openservices.shade.com.alibaba.fastjson.JSON;
+import com.sellgirl.sellgirlPayService.SGDigestUtils;
 import com.sellgirl.sellgirlPayService.pay.model.PayPlan;
 import com.sellgirl.sgJavaHelper.SGHttpHelper;
 //import com.sellgirl.sellgirlPayWeb.user.UserController.PayPlan;
@@ -9,25 +10,25 @@ import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.SGRequestResult;
 //import com.sellgirl.sellgirlPayWeb.pay.config.WechatPayConfig;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
-import com.wechat.pay.java.service.payments.nativepay.NativePayService;
-import com.wechat.pay.java.service.payments.nativepay.model.Amount;
-import com.wechat.pay.java.service.payments.nativepay.model.PrepayRequest;
-import com.wechat.pay.java.service.payments.nativepay.model.PrepayResponse;
+//import com.wechat.pay.java.service.payments.nativepay.NativePayService;
+//import com.wechat.pay.java.service.payments.nativepay.model.Amount;
+//import com.wechat.pay.java.service.payments.nativepay.model.PrepayRequest;
+//import com.wechat.pay.java.service.payments.nativepay.model.PrepayResponse;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-//import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
+////import lombok.extern.slf4j.Slf4j;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.stereotype.Service;
+//import org.springframework.util.DigestUtils;
 
 //https://member.z-pay.cn/member/doc.html
 //@Slf4j
-@Service
-public class ZPayNativeService  extends com.sellgirl.sellgirlPayService.pay.ZPayNativeService{
+//@Service
+public class ZPayNativeService {
 
 //    @Autowired
 //    private NativePayService nativePayService;
@@ -65,18 +66,18 @@ public class ZPayNativeService  extends com.sellgirl.sellgirlPayService.pay.ZPay
 //        return codeUrl;
 //    }
 //    long newId=0;
-//    private String submitApi="https://z-pay.cn/submit.php";
-//    private String productName = "";//商品名
-//    private String money = "";//价格
-//    private long pid =2026031219321114L;// "2026031219321114";//商户id
-//    @Value("${zpay.notifyUrl}")
-//    private String notifyUrl="";
-//    @Value("${zpay.returnUrl}")
-//    private String returnUrl="";
-//	//    String signStr2;
-//    private String signType = "MD5";//签名类型
-//    private static String key = "uXXOQLIbgs3PasUjBgWp3vKkCmPzc8iN";//商户密钥
-//    private static String payType = "alipay";//支付类型
+    protected String submitApi="https://z-pay.cn/submit.php";
+    protected String productName = "";//商品名
+    protected String money = "";//价格
+    protected long pid =2026031219321114L;// "2026031219321114";//商户id
+    //@Value("${zpay.notifyUrl}")
+    protected String notifyUrl="";
+    //@Value("${zpay.returnUrl}")
+    protected String returnUrl="";
+	//    String signStr2;
+    protected String signType = "MD5";//签名类型
+    protected static String key = "uXXOQLIbgs3PasUjBgWp3vKkCmPzc8iN";//商户密钥
+    protected static String payType = "alipay";//支付类型
     public String createNativeOrder(long orderId,PayPlan plan,String amount) {
 
 //        String url = "https://z-pay.cn";//支付地址
@@ -121,7 +122,7 @@ public class ZPayNativeService  extends com.sellgirl.sellgirlPayService.pay.ZPay
         signStr += key;
  
         //转为MD5
-        signStr = DigestUtils.md5DigestAsHex(signStr.getBytes());
+        signStr = SGDigestUtils.md5DigestAsHex(signStr.getBytes());
  
         sign.put("sign_type",signType);
         sign.put("sign",signStr);
@@ -191,7 +192,7 @@ public class ZPayNativeService  extends com.sellgirl.sellgirlPayService.pay.ZPay
         signStr += key;
  
         //转为MD5
-        signStr = DigestUtils.md5DigestAsHex(signStr.getBytes());
+        signStr = SGDigestUtils.md5DigestAsHex(signStr.getBytes());
     	return signStr;
     }
     public static boolean isSignCorrect(long pid,
@@ -313,16 +314,17 @@ pid,key,orderId
 		}
 		return r.success;
 	}
-//	/**
-//	 * 退款
-//	 * https://zpayz.cn/api.php?act=refund
-//	 * 
-//	 * @param orderId
-//	 * @param trade_no
-//	 * @param money
-//	 * @return
-//	 */
-//	public boolean refund(long orderId,String trade_no,String money) {
+	/**
+	 * 退款
+	 * https://zpayz.cn/api.php?act=refund
+	 * 
+	 * @param orderId
+	 * @param trade_no
+	 * @param money
+	 * @return
+	 */
+	public boolean refund(long orderId,String trade_no,String money) {
+		return this.refund2(orderId, trade_no, money).success;
 ////		String refundUrl=SGDataHelper.FormatString(
 ////"https://zpayz.cn/api.php?act=refund&pid={0}&key={1}&trade_no={2}&out_trade_no={3}&money={4}", 
 ////pid,key,trade_no,orderId,money
@@ -352,22 +354,50 @@ pid,key,orderId
 //		}
 //		}
 //		return r.success;
-//	}
-
-//	public String getNotifyUrl() {
-//		return notifyUrl;
-//	}
-	@Override
-	@Value("${zpay.notifyUrl}")
-	public void setNotifyUrl(String notifyUrl) {
-		super.notifyUrl = notifyUrl;
 	}
-//	public String getReturnUrl() {
-//		return returnUrl;
-//	}
-	@Override
-	@Value("${zpay.returnUrl}")
+
+	public SGRequestResult refund2(long orderId,String trade_no,String money) {
+//		String refundUrl=SGDataHelper.FormatString(
+//"https://zpayz.cn/api.php?act=refund&pid={0}&key={1}&trade_no={2}&out_trade_no={3}&money={4}", 
+//pid,key,trade_no,orderId,money
+//				);
+
+		String refundUrl=
+"https://zpayz.cn/api.php?act=refund"
+				;
+		if(isTest) {
+		SGDataHelper.getLog().print("-----------refund---------------");
+		SGDataHelper.getLog().print(refundUrl);
+		}
+		HashMap<String,String> body=new HashMap<String,String>();
+		body.put("pid",String.valueOf(pid) );
+		body.put("key",key );
+		body.put("trade_no",trade_no );
+		body.put("out_trade_no",String.valueOf(orderId) );
+		body.put("money",money);
+		SGRequestResult r= SGHttpHelper.HttpPost(refundUrl, 
+//				"{\"out_trade_no\":\""+orderId+"\"}"//这格式可以
+				JSON.toJSONString(body)
+				);
+		if(isTest) {
+		SGDataHelper.getLog().print(r.content);
+		if(null!=r.error) {
+		SGDataHelper.getLog().print(r.error);
+		}
+		}
+		return r;
+	}
+
+public String getNotifyUrl() {
+		return notifyUrl;
+	}
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
+	}
+	public String getReturnUrl() {
+		return returnUrl;
+	}
 	public void setReturnUrl(String returnUrl) {
-		super.returnUrl = returnUrl;
+		this.returnUrl = returnUrl;
 	}
 }

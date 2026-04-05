@@ -101,6 +101,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
    select max(resource_id),count(*) as m from sg_comic limit 1;
    
    select * from sg_comic limit 20;
+   select * from sg_comic where create_date>'2026-04-05 01:16:33' limit 20;
    update sg_comic set create_date='2026-04-03 17:16:33' where resource_id=1
    select * from sg_comic where resource_id>127 limit 100;
    select * from sg_comic where resource_id=423 limit 20;

@@ -1,1 +1,1 @@
-start cmd /k "java -jar target/sellgirlPayWeb-0.0.4.jar"
+start cmd /k "D:\Program Files\Java\jre-1.8\bin\java" -jar ./sellgirlPayWeb-0.0.4.jar

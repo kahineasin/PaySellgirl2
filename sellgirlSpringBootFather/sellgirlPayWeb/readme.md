@@ -63,14 +63,12 @@ application-prod.yml, static/resourceImg/** ...
 ```
 
 ## 确定弹窗
-1. 见 templates/Product/index.html 升级模态框
- 
-2. 二
+1.见 templates/Product/index.html 升级模态框
 
 	```
 	<button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#upgradeModal">⭐ 升级资源站</button>
 	```
-3. 三
+2.
 
 	```
 	<!-- 升级模态框 -->
@@ -97,7 +95,7 @@ application-prod.yml, static/resourceImg/** ...
 	    </div>
 	</div>
 	```
-4. 关闭弹窗 
+3.关闭弹窗 
 
 	```
     setTimeout(() => {

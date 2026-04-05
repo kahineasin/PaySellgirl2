@@ -1,21 +1,24 @@
-//package org.sellgirl.sellgirlPayWeb.controller;
-//
-//
-//import java.io.File;
-//import java.nio.file.Paths;
-//import java.sql.ResultSet;
-//import java.sql.ResultSetMetaData;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.dom4j.Element;
-//import org.dom4j.io.SAXReader;
-//
-//import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
-//
-//import junit.framework.Test;
-//import junit.framework.TestCase;
-//import junit.framework.TestSuite;
+package org.sellgirl.sellgirlPayWeb.controller;
+
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.springframework.util.DigestUtils;
+
+import com.sellgirl.sellgirlPayService.SGDigestUtils;
+import com.sellgirl.sellgirlPayWeb.configuration.PFConfigMapper;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 //import com.sellgirl.sgJavaHelper.IPFJdbc;
 //import com.sellgirl.sgJavaHelper.ISqlExecute;
 //import com.sellgirl.sgJavaHelper.PFDataTable;
@@ -27,39 +30,48 @@
 //import com.sellgirl.sgJavaHelper.PFYmd;
 //import com.sellgirl.sgJavaHelper.SqlCreateTableItem;
 //import com.sellgirl.sgJavaHelper.config.PFDataHelper;
-//
-///**
-// * Unit test for simple App.
-// */
-//@SuppressWarnings("unused")
-//public class PFDataHelperTest 
-//    extends TestCase
-//{
-//    /**
-//     * Create the test case
-//     *
-//     * @param testName name of the test case
-//     */
-//    public PFDataHelperTest( String testName )
-//    {
-//        super( testName );
-//    }
-//
-//    /**
-//     * @return the suite of tests being tested
-//     */
-//    public static Test suite()
-//    {
-//        return new TestSuite( PFDataHelperTest.class );
-//    }
-//
-//    /**
-//     * Rigourous Test :-)
-//     */
-//    public void testApp()
-//    {
-//        assertTrue( true );
-//    }
+
+/**
+ * Unit test for simple App.
+ */
+@SuppressWarnings("unused")
+public class SGDataHelperTest 
+    extends TestCase
+{
+    /**
+     * Create the test case
+     *
+     * @param testName name of the test case
+     */
+    public SGDataHelperTest( String testName )
+    {
+        super( testName );
+    }
+
+    /**
+     * @return the suite of tests being tested
+     */
+    public static Test suite()
+    {
+        return new TestSuite( SGDataHelperTest.class );
+    }
+
+    /**
+     * Rigourous Test :-)
+     */
+    public void testMD5()
+    {
+    	String signStr="aabbcc";
+    	String a=DigestUtils.md5DigestAsHex(signStr.getBytes());
+    	String b=SGDataHelper.getHashMD5ByByte(signStr.getBytes());
+    	String c=SGDigestUtils.md5DigestAsHex(signStr.getBytes());
+    	System.out.println(a);
+    	System.out.println(b);
+    	System.out.println(c);
+        assertTrue( //a.equals(b)&&b.equals(c)
+        		a.equals(c)
+        		);
+    }
 //    /**
 //     * Rigourous Test :-)
 //     */
@@ -275,5 +287,5 @@
 //
 //
 //	}
-//
-//}
+
+}

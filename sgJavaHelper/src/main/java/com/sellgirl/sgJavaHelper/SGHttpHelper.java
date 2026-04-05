@@ -18,354 +18,244 @@ import com.alibaba.fastjson.JSON;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.model.HttpPostOption;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-//import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+// HttpClient 5.x 导入
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 
 /**
+ * HTTP 请求工具类（基于 Apache HttpClient 5.x）
  * 
- * 使用SGHttpHelper类一定要有apache引用:(因为这些类库容易冲突,设置为provided了) 
-        api "org.apache.httpcomponents:httpclient:4.5.13"
-        api "org.apache.httpcomponents:httpmime:4.5.13"
-        
- * @deprecated HttpRequestBase已经过期,下次使用SGHttpHelper顺别把方式改了.注意proguard压缩后.运行时只要类中接触此类都会报错HttpRequestBase不存在,因为当前时provided的
+ * deepseek直接升级了我的SGHttpHelper, 把原本的依赖从org.apache.http升级到了org.apache.hc
  */
-@Deprecated
 public class SGHttpHelper {
-	// #endregion String
-		public static <RequestType extends HttpRequestBase> SGRequestResult HttpRequest(RequestType httpRequest, String url,
-				String body, Map<String, String> headers) {
-			CloseableHttpClient httpClient = HttpClients.createDefault();
-			CloseableHttpResponse response = null;
-//	        URIBuilder uriBuilder = new URIBuilder("http://192.168.0.69:8089/procedure/getInvStock");
-//	        String url="http://127.0.0.1:8089/procedure/seekinvallkc2wmpsjk";
-			// String url="http://localhost:38201/crm/gethyzlchange";
-			URIBuilder uriBuilder;
-			try {
-				uriBuilder = new URIBuilder(url);
-				httpRequest.setURI(uriBuilder.build());
-			} catch (URISyntaxException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 
-			// List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-			// nvps.add(new BasicNameValuePair("inv_no", "ACC"));
-			// uriBuilder.setParameters(nvps);
+    /**
+     * 通用 HTTP 请求方法（支持 GET/POST/PUT/DELETE）
+     * @param httpRequest 具体的请求对象（如 HttpGet, HttpPost 等）
+     * @param url 请求地址
+     * @param body 请求体（JSON 字符串，仅对 POST/PUT 有效）
+     * @param headers 请求头
+     * @return 封装的结果对象
+     */
+    public static <T extends HttpUriRequestBase> SGRequestResult httpRequest(T httpRequest, String url,
+                                                                              String body, Map<String, String> headers) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
 
-			// 根据带参数的URI对象构建GET请求对象
-			// HttpPost httpGet = new HttpPost(uriBuilder.build());
+        try {
+            URIBuilder uriBuilder = new URIBuilder(url);
+            httpRequest.setUri(uriBuilder.build());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            SGRequestResult result = new SGRequestResult();
+            result.setError("Invalid URL: " + e.getMessage());
+            result.refuse = true;
+            return result;
+        }
 
-			if (headers != null) {
-				// for(int i=0;i<headers.length;i++) {
-				// httpRequest.addHeader(headers[i]);
-				// }
+        // 设置请求头
+        if (headers != null) {
+            for (Entry<String, String> header : headers.entrySet()) {
+                httpRequest.setHeader(header.getKey(), header.getValue());
+            }
+        }
 
-				Iterator<Entry<String, String>> headerIterator = headers.entrySet().iterator(); // 循环增加header
-				while (headerIterator.hasNext()) {
-					Entry<String, String> elem = headerIterator.next();
-					httpRequest.addHeader(elem.getKey(), elem.getValue());
-				}
-			}
+        // 设置请求体（仅对有实体的请求，如 POST/PUT）
+        if (httpRequest instanceof HttpPost || httpRequest instanceof HttpPut) {
+            if (!SGDataHelper.StringIsNullOrWhiteSpace(body)) {
+                httpRequest.setHeader("Content-Type", "application/json;charset=" + SGDataHelper.encoding);
+                httpRequest.setEntity(new StringEntity(body, Charset.forName(SGDataHelper.encoding)));
+            }
+        }
 
-			// benjamin todo
+        SGRequestResult result = new SGRequestResult();
 
-			if (httpRequest instanceof HttpEntityEnclosingRequestBase && (!com.sellgirl.sgJavaHelper.config.SGDataHelper.StringIsNullOrWhiteSpace(body))) {
-				HttpEntityEnclosingRequestBase httpPost = ((HttpEntityEnclosingRequestBase) httpRequest);
-				httpPost.setHeader("Content-Type", "application/json;charset=" + com.sellgirl.sgJavaHelper.config.SGDataHelper.encoding);
-				httpPost.setEntity(new StringEntity(body, com.sellgirl.sgJavaHelper.config.SGDataHelper.encoding));
+        try {
+            response = httpClient.execute(httpRequest);
+            result.statusCode = response.getCode();  // 5.x 中直接 getCode()
+            if (SGDataHelper.HTTP_STATUS_OK == result.statusCode) {
+                result.content = EntityUtils.toString(response.getEntity(), Charset.forName(SGDataHelper.encoding));
+            } else {
+                result.error = "Invalid response from API, status code: " + result.statusCode;
+            }
+        } catch (IOException | ParseException e) {
+            result.setError(e.getMessage());
+            result.refuse = true;
+        } finally {
+            try {
+                if (response != null) response.close();
+                if (httpClient != null) httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 
-				/*
-				 * try { List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-				 * JSONObject js = JSON.parseObject(body); for (Map.Entry<String, Object> entry
-				 * : js.entrySet()) { parameters.add(new
-				 * BasicNameValuePair(entry.getKey(),JSON.toJSONString(entry.getValue())));
-				 * //System.out.println(entry.getKey() + ":" + entry.getValue()); }
-				 * UrlEncodedFormEntity encodedFormEntity; encodedFormEntity = new
-				 * UrlEncodedFormEntity( parameters, encoding);
-				 * httpPost.setEntity(encodedFormEntity);//这种方法加的参数格式为: p1=xx&p2=xx&... } catch
-				 * (UnsupportedEncodingException e) { e.printStackTrace(); }
-				 */
-			}
+    // 以下便捷方法保持签名不变，内部调用 httpRequest
 
-//	       if(httpRequest instanceof HttpPost) {    	   
-//	    	   HttpPost HttpPost=(HttpPost)httpRequest;
-//	    	   HttpPost.fi
-//	       }
-//	       
-			SGRequestResult result = new SGRequestResult();
-			// 执行请求
-			try {
-				response = httpClient.execute(httpRequest);
+    public static SGRequestResult HttpDelete(String url, String body, Map<String, String> headers) {
+        return httpRequest(new HttpDelete(url), url, body, headers);
+    }
 
-				result.statusCode = response.getStatusLine().getStatusCode();
-				if (com.sellgirl.sgJavaHelper.config.SGDataHelper.HTTP_STATUS_OK == result.statusCode) {
-					// 获取服务器请求的返回结果，注意此处为了保险要加上编码格式
-					try {
-						result.content = EntityUtils.toString(response.getEntity(),com.sellgirl.sgJavaHelper.config.SGDataHelper.encoding);
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else {
-					result.error = "Invalide response from API" + response.toString();
-				}
-			} catch (ClientProtocolException e) {
-				result.setError(e.getMessage());
-				result.refuse = true;
-				// e.printStackTrace();
-			} catch (IOException e) {
-				result.setError(e.getMessage());
-				result.refuse = true;
-				// e.printStackTrace();
-			}
-			//// 获得响应的实体对象
-			// HttpEntity entity = response.getEntity();
-			// String rStr = EntityUtils.toString(entity,encoding);
-			/// *
-			// * // 使用Apache提供的工具类进行转换成字符串 String entityStr = EntityUtils.toString(entity,
-			// * "UTF-8"); JSONObject jsonObject = JSONObject.parseObject(entityStr);
-			// */
-			//// System.out.println(JSON.toJSONString(entity));
-			//// String r = JSON.toJSONString(entity);
-			return result;
-		}
+    public static SGRequestResult HttpPut(String url, String body, Map<String, String> headers) {
+        return httpRequest(new HttpPut(url), url, body, headers);
+    }
 
-		public static SGRequestResult HttpDelete(String url, String body, Map<String, String> headers) {
-			return HttpRequest(new HttpDelete(), url, body, headers);
-		}
+    public static SGRequestResult HttpGet(String url, String body, Map<String, String> headers) {
+        return httpRequest(new HttpGet(url), url, body, headers);
+    }
 
-		public static SGRequestResult HttpPut(String url, String body, Map<String, String> headers) {
-			return HttpRequest(new HttpPut(), url, body, headers);
-		}
+    public static SGRequestResult HttpPost(String url, String body, Map<String, String> headers) {
+        return httpRequest(new HttpPost(url), url, body, headers);
+    }
 
-		public static SGRequestResult HttpGet(String url, String body, Map<String, String> headers) {
-			return HttpRequest(new HttpGet(), url, body, headers);
-		}
+    public static SGRequestResult HttpDelete(String url, String body) {
+        return HttpDelete(url, body, null);
+    }
 
-		public static SGRequestResult HttpPost(String url, String body, Map<String, String> headers) {
-			return HttpRequest(new HttpPost(), url, body, headers);
-		}
+    public static SGRequestResult HttpPut(String url, String body) {
+        return HttpPut(url, body, null);
+    }
 
-		public static SGRequestResult HttpDelete(String url, String body) {
-			return HttpRequest(new HttpDelete(), url, body, null);
-		}
+    public static SGRequestResult HttpGet(String url, String body) {
+        return HttpGet(url, body, null);
+    }
 
-		public static SGRequestResult HttpPut(String url, String body) {
-			return HttpRequest(new HttpPut(), url, body, null);
-		}
+    public static SGRequestResult HttpPost(String url, String body) {
+        return HttpPost(url, body, null);
+    }
 
-		public static SGRequestResult HttpGet(String url, String body) {
-			return HttpRequest(new HttpGet(), url, body, null);
-		}
+    /**
+     * 文件上传（支持中文）
+     */
+    public static void HttpPostFile(String reportUrl, File file, Map<String, Object> postBody) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        try {
+            HttpPost httpPost = new HttpPost(reportUrl);
 
-		public static SGRequestResult HttpPost(String url, String body) {
-			return HttpRequest(new HttpPost(), url, body, null);
-		}
-		/**
-		 * 文件上传支持中文 注意postBody里的每个参数，在controller里似乎只能用String或String[]等简单类型接收，原因不明
-		 *
-		 * @param reportUrl
-		 * @throws IOException
-		 */
-		public static void HttpPostFile(String reportUrl, File file, // String filepath,
-				Map<String, Object> postBody) {
-			CloseableHttpClient closeableHttpClient = null;
-			CloseableHttpResponse response = null;
-			try {
-				closeableHttpClient = HttpClients.createDefault();
-				HttpPost httpPost = new HttpPost(reportUrl);
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectionRequestTimeout(200000,java.util.concurrent.TimeUnit.MILLISECONDS)
+                    .setResponseTimeout(200000, java.util.concurrent.TimeUnit.MILLISECONDS) // 5.x 使用 setResponseTimeout
+                    .build();
+            httpPost.setConfig(requestConfig);
 
-				RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(200000).setSocketTimeout(200000)
-						.build();
-				httpPost.setConfig(requestConfig);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create()
+                    .setCharset(Charset.forName("UTF-8"))
+                    .setMode(HttpMultipartMode.LEGACY); // 对应旧版的 BROWSER_COMPATIBLE
 
-				// String filename = filepath.split("/")[filepath.split("/").length - 1];
-//	            File file = new File(filepath);
+            if (file != null) {
+                builder.addBinaryBody("file", file, ContentType.create("multipart/form-data", Charset.forName("UTF-8")), file.getName());
+            }
 
-//	            String filename = file.getName(); 
-//	            FileBody fileBody = new FileBody(file, ContentType.create("multipart/form-data", "UTF-8"), filename);
+            for (Entry<String, Object> entry : postBody.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    builder.addTextBody(key, SGDataHelper.ObjectToString(value),
+                            ContentType.create("multipart/form-data", Charset.forName("UTF-8")));
+                } else {
+                    builder.addTextBody(key, JSON.toJSONString(value), ContentType.APPLICATION_JSON);
+                }
+            }
 
-//	            StringBody userIdStringBody = new StringBody(userId, ContentType.create("multipart/form-data", "UTF-8"));
-//	            StringBody systemNameStringBody = new StringBody(systemName, ContentType.create("multipart/form-data", "UTF-8"));
-//	            StringBody reportNameStringBody = new StringBody(filename, ContentType.create("multipart/form-data", "UTF-8"));
+            httpPost.setEntity(builder.build());
+            response = httpClient.execute(httpPost);
+            int statusCode = response.getCode();
+            if (statusCode == 200) {
+                System.out.println("上传成功");
+            } else {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+                    StringBuilder buffer = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null && line.trim().length() > 0) {
+                        buffer.append(line);
+                    }
+                    System.out.println(buffer.toString());
+                }
+                System.out.println("上传失败：" + statusCode);
+            }
+        } catch (Exception ex) {
+            System.out.println("uploadReport发生异常：" + ex);
+        } finally {
+            try {
+                if (response != null) response.close();
+                if (httpClient != null) httpClient.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-//	            HttpEntity httpEntity = MultipartEntityBuilder
-//	                    .create()
-//	                    .setCharset(Charset.forName("UTF-8"))
-//	                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-//	                    .addPart("file", fileBody)
-//	                    .addPart("userId", userIdStringBody)
-//	                    .addPart("systemName", systemNameStringBody)
-//	                    .addPart("reportName", reportNameStringBody)
-//	                    .build();
-//	            MultipartEntityBuilder httpBuilder=MultipartEntityBuilder
-//	                    .create()
-//	                    .setCharset(Charset.forName("UTF-8"))
-//	                    .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-//	                    .addPart("file", fileBody);
+    // 分页请求方法（签名保持不变，内部无需修改）
+    public static <TResponse, TData> Boolean HttpGetPageByPage(Type responseCls, int firstPage,
+                                                               Function<Integer, String> urlAction,
+                                                               Function<TResponse, List<TData>> dataAction,
+                                                               Consumer<List<TData>> dataDoAction,
+                                                               Consumer<TResponse> endAction,
+                                                               Function<TResponse, Boolean> errorAction,
+                                                               String apiName,
+                                                               Consumer<HttpPostOption> postOptionAction) throws Exception {
+        HttpPostOption postOption = new HttpPostOption();
+        if (null != postOptionAction) {
+            postOptionAction.accept(postOption);
+        }
+        String r;
+        List<TData> data;
+        Boolean isEnd = false;
+        int pageNum = firstPage;
 
-				MultipartEntityBuilder httpBuilder = MultipartEntityBuilder.create().setCharset(Charset.forName("UTF-8"))
-						.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        int logMaxLength = 100;
+        java.util.function.Function<String, String> shortLog = a -> a == null ? "" : (a.length() > logMaxLength ? a.substring(0, logMaxLength) : a);
 
-				if (file != null) {
-					String filename = file.getName();
-					FileBody fileBody = new FileBody(file, ContentType.create("multipart/form-data", "UTF-8"), filename);
-					httpBuilder.addPart("file", fileBody);
-				}
+        while (!isEnd) {
+            String url = urlAction.apply(pageNum);
+            SGRequestResult r2 = SGHttpHelper.HttpGet(url, "");
+            if (!r2.success || null == r2.content) {
+                throw new Exception(SGDataHelper.FormatString("{2}接口异常或没有读到数据\r\nurl:{0}\r\n返回信息:{1}\r\n", url,
+                        shortLog.apply(r2.content), apiName));
+            }
+            r = r2.content;
 
-				Iterator<Entry<String, Object>> postBodyIter = postBody.entrySet().iterator();
-				while (postBodyIter.hasNext()) {
-					Entry<String, Object> key = postBodyIter.next();
-					Object value = key.getValue();
-					if (value instanceof String) {
-						httpBuilder.addPart(key.getKey(),
-								new StringBody(com.sellgirl.sgJavaHelper.config.SGDataHelper.ObjectToString(value), ContentType.create("multipart/form-data", "UTF-8")));
-					} else {
-						httpBuilder.addPart(key.getKey(),
-								new StringBody(JSON.toJSONString(value), ContentType.APPLICATION_JSON));
-						// httpBuilder.addTextBody(key.getKey(),JSON.toJSONString(value),
-						// ContentType.APPLICATION_JSON);
-						// httpBuilder.addBinaryBody(key.getKey(), new
-						// StringBody(JSON.toJSONString(value), ContentType.APPLICATION_JSON));
-					}
-				}
+            TResponse res = JSON.parseObject(r, responseCls);
 
-				HttpEntity httpEntity = httpBuilder.build();
-
-				httpPost.setEntity(httpEntity);
-				response = closeableHttpClient.execute(httpPost);
-				HttpEntity responseEntity = response.getEntity();
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode == 200) {
-					System.out.println("上传成功");
-				} else {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
-					StringBuffer buffer = new StringBuffer();
-					String str = "";
-//	                while ((str = reader.readLine()) != null && (str = reader.readLine()).trim().length() > 0) {
-//	                    buffer.append(str);
-//	                }
-					while ((str = reader.readLine()) != null && str.trim().length() > 0) {
-						buffer.append(str);
-					}
-					System.out.println(buffer.toString());
-					System.out.println("上传失败：" + statusCode);
-				}
-				closeableHttpClient.close();
-				if (response != null) {
-					response.close();
-				}
-
-			} catch (Exception ex) {
-				System.out.println("uploadReport发生异常：" + ex);
-			} finally {
-				try {
-					if (closeableHttpClient != null) {
-						closeableHttpClient.close();
-					}
-					if (response != null) {
-						response.close();
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-
-		public static <TResponse, TData> Boolean HttpGetPageByPage(Type responseCls, int firstPage,
-				// Func<TResponse, bool> hasDataAction,
-				Function<Integer, String> urlAction, Function<TResponse, List<TData>> dataAction,
-				Consumer<List<TData>> dataDoAction, Consumer<TResponse> endAction, Function<TResponse, Boolean> errorAction,
-				String apiName,
-				// out TList data,
-				Consumer<HttpPostOption> postOptionAction) throws Exception
-		// where TList : IEnumerable<TData>
-		{
-			HttpPostOption postOption = new HttpPostOption();
-			if (null != postOptionAction) {
-				postOptionAction.accept(postOption);
-			}
-			String r = null;
-			// TList data
-			// data =default(TList);
-			// TList data = default(TList);
-			List<TData> data = null;
-
-			Boolean isEnd = false;
-			int pageNum = firstPage;
-
-			int logMaxLength = 100;
-			Function<String, String> shortLog = a -> {
-				return a == null ? "" : (a.length() > logMaxLength ? a.substring(0, logMaxLength) : a);
-			};
-
-			while (!isEnd) {
-				String url = urlAction.apply(pageNum);
-				SGRequestResult r2 = SGHttpHelper.HttpGet(url, "");
-				if ((!r2.success) || null == r2.content) {
-					throw new Exception(SGDataHelper.FormatString("{2}接口异常或没有读到数据\r\n", "url:{0}\r\n", "返回信息:{1}\r\n", url,
-							shortLog.apply(r2.content), apiName));
-				}
-				r = r2.content;
-//	            if (r == null)
-//	            {
-//	                throw new Exception(PFDataHelper.FormatString(
-	//"{2}接口没有读到数据",
-	//"url:{0}",
-	//"返回信息:{1}",
-	//url, shortLog(r), apiName));
-//	            }
-
-//	            var jsonSerizlizerSetting = new JsonSerializerSettings();
-//	            jsonSerizlizerSetting.Converters.Add(new PFDateTimeConvert());
-//	            var res = JsonConvert.DeserializeObject<TResponse>(r, jsonSerizlizerSetting);
-
-				// TResponse res = JSON.<TResponse>parseObject(r);
-				// TResponse res = JSON.<TResponse>parseObject(r, new
-				// TypeReference<TResponse>(){}) ;//嵌套泛型不支持
-				TResponse res = JSON.<TResponse>parseObject(r, responseCls);
-
-				data = dataAction.apply(res);
-				if (data != null && data.size() > 0) {
-					dataDoAction.accept(data);
-				} else if (pageNum == 1 && postOption.NoDataError) {// 第一页都没数据的话,认为是有异常,进行重试
-					throw new Exception(SGDataHelper.FormatString("{2}接口的第1页没有读到数据\r\n", "url:{0}\r\n", "返回信息:{1}", url,
-							shortLog.apply(r), apiName));
-				} else if (errorAction.apply(res)) {
-					throw new Exception(SGDataHelper.FormatString("{2}接口异常\r\n", "url:{0}\r\n", "返回信息:{1}", url,
-							shortLog.apply(r), apiName));
-				} else {
-					isEnd = true;
-					SGDataHelper.WriteLog(SGDataHelper.FormatString("{2}接口读取数据完成\r\n", "url:{0}\r\n",
-							"最后一次的返回信息(取前{3}字符):{1}", url, shortLog.apply(r), apiName, logMaxLength));
-					endAction.accept(res);
-				}
-
-				pageNum++;
-			}
-			return true;
-		}
+            data = dataAction.apply(res);
+            if (data != null && data.size() > 0) {
+                dataDoAction.accept(data);
+            } else if (pageNum == 1 && postOption.NoDataError) {
+                throw new Exception(SGDataHelper.FormatString("{2}接口的第1页没有读到数据\r\nurl:{0}\r\n返回信息:{1}", url,
+                        shortLog.apply(r), apiName));
+            } else if (errorAction.apply(res)) {
+                throw new Exception(SGDataHelper.FormatString("{2}接口异常\r\nurl:{0}\r\n返回信息:{1}", url,
+                        shortLog.apply(r), apiName));
+            } else {
+                isEnd = true;
+                SGDataHelper.WriteLog(SGDataHelper.FormatString("{2}接口读取数据完成\r\nurl:{0}\r\n最后一次的返回信息(取前{3}字符):{1}",
+                        url, shortLog.apply(r), apiName, logMaxLength));
+                endAction.accept(res);
+            }
+            pageNum++;
+        }
+        return true;
+    }
 }

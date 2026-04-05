@@ -1,13 +1,15 @@
 package com.sellgirl.sellgirlPayWeb.pay.service;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
+import com.sellgirl.sellgirlPayWeb.configuration.jdbc.ShopJdbc;
 import com.sellgirl.sellgirlPayWeb.pay.model.OrderStatus;
-import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
+import com.sellgirl.sellgirlPayService.pay.model.vipOrder;
 import com.sellgirl.sellgirlPayWeb.pay.model.vipOrderCreate;
-import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
+import com.sellgirl.sellgirlPayService.pay.model.PayPlan;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.SGSqlCommandString;
@@ -26,9 +28,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class OrderService {
+public class OrderService  extends com.sellgirl.sellgirlPayService.pay.OrderService{
 
     private  String TAG="OrderService";
+	@Autowired
+	public void setJdbc2(ShopJdbc jdbc) {
+		super.jdbc=jdbc;  //这里把spring注入的ShopJdbc赋值给super的ISGJdbc就行了
+	}
     // 模拟订单存储：key=商户订单号，value=支付状态（0-未支付，1-已支付）
     private final Map<String, Integer> orderMap = new ConcurrentHashMap<>();
 
@@ -123,16 +129,16 @@ public class OrderService {
 		return -1;
 	}
 	
-    public vipOrder GetOnevipOrder(long id)
-    {
-        vipOrder model = null;
-        SGDataTable dt = GetvipOrderById(id);
-        if (dt != null && !dt.IsEmpty())
-        {
-            model = dt.ToList(vipOrder.class,null).get(0);
-        }
-        return model;
-    }
+//    public vipOrder GetOnevipOrder(long id)
+//    {
+//        vipOrder model = null;
+//        SGDataTable dt = GetvipOrderById(id);
+//        if (dt != null && !dt.IsEmpty())
+//        {
+//            model = dt.ToList(vipOrder.class,null).get(0);
+//        }
+//        return model;
+//    }
 
     public OrderStatus GetvipOrderStatusById(long id)
     {

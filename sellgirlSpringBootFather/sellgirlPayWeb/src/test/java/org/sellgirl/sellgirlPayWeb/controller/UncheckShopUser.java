@@ -5,7 +5,7 @@ import org.sellgirl.sellgirlPayWeb.controller.model.JdbcHelperTest;
 import org.sellgirl.sellgirlPayWeb.controller.model.PFConfigTestMapper;
 
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
-import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
+//import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
 import com.sellgirl.sellgirlPayWeb.pay.service.OrderService;
 import com.sellgirl.sellgirlPayWeb.pay.service.ZPayNativeService;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;

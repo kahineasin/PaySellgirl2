@@ -25,6 +25,8 @@ import com.alibaba.fastjson.JSON;
 //import com.perfect99.right.amsweb.BaseReturnInfo;
 
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
+import com.sellgirl.sgJavaHelper.Cache;
+import com.sellgirl.sgJavaHelper.CacheManager;
 import com.sellgirl.sgJavaHelper.HostType;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
@@ -39,6 +41,7 @@ import com.sellgirl.sgJavaHelper.PFJsonDataT;
 import com.sellgirl.sgJavaSpringHelper.PFObject;
 //import com.sellgirl.sgJavaSpringHelper.PFObject;
 import com.sellgirl.sgJavaHelper.SGRef;
+import com.sellgirl.sgJavaHelper.SGYmd;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 
 import io.swagger.annotations.ApiOperation;
@@ -60,7 +63,7 @@ import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
 //import com.sellgirl.sellgirlPayWeb.oAuth.MetabaseUser;
 import com.sellgirl.sellgirlPayWeb.oAuth.model.*;
 import com.sellgirl.sellgirlPayWeb.projHelper.DES_IV;
-import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
+import com.sellgirl.sellgirlPayService.pay.model.PayPlan;
 import com.sellgirl.sellgirlPayWeb.user.model.User;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreate;
 import com.sellgirl.sellgirlPayWeb.user.model.UserCreateModel;
@@ -575,7 +578,7 @@ extends YJQueryController
   	result.setViewName(registerView);
   	return result;
     }
-	private String registerView="Product2/register";
+	private String registerView="Product/register";
 
 	@SGAllowAnonymous
 	@GetMapping(value = { "/logout.html" })
@@ -1000,51 +1003,80 @@ extends YJQueryController
 			hasError=true;			
 			result.addObject("err","该邮箱未注册");
 		}else {
-//			StringBuilder sb=new StringBuilder();
-//			sb.append("<p>以下是你bdhome的账号:</p><ol>");
-//			for(LinkedHashMap<String,Object> i:list) {
-//				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
-//			}
-//			sb.append("</ol>");
-			//boolean b=SGEmailSend.SendMail(new String[] {email}, "找回密码",content);
-			
-			String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","forgerPwdTML.html").toString(), com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System);
-			StringBuilder sb=new StringBuilder();
-			for(LinkedHashMap<String,Object> i:list) {
-				sb.append("<div class=\"info-box\">");
-				sb.append("<div class=\"info-item\">");
-				sb.append("<span class=\"info-label\">账 号：</span>");
-				sb.append("<span class=\"info-value\">"+i.get("user_name")+"</span>");
-				sb.append("</div>");
-				sb.append("<div class=\"info-item\">");
-				sb.append("<span class=\"info-label\">密 码：</span>");
-				sb.append("<span class=\"info-value\">"+i.get("pwd")+"</span>");
-				sb.append("</div>");
-				sb.append("</div>");
-			}
-			SGDate now =SGDate.Now();
-			String content=tpl.replace("{pwd}", sb.toString())
-					.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
-					.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
-			
-//			//参数完全一样,就是失败..session问题?原来是少了依赖,javax.mail connect时需要service
-			boolean b=SGEmailSend.SendMail(new String[] {email}, "忘记密码通知",content);
+//	    	Cache cache=CacheManager.getCacheInfo(email);
+////	    	boolean canSend=true;
+//	    	if(null==cache) {
+//	    		
+//	    	}else {
+//	    		if(cache.isExpired()) {
+//	    			CacheManager.clearOnly(email);
+//	    		}else {
+//	    	        long nowDt = System.currentTimeMillis(); //系统当前的毫秒数 
+//	    	        long cacheDt = cache.getTimeOut(); //缓存内的过期毫秒数 
+//	    			String t=SGDataHelper.GetTimeSpan(cacheDt-nowDt, SGYmd.Minute | SGYmd.Second).toString();
+//	    			result.addObject("err","请在"+t+"后重试");
+//	    			hasError=true;
+////	    			canSend=false;
+//	    		}
+//	    	}
 
-//			SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
-//			SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
-//			SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
-//
-//			String title="测试发邮件20260331_3_"+ SGDate.Now().toString();
-//
-//			String[] emails= new String[]{
-//					//"miuxiaoniao@126.com",
-//					"li@sellgirl.com"
-//					};
-//			boolean b=SGEmailSend.SendMail(emails,
-//					title,  title);
-//			System.out.println("success:"+b);
-			
-			sentEmail=b;
+			SGRef<String> msg=new SGRef<String>(); 
+			if(canSendEmail("forgot",email,msg)) {
+				
+			}else {	    			
+				result.addObject("err",msg.GetValue());
+				hasError=true;
+			}
+			if(!hasError) {
+	//			StringBuilder sb=new StringBuilder();
+	//			sb.append("<p>以下是你bdhome的账号:</p><ol>");
+	//			for(LinkedHashMap<String,Object> i:list) {
+	//				sb.append(SGDataHelper.FormatString("<li>{0}: {1}</li>", i.get("user_name"),i.get("pwd")));
+	//			}
+	//			sb.append("</ol>");
+				//boolean b=SGEmailSend.SendMail(new String[] {email}, "找回密码",content);
+				
+				String tpl=com.sellgirl.sgJavaHelper.config.SGDataHelper.ReadLocalTxt(Paths.get("shop","forgerPwdTML.html").toString(), com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType.System);
+				StringBuilder sb=new StringBuilder();
+				for(LinkedHashMap<String,Object> i:list) {
+					sb.append("<div class=\"info-box\">");
+					sb.append("<div class=\"info-item\">");
+					sb.append("<span class=\"info-label\">账 号：</span>");
+					sb.append("<span class=\"info-value\">"+i.get("user_name")+"</span>");
+					sb.append("</div>");
+					sb.append("<div class=\"info-item\">");
+					sb.append("<span class=\"info-label\">密 码：</span>");
+					sb.append("<span class=\"info-value\">"+i.get("pwd")+"</span>");
+					sb.append("</div>");
+					sb.append("</div>");
+				}
+				SGDate now =SGDate.Now();
+				String content=tpl.replace("{pwd}", sb.toString())
+						.replace("{sysEmail}", SGEmailSend.EMAIL_OWNER_ADDR)
+						.replace("{now}",now.toString(com.sellgirl.sgJavaHelper.config.SGDataHelper.DayFormat) );
+				
+	//			//参数完全一样,就是失败..session问题?原来是少了依赖,javax.mail connect时需要service
+				boolean b=SGEmailSend.SendMail(new String[] {email}, "忘记密码通知",content);
+	
+	//			SGEmailSend.EMAIL_OWNER_ADDR="2557667040@qq.com";
+	//			SGEmailSend.EMAIL_OWNER_ADDR_PASS="ctmglvmrtpuddjaj";
+	//			SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY= HostType.TENCENT2.getProperties();
+	//
+	//			String title="测试发邮件20260331_3_"+ SGDate.Now().toString();
+	//
+	//			String[] emails= new String[]{
+	//					//"miuxiaoniao@126.com",
+	//					"li@sellgirl.com"
+	//					};
+	//			boolean b=SGEmailSend.SendMail(emails,
+	//					title,  title);
+	//			System.out.println("success:"+b);
+				
+				sentEmail=b;
+				if(b) {
+					SGCaching.Set("forgot"+email, true,180);
+				}
+			}
 		}
 		result.addObject("hasError",hasError);
 		result.addObject("sentEmail",sentEmail);
@@ -1104,4 +1136,25 @@ extends YJQueryController
 	  	result.setViewName("Product/change-password");
 	  	return result;
     }
+	public static boolean canSendEmail(String type,String email,SGRef<String> msg) {
+    	Cache cache=CacheManager.getCacheInfo(type+email);
+//    	boolean canSend=true;
+    	if(null==cache) {
+    		return true;
+    	}else {
+    		if(cache.isExpired()) {
+    			CacheManager.clearOnly(email);
+    			return true;
+    		}else {
+    	        long nowDt = System.currentTimeMillis(); //系统当前的毫秒数 
+    	        long cacheDt = cache.getTimeOut(); //缓存内的过期毫秒数 
+    			String t=SGDataHelper.GetTimeSpan(cacheDt-nowDt, SGYmd.Minute | SGYmd.Second).toString();
+    			msg.SetValue("请在"+t+"后重试");
+//    			result.addObject("err","请在"+t+"后重试");
+//    			hasError=true;
+    			return false;
+//    			canSend=false;
+    		}
+    	}
+	}
 }

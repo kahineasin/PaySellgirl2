@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>注册 · 电子书库--deprecated</title>
+    <title>注册 · 电子书库</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap-icons.min.css">
 </head>
@@ -14,15 +14,28 @@
                 <form id="registerForm" action="/AddUser" method="POST" >
                     <div class="mb-3">
                         <label class="form-label">用户名</label>
-                        <input type="text" class="form-control" id="username" required name="username" th:value="${username}" />
+                        <input type="text" class="form-control" id="username" required  name="username" th:value="${username}" />
+                        <div class="form-text">3-20位，只能包含字母、数字、下划线</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">邮箱</label>
+                        <input type="email" class="form-control" id="email" required  name="email"  th:value="${email}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">密码</label>
-                        <input type="password" class="form-control" id="password" required name="password">
+                        <input type="password" class="form-control" id="password" required  name="password"  th:value="${password}" />
+                        <div class="form-text">6-20位，至少包含一个字母和一个数字</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">邮箱验证码</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="verifyCode" placeholder="请输入验证码" required   name="verifyCode">
+                            <button class="btn btn-outline-secondary" type="button" id="sendCodeBtn">发送验证码</button>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">邀请码（选填）</label>
-                        <input type="text" class="form-control" id="inviteCode" placeholder="如有邀请码请填写" name="inviteCode">
+                        <input type="text" class="form-control" id="inviteCode" placeholder="如有邀请码请填写"  name="inviteCode"  th:value="${inviteCode}">
                         <div class="form-text">填写指定邀请码可访问资源站</div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">注册</button>
@@ -30,43 +43,93 @@
                 <div class="mt-3 text-center">
                     <a href="login.html">已有账号？去登录</a>
                 </div>
-                <div id="errorMsg" class="text-danger mt-2 text-center"></div>
+                <div id="errorMsg" class="text-danger mt-2 text-center" th:text="${errorMsg}"></div>
             </div>
         </div>
     </div>
-
-    <!--<script src="/sg/js/jq/jquery-2.1.4.js"></script>-->
+    
+	<script src="/sg/js/jq/jquery-2.1.4.js"></script>
     <script>
-        const SECRET_INVITE_CODE = 'RESOURCE2025';
+        let generatedCode = null;
+
+        function validateUsername(username) {
+            const re = /^[a-zA-Z0-9_]{3,20}$/;
+            return re.test(username);
+        }
+
+        function validatePassword(password) {
+            if (password.length < 6 || password.length > 20) return false;
+            const hasLetter = /[a-zA-Z]/.test(password);
+            const hasDigit = /\d/.test(password);
+            return hasLetter && hasDigit;
+        }
+
+        const sendCodeBtn=document.getElementById('sendCodeBtn');
+        sendCodeBtn.addEventListener('click', function() {
+            sendCodeBtn.disabled = true;
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                alert('请先填写邮箱');
+            	sendCodeBtn.disabled = false;
+                return;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('邮箱格式不正确');
+            	sendCodeBtn.disabled = false;
+                return;
+            }
+            //generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+            //alert(`验证码已发送至 ${email}（演示模式，验证码：${generatedCode}）`);
+            //console.log(`验证码：${generatedCode}`);
+            
+		  $.post("/GenEmailCode",
+		  {
+		    email:email
+		  },
+		  function(data,status){
+		  	if(data.success){
+		    	alert(`验证码已发送至 ${email} (可能在垃圾箱)`);
+		    }else{
+		    	alert(data.msg);
+		    }
+            sendCodeBtn.disabled = false;
+		  })
+		  .success(function() { /*alert("second success");*/ })//grid进入
+		  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
+		  .complete(function(XMLHttpRequest, textStatus){sendCodeBtn.disabled = false;})
+		  ;
+  
+        });
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             //e.preventDefault();
             const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
+            const verifyCode = document.getElementById('verifyCode').value.trim();
             const inviteCode = document.getElementById('inviteCode').value.trim();
-			//alert('aaa');
-			//debugger;
-            if (!username || !password) {
-                document.getElementById('errorMsg').textContent = '用户名和密码不能为空';
-            	e.preventDefault();
+
+            if (!validateUsername(username)) {
+                document.getElementById('errorMsg').textContent = '用户名必须为3-20位字母、数字或下划线';
+                e.preventDefault();
                 return;
             }
-                    
-//  $.post("demo_test_post.asp",
-//  {
-//    username:username,
-//    password:password,
-//    inviteCode:inviteCode
-//  },
-//  function(data,status){
-//    alert("Data: " + data + "\nStatus: " + status);
-//  })
-//  .success(function() { alert("second success"); })//grid进入
-//  .error(function() { alert("error"); alert(JSON.stringify(arguments))})//tree进入
-//  .complete(function(XMLHttpRequest, textStatus){})
-//  ;
-//            	e.preventDefault();
-              
+            if (!validatePassword(password)) {
+                document.getElementById('errorMsg').textContent = '密码必须为6-20位，且包含字母和数字';
+                e.preventDefault();
+                return;
+            }
+            //if (!generatedCode) {
+            //    document.getElementById('errorMsg').textContent = '请先获取验证码';
+            //    e.preventDefault();
+            //    return;
+            //}
+            //if (verifyCode !== generatedCode) {
+            //    document.getElementById('errorMsg').textContent = '验证码错误';
+            //    e.preventDefault();
+            //    return;
+            //}
+
 			return;
 			
             const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -74,13 +137,35 @@
                 document.getElementById('errorMsg').textContent = '用户名已存在';
                 return;
             }
+            if (users.find(u => u.email === email)) {
+                document.getElementById('errorMsg').textContent = '邮箱已被注册';
+                return;
+            }
 
-            const role = (inviteCode === SECRET_INVITE_CODE) ? 'resource' : 'normal';
+            let role = 'normal';
+            if (inviteCode !== '') {
+                if (inviteCode === SECRET_INVITE_CODE) {
+                    role = 'resource';
+                } else {
+                    document.getElementById('errorMsg').textContent = '邀请码错误';
+                    return;
+                }
+            }
 
-            const newUser = { username, password, role, favorites: [] };
+            const newUser = {
+                username,
+                email,
+                password,
+                role,
+                favorites: [],
+                points: 0,
+                lastSignDate: null,
+                consecutiveDays: 0,
+                unlockedResources: [],   // 新增：已解锁资源ID列表
+                unlockedBooks: []
+            };
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
-
             localStorage.setItem('currentUser', JSON.stringify(newUser));
 
             if (role === 'resource') {

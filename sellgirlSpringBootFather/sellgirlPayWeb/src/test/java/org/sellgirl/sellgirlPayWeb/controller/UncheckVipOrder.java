@@ -5,7 +5,7 @@ import org.sellgirl.sellgirlPayWeb.controller.model.JdbcHelperTest;
 import org.sellgirl.sellgirlPayWeb.controller.model.PFConfigTestMapper;
 
 import com.sellgirl.sellgirlPayWeb.configuration.jdbc.JdbcHelper;
-import com.sellgirl.sellgirlPayWeb.pay.model.vipOrder;
+import com.sellgirl.sellgirlPayService.pay.model.vipOrder;
 import com.sellgirl.sellgirlPayWeb.pay.service.OrderService;
 import com.sellgirl.sellgirlPayWeb.pay.service.ZPayNativeService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
@@ -55,11 +55,14 @@ public class UncheckVipOrder  extends TestCase {
     }
 
     public void testGetOrder() {
-    	JdbcHelper.setShop(JdbcHelperTest.GetSgShopJdbc());
-    	OrderService orderService = new OrderService();
-    	vipOrder order=orderService.GetOnevipOrder(25);
+//    	JdbcHelper.setShop(JdbcHelperTest.GetSgShopJdbc());
+//    	OrderService orderService = new OrderService();
+//    	vipOrder order=orderService.GetOnevipOrder(25);
     	ZPayNativeService zPayService=new ZPayNativeService();
-    	zPayService.getOrder(order.getVip_order_id());
+//    	zPayService.getOrder(order.getVip_order_id());
+
+    	zPayService.getOrder(52);
+    	
 //    	UserService service=new UserService();
 //    	SGDate now=SGDate.Now();
 //    	service.updateUserVip(1, true, now, true, now);

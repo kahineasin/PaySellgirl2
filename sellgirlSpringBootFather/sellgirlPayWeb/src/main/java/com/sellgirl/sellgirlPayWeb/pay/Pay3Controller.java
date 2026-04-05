@@ -8,7 +8,7 @@ import com.sellgirl.sellgirlPayWeb.pay.service.OrderService;
 //import com.sellgirl.sellgirlPayWeb.pay.service.WechatPayNativeService;
 import com.sellgirl.sellgirlPayWeb.pay.service.ZPayNativeService;
 import com.sellgirl.sellgirlPayWeb.user.YJQueryController;
-import com.sellgirl.sellgirlPayWeb.user.model.PayPlan;
+import com.sellgirl.sellgirlPayService.pay.model.PayPlan;
 import com.sellgirl.sgJavaHelper.SGAllowAnonymous;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGHttpHelper;
