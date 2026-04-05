@@ -4,13 +4,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.alibaba.fastjson.JSON;
+import com.sellgirl.sgJavaHelper.config.SGDataHelper;
+import com.sellgirl.sgJavaHelper.model.HttpPostOption;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -39,7 +46,10 @@ import org.apache.http.util.EntityUtils;
  * 使用SGHttpHelper类一定要有apache引用:(因为这些类库容易冲突,设置为provided了) 
         api "org.apache.httpcomponents:httpclient:4.5.13"
         api "org.apache.httpcomponents:httpmime:4.5.13"
+        
+ * @deprecated HttpRequestBase已经过期,下次使用SGHttpHelper顺别把方式改了.注意proguard压缩后.运行时只要类中接触此类都会报错HttpRequestBase不存在,因为当前时provided的
  */
+@Deprecated
 public class SGHttpHelper {
 	// #endregion String
 		public static <RequestType extends HttpRequestBase> SGRequestResult HttpRequest(RequestType httpRequest, String url,
@@ -285,4 +295,77 @@ public class SGHttpHelper {
 			}
 		}
 
+		public static <TResponse, TData> Boolean HttpGetPageByPage(Type responseCls, int firstPage,
+				// Func<TResponse, bool> hasDataAction,
+				Function<Integer, String> urlAction, Function<TResponse, List<TData>> dataAction,
+				Consumer<List<TData>> dataDoAction, Consumer<TResponse> endAction, Function<TResponse, Boolean> errorAction,
+				String apiName,
+				// out TList data,
+				Consumer<HttpPostOption> postOptionAction) throws Exception
+		// where TList : IEnumerable<TData>
+		{
+			HttpPostOption postOption = new HttpPostOption();
+			if (null != postOptionAction) {
+				postOptionAction.accept(postOption);
+			}
+			String r = null;
+			// TList data
+			// data =default(TList);
+			// TList data = default(TList);
+			List<TData> data = null;
+
+			Boolean isEnd = false;
+			int pageNum = firstPage;
+
+			int logMaxLength = 100;
+			Function<String, String> shortLog = a -> {
+				return a == null ? "" : (a.length() > logMaxLength ? a.substring(0, logMaxLength) : a);
+			};
+
+			while (!isEnd) {
+				String url = urlAction.apply(pageNum);
+				SGRequestResult r2 = SGHttpHelper.HttpGet(url, "");
+				if ((!r2.success) || null == r2.content) {
+					throw new Exception(SGDataHelper.FormatString("{2}接口异常或没有读到数据\r\n", "url:{0}\r\n", "返回信息:{1}\r\n", url,
+							shortLog.apply(r2.content), apiName));
+				}
+				r = r2.content;
+//	            if (r == null)
+//	            {
+//	                throw new Exception(PFDataHelper.FormatString(
+	//"{2}接口没有读到数据",
+	//"url:{0}",
+	//"返回信息:{1}",
+	//url, shortLog(r), apiName));
+//	            }
+
+//	            var jsonSerizlizerSetting = new JsonSerializerSettings();
+//	            jsonSerizlizerSetting.Converters.Add(new PFDateTimeConvert());
+//	            var res = JsonConvert.DeserializeObject<TResponse>(r, jsonSerizlizerSetting);
+
+				// TResponse res = JSON.<TResponse>parseObject(r);
+				// TResponse res = JSON.<TResponse>parseObject(r, new
+				// TypeReference<TResponse>(){}) ;//嵌套泛型不支持
+				TResponse res = JSON.<TResponse>parseObject(r, responseCls);
+
+				data = dataAction.apply(res);
+				if (data != null && data.size() > 0) {
+					dataDoAction.accept(data);
+				} else if (pageNum == 1 && postOption.NoDataError) {// 第一页都没数据的话,认为是有异常,进行重试
+					throw new Exception(SGDataHelper.FormatString("{2}接口的第1页没有读到数据\r\n", "url:{0}\r\n", "返回信息:{1}", url,
+							shortLog.apply(r), apiName));
+				} else if (errorAction.apply(res)) {
+					throw new Exception(SGDataHelper.FormatString("{2}接口异常\r\n", "url:{0}\r\n", "返回信息:{1}", url,
+							shortLog.apply(r), apiName));
+				} else {
+					isEnd = true;
+					SGDataHelper.WriteLog(SGDataHelper.FormatString("{2}接口读取数据完成\r\n", "url:{0}\r\n",
+							"最后一次的返回信息(取前{3}字符):{1}", url, shortLog.apply(r), apiName, logMaxLength));
+					endAction.accept(res);
+				}
+
+				pageNum++;
+			}
+			return true;
+		}
 }

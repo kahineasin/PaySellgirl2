@@ -14,7 +14,6 @@ import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGDataTableFieldValidModel;
 import com.sellgirl.sgJavaHelper.SGFunc;
 import com.sellgirl.sgJavaHelper.PFSqlCommandTimeoutSecond;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 public class SGSqlTransferItem extends DirectNode implements ISGSqlTransferItem, Cloneable {
@@ -26,8 +25,8 @@ public class SGSqlTransferItem extends DirectNode implements ISGSqlTransferItem,
 
 	public ISGJdbc SrcJdbc;
 	public ISGJdbc DstJdbc;
-	public PFSqlType SrcSqlType = PFSqlType.SqlServer;
-	public PFSqlType DstSqlType = PFSqlType.SqlServer;
+	public SGSqlType SrcSqlType = SGSqlType.SqlServer;
+	public SGSqlType DstSqlType = SGSqlType.SqlServer;
 
 	public String SrcSql = null;
 

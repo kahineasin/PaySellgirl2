@@ -64,6 +64,7 @@ public class SGLog implements ISGLog{
 	@Override
 	public void printException(Throwable e, String tag) {
 		if(null==tag) {
+			e.printStackTrace();
 			System.err.println(SGDataHelper.getErrorFullString(e));
 		}else {
 			System.err.println(tag+"\r\n"+SGDataHelper.getErrorFullString(e));

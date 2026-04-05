@@ -4395,7 +4395,7 @@ public class Uncheck001 extends TestCase {
 		try {
 			Type apiResultCls=(new TypeReference<HealthOrdersApiResult<JSONObject>>(){}).getType();
 			//if (!PFDataHelper.<SuccessApiResult<HealthOrdersApiResult<T>>, T>HttpGetPageByPage(
-			if (!SGDataHelper.<HealthOrdersApiResult<T>, T>HttpGetPageByPage(
+			if (!SGHttpHelper.<HealthOrdersApiResult<T>, T>HttpGetPageByPage(
 					apiResultCls,
 					1,
 //			        pageNum -> PFDataHelper.FormatString("{0}/mall-rest/perfectdatasync/{4}?pageNum={1}&pageSize={2}&month={3}", _healthBaseUrl, pageNum, _healthPageSize, cmonth,url),

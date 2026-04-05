@@ -1,7 +1,6 @@
 package com.sellgirl.sgJavaHelper.sql;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 import java.util.HashMap;
@@ -60,7 +59,7 @@ public abstract class PFJdbcBase implements ISGJdbc {
     
 	public PFJdbcBase() {}
 	public PFJdbcBase(String sqlType, String host, int port, String db, String username, String password, Map<String,String> urlParam) {
-		PFSqlType sqlTypeEnum=StringToSqlType(sqlType);
+		SGSqlType sqlTypeEnum=StringToSqlType(sqlType);
 //		if(PFSqlType.MySql==sqlTypeEnum||PFSqlType.Tidb==sqlTypeEnum) {
 //			driverClassName="com.mysql.jdbc.Driver";
 //			Map<String,String> urlParamDef=new HashMap<>();
@@ -130,40 +129,40 @@ public abstract class PFJdbcBase implements ISGJdbc {
 	public void setSqlType(String sqlType) {
 		this.sqlType = sqlType;
 	}
-	public PFSqlType GetSqlType() {
+	public SGSqlType GetSqlType() {
     	if(getDriverClassName().equals("ru.yandex.clickhouse.ClickHouseDriver")
 				||"com.github.housepower.jdbc.ClickHouseDriver".equals(getDriverClassName())) {
             // 连接数据库
-    		return PFSqlType.ClickHouse;
+    		return SGSqlType.ClickHouse;
     	}
     	if(getDriverClassName().equals("net.sourceforge.jtds.jdbc.Driver")||"com.microsoft.sqlserver.jdbc.SQLServerDriver".equals(driverClassName)) {
             // 连接数据库
-    		return PFSqlType.SqlServer;
+    		return SGSqlType.SqlServer;
     	}
     	if(getDriverClassName().equals("com.mysql.jdbc.Driver")
     			||getDriverClassName().equals("com.mysql.cj.jdbc.Driver")) {
             // 连接数据库
     		if(getSqlType()!=null&&(!"".equals(getSqlType()))) {
-    			return PFSqlType.valueOf(getSqlType());
+    			return SGSqlType.valueOf(getSqlType());
     		}
-    		return PFSqlType.MySql;
+    		return SGSqlType.MySql;
     	}
-    	return PFSqlType.MySql;
+    	return SGSqlType.MySql;
 	}
-	public static  PFSqlType StringToSqlType(String sqlType) {
+	public static  SGSqlType StringToSqlType(String sqlType) {
 		sqlType=sqlType.toLowerCase();
 		if("mysql".equals(sqlType)) {
-			return PFSqlType.MySql;
+			return SGSqlType.MySql;
 		}else if("sqlserver".equals(sqlType)) {
-			return PFSqlType.SqlServer;
+			return SGSqlType.SqlServer;
 		}else if("clickhouse".equals(sqlType)) {
-			return PFSqlType.ClickHouse;
+			return SGSqlType.ClickHouse;
 		}else if("tidb".equals(sqlType)) {
-			return PFSqlType.Tidb;
+			return SGSqlType.Tidb;
 		}else if("hive".equals(sqlType)) {
-			return PFSqlType.Hive;
+			return SGSqlType.Hive;
 		}
-		return PFSqlType.MySql;
+		return SGSqlType.MySql;
 	}
 	public static  boolean StringIsSqlType(String sqlType) {
 		sqlType=sqlType.toLowerCase();

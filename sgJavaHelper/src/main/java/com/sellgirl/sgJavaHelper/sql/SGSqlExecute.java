@@ -28,7 +28,6 @@ import com.sellgirl.sgJavaHelper.SGSqlCommandString;
 import com.sellgirl.sgJavaHelper.PFSqlCommandTimeoutSecond;
 import com.sellgirl.sgJavaHelper.SGSqlFieldInfo;
 import com.sellgirl.sgJavaHelper.SGSqlFieldTypeEnum;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
@@ -89,13 +88,13 @@ public class SGSqlExecute extends SGSqlExecuteBase implements ISqlExecute {
 
 
 	public static ISqlExecute Init(ISGJdbc jdbc) throws Exception {
-		if (jdbc.GetSqlType() == PFSqlType.ClickHouse) {
+		if (jdbc.GetSqlType() == SGSqlType.ClickHouse) {
 			return SGDataHelper.GetConfigMapper().GetClickHouseSqlExecute(jdbc);
 			// return new PFClickHouseSqlExecute(jdbc);//如果项目没有使用ClickHouse,可以注释这句
 			// return GetClickHouseExecute(jdbc);
-		} else if (PFSqlType.MySql == jdbc.GetSqlType()) {
+		} else if (SGSqlType.MySql == jdbc.GetSqlType()) {
 			return new SGMySqlExecute(jdbc);
-		} else if (PFSqlType.Tidb == jdbc.GetSqlType()) {
+		} else if (SGSqlType.Tidb == jdbc.GetSqlType()) {
 			return new PFTidbSqlExecute(jdbc);
 		} else {
 			return new SGSqlExecute(jdbc);

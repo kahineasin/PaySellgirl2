@@ -45,7 +45,6 @@ import com.sellgirl.sgJavaHelper.PFSqlCommandTimeoutSecond;
 import com.sellgirl.sgJavaHelper.SGSqlFieldInfo;
 import com.sellgirl.sgJavaHelper.SGSqlFieldTypeEnum;
 import com.sellgirl.sgJavaHelper.PFSqlParameter;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.exception.PFSqlConnOpenException;
@@ -369,7 +368,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         // throw new Exception("Not Declare getConnection()");
         try {
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-            if (PFSqlType.MySql == jdbc.GetSqlType() || PFSqlType.Tidb == jdbc.GetSqlType()) {
+            if (SGSqlType.MySql == jdbc.GetSqlType() || SGSqlType.Tidb == jdbc.GetSqlType()) {
 //				// if (jdbc.getDriverVersion() != null) {
 //				if (!PFDataHelper.StringIsNullOrWhiteSpace(jdbc.getDriverVersion())) {
 //					MycatMulitJdbcVersionTest.dynamicLoadJdbcByVersion(jdbc.getDriverVersion(),
@@ -380,7 +379,7 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
 //				// Class.forName(jdbc.getDriverClassName());
 //				return DriverManager.getConnection(jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
                 return PFSqlConnHelper.dynamicGetConnByVersion(jdbc);
-            } else if (PFSqlType.SqlServer == jdbc.GetSqlType()) {
+            } else if (SGSqlType.SqlServer == jdbc.GetSqlType()) {
 //				MycatMulitJdbcVersionTest.dynamicLoadSqlServerJdbcByVersion(jdbc.getDriverVersion(),
 //						jdbc.getDriverClassName());
 //				return DriverManager.getConnection(jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
@@ -413,8 +412,8 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         // throw new Exception("Not Declare getConnection()");
         try {
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-            if (_jdbc.GetSqlType() == PFSqlType.MySql || _jdbc.GetSqlType() == PFSqlType.ClickHouse
-                    || PFSqlType.Tidb == _jdbc.GetSqlType()) {
+            if (_jdbc.GetSqlType() == SGSqlType.MySql || _jdbc.GetSqlType() == SGSqlType.ClickHouse
+                    || SGSqlType.Tidb == _jdbc.GetSqlType()) {
                 return new PFMySqlWhereCollection();
             } else {
                 return new SGSqlWhereCollection();
@@ -431,8 +430,8 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         try {
             SGSqlInsertCollection r = null;
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-            if (_jdbc.GetSqlType() == PFSqlType.MySql || _jdbc.GetSqlType() == PFSqlType.ClickHouse
-                    || PFSqlType.Tidb == _jdbc.GetSqlType()) {
+            if (_jdbc.GetSqlType() == SGSqlType.MySql || _jdbc.GetSqlType() == SGSqlType.ClickHouse
+                    || SGSqlType.Tidb == _jdbc.GetSqlType()) {
                 r = new PFMySqlInsertCollection();
             } else {
                 r = new SGSqlInsertCollection();
@@ -485,8 +484,8 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
         try {
             SGSqlUpdateCollection r = null;
             // 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-            if (_jdbc.GetSqlType() == PFSqlType.MySql || _jdbc.GetSqlType() == PFSqlType.ClickHouse
-                    || PFSqlType.Tidb == _jdbc.GetSqlType()) {
+            if (_jdbc.GetSqlType() == SGSqlType.MySql || _jdbc.GetSqlType() == SGSqlType.ClickHouse
+                    || SGSqlType.Tidb == _jdbc.GetSqlType()) {
                 r = new PFMySqlUpdateCollection();
             } else {
                 r = new SGSqlUpdateCollection();
@@ -2257,11 +2256,11 @@ public abstract class SGSqlExecuteBase implements ISqlExecute {
                         };
                     }
                     if ( // beforeInsertAction==null&&
-                            transferItem.DstJdbc.GetSqlType().equals(PFSqlType.SqlServer) // sqlserver要用bulk才会快
-                                    || transferItem.DstJdbc.GetSqlType().equals(PFSqlType.MySql) // 阿辉那边的mysql库如cloud.perfect99.com_10129_leGe_prod_merge_slave
+                            transferItem.DstJdbc.GetSqlType().equals(SGSqlType.SqlServer) // sqlserver要用bulk才会快
+                                    || transferItem.DstJdbc.GetSqlType().equals(SGSqlType.MySql) // 阿辉那边的mysql库如cloud.perfect99.com_10129_leGe_prod_merge_slave
                                     // 使用bulk方式也非常慢
-                                    || PFSqlType.Tidb == transferItem.DstJdbc.GetSqlType() // tidb好像用insert语句更快,先看看为什么会报错,再注释掉
-                                    || PFSqlType.ClickHouse.equals(transferItem.DstJdbc.GetSqlType())) {
+                                    || SGSqlType.Tidb == transferItem.DstJdbc.GetSqlType() // tidb好像用insert语句更快,先看看为什么会报错,再注释掉
+                                    || SGSqlType.ClickHouse.equals(transferItem.DstJdbc.GetSqlType())) {
                         b = HugeBulkReader(insert, dr, dstTableName, beforeInsertAction2, (already) -> {
                             arr[0] = already;
                             if (alreadyAction != null) {

@@ -3,12 +3,14 @@ package com.sellgirl.sellgirlPayService.product.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.sellgirl.sgJavaHelper.ISGUnProGuard;
 import com.sellgirl.sgJavaHelper.SGDate;
 
 /**
 * 资源
 */
-public class resourceCreate {
+public class resourceCreate implements ISGUnProGuard{
         /**
         * resource_id
          */

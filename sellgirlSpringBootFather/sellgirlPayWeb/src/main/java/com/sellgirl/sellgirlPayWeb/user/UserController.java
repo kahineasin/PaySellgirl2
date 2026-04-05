@@ -975,7 +975,7 @@ extends YJQueryController
   	return result;
     }
 	//---------------------v2---------------------
-
+	@SGAllowAnonymous
 	@GetMapping(value = { "/forgot-password.html" })
     public ModelAndView ForgotPassword()
     {
@@ -988,6 +988,7 @@ extends YJQueryController
   	return result;
     }
 
+	@SGAllowAnonymous
 	@PostMapping(value = { "/PostForgotPassword" })
     public ModelAndView PostForgotPassword(String email)
     {

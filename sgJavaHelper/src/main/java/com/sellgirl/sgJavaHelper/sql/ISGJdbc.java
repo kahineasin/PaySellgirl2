@@ -2,8 +2,6 @@ package com.sellgirl.sgJavaHelper.sql;
 
 import java.io.Serializable;
 
-import com.sellgirl.sgJavaHelper.PFSqlType;
-
 public interface ISGJdbc extends Serializable{
 
 	/**
@@ -26,7 +24,7 @@ public interface ISGJdbc extends Serializable{
 
 	void setPassword(String password);
 
-	PFSqlType GetSqlType();
+	SGSqlType GetSqlType();
 
 	/**
 	 * 如果除mysql外的数据库也要区分片,考虑共用此属性

@@ -15,14 +15,13 @@ import com.sellgirl.sgJavaHelper.PFDataColumn;
 import com.sellgirl.sgJavaHelper.PFDataRow;
 import com.sellgirl.sgJavaHelper.SGFunc;
 import com.sellgirl.sgJavaHelper.SGSqlFieldTypeEnum;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlUpdateItem> {
     /**
      * 便于提示一些tidb等兼容性的异常内容(此属性在SqlExecute.getInsertCollection时设置
      */
-    private PFSqlType sqlType = PFSqlType.MySql;
+    private SGSqlType sqlType = SGSqlType.MySql;
     // protected abstract PFSqlType sqlType();
     /**
      *
@@ -51,7 +50,7 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
     public BaseSqlUpdateCollection() {
     }
 
-    public void setSqlType(PFSqlType sqlType) {
+    public void setSqlType(SGSqlType sqlType) {
         this.sqlType = sqlType;
     }
 
@@ -491,7 +490,7 @@ public abstract class BaseSqlUpdateCollection extends LinkedHashMap<String, SqlU
                         // }
                     }
                 } catch (Exception e) {
-                    if (PFSqlType.Tidb == sqlType
+                    if (SGSqlType.Tidb == sqlType
                             && "java.sql.SQLException: Invalid length (10) for type TIMESTAMP".equals(e.toString())) {
                         SGDataHelper.WriteError(new Throwable(), new Exception(SGDataHelper.FormatString(
                                 "UpdateByDataReaderAutoConvert[{0}]报错,原因是不支持 date_add产生的10位Timestamp(如date_add(STR_TO_DATE('2021.10.01','%Y.%m.%d'), INTERVAL -1 year))",

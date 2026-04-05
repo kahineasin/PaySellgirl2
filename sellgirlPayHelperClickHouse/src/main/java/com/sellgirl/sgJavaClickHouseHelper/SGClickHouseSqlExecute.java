@@ -69,7 +69,7 @@ public class SGClickHouseSqlExecute extends SGSqlExecuteBase implements ISqlExec
 	public Connection getConnection(ISGJdbc jdbc) throws PFSqlConnOpenException {
 //		try {
 		// 这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-		if (jdbc.GetSqlType() == PFSqlType.ClickHouse) {
+		if (jdbc.GetSqlType() == SGSqlType.ClickHouse) {
 			return getClickHouseConnection(jdbc);
 		} else {
 			return super.getConnection(jdbc);

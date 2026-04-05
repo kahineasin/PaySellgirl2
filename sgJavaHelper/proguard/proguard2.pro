@@ -21,3 +21,5 @@
 -keep class com.sellgirl.sgJavaHelper.file.SGFileSplit {public *;}
 -keep class com.sellgirl.sgJavaHelper.file.SGFileMerge {public *;}
 -keep class com.sellgirl.sgJavaHelper.file.SGDirectorySplit {public *;}
+-keep class com.sellgirl.sgJavaHelper.sql.SGJdbc {public *;}
+-keep enum com.sellgirl.sgJavaHelper.sql.SGSqlType{*;}

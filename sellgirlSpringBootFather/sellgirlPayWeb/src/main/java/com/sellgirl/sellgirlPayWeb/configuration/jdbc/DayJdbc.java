@@ -3,8 +3,8 @@ package com.sellgirl.sellgirlPayWeb.configuration.jdbc;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.sql.PFJdbcBase;
+import com.sellgirl.sgJavaHelper.sql.SGSqlType;
 
 @Component
 public class DayJdbc extends PFJdbcBase {
@@ -63,7 +63,7 @@ public class DayJdbc extends PFJdbcBase {
     }
 
 	@Override
-	public PFSqlType GetSqlType() {
+	public SGSqlType GetSqlType() {
 		// TODO Auto-generated method stub
 		return null;
 	}

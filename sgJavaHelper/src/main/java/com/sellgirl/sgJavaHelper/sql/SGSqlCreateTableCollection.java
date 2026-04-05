@@ -9,7 +9,6 @@ import com.sellgirl.sgJavaHelper.PFModelConfig;
 import com.sellgirl.sgJavaHelper.SGSqlCommandString;
 import com.sellgirl.sgJavaHelper.SGSqlFieldInfo;
 import com.sellgirl.sgJavaHelper.SGSqlFieldTypeEnum;
-import com.sellgirl.sgJavaHelper.PFSqlType;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 
@@ -62,11 +61,11 @@ public class SGSqlCreateTableCollection extends ArrayList<SqlCreateTableItem> {
     public static SGSqlCreateTableCollection Init(ISGJdbc jdbc) {
 		try {
 			//这里不判断ClickHouse了，因为这样如果项目没引用，也可以正常使用PFSqlExecute
-			PFSqlType sqlType=jdbc.GetSqlType();
-	    	if(sqlType==PFSqlType.ClickHouse) {
+			SGSqlType sqlType=jdbc.GetSqlType();
+	    	if(sqlType==SGSqlType.ClickHouse) {
 				//	Class.forName(jdbc.getDriverClassName());
 	            return new PFClickHouseSqlCreateTableCollection();
-	    	}else if(sqlType==PFSqlType.MySql||sqlType==PFSqlType.Tidb){
+	    	}else if(sqlType==SGSqlType.MySql||sqlType==SGSqlType.Tidb){
 	    		return new PFMySqlCreateTableCollection();
 	    	}else {
 	    		return new SGSqlCreateTableCollection();

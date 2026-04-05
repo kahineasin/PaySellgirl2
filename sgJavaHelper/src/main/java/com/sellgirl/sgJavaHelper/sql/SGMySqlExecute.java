@@ -759,7 +759,7 @@ public class SGMySqlExecute extends SGSqlExecuteBase {// PFSqlExecute {
 
         UpToCommandTimeOut(PFSqlCommandTimeoutSecond.NormalTransfer());
 
-        if (PFSqlType.Tidb == _jdbc.GetSqlType() && null == connConfigSettingSql) {
+        if (SGSqlType.Tidb == _jdbc.GetSqlType() && null == connConfigSettingSql) {
             connConfigSettingSql = new SGSqlCommandString("set tidb_batch_insert = 1", "set tidb_batch_delete = 1",
                     // "update mysql.tidb set variable_value='24h' where
                     // variable_name='tikv_gc_life_time'",
