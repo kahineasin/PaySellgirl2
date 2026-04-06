@@ -29,7 +29,11 @@ com.sellgirl.sellgirlPayWeb.shop
 5. cloudflare加速
 6. resource-search.html 页面搜索中文后, 如果因为登录失效跳到登录页, 之后回来url变为xxx?q=??
    看看怎么处理好
-7. 
+7. webp图片生成缩略图报错,计算不了width
+   sgJavaHelper unitTest org.sellgirlPayHelperNotSpring.UncheckImg
+8. cli测试支付接口
+9. 做aiAgent,语音操作cli,识别内鬼,操作图片...之类
+10. 要不要统计resource-detail?id=x的访问次数,记录喜好
 
 ## 测试地址
 

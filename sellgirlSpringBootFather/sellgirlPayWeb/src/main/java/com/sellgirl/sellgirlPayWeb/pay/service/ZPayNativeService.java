@@ -313,6 +313,69 @@ pid,key,orderId
 		}
 		return r.success;
 	}
+//
+//	/**
+//	 * refund 方法提示订单不存在 试试什么问题
+//	 * @param orderId
+//	 * @param trade_no
+//	 * @param money
+//	 * @return
+//	 */
+//	public SGRequestResult refund3(long orderId,String trade_no,String money) {
+////		String refundUrl=SGDataHelper.FormatString(
+////"https://zpayz.cn/api.php?act=refund&pid={0}&key={1}&trade_no={2}&out_trade_no={3}&money={4}", 
+////pid,key,trade_no,orderId,money
+////				);
+//
+//		//方法1 订单不存在
+////		String refundUrl=
+////"https://zpayz.cn/api.php?act=refund"
+////				;
+////		HashMap<String,String> body=new HashMap<String,String>();
+////		body.put("pid",String.valueOf(pid) );
+////		body.put("key",key );
+////		body.put("trade_no",trade_no );
+////		body.put("out_trade_no",String.valueOf(orderId) );
+////		body.put("money",money);
+//
+////		//方法2{"code":0,"msg":"out_trade_no和trade_no不可同时为空！"}
+////		String refundUrl=SGDataHelper.FormatString(
+////"https://zpayz.cn/api.php?act=refund&pid={0}&key={1}&out_trade_no={2}&money={3}", 
+////pid,key,orderId,money
+////				);
+//
+//		//方法3
+//		String refundUrl=SGDataHelper.FormatString(
+//"https://zpayz.cn/api.php?act=refund&pid={0}&key={1}&out_trade_no={2}&money={3}", 
+//pid,key,orderId,money
+//				);
+//
+//		HashMap<String,String> bodyObj=new HashMap<String,String>();
+//		bodyObj.put("pid",String.valueOf(pid) );
+//		bodyObj.put("key",key );
+////		bodyObj.put("trade_no",trade_no );
+//		bodyObj.put("out_trade_no",String.valueOf(orderId) );
+////		body.put("money",money);
+//		String body=JSON.toJSONString(bodyObj);
+//		if(isTest) {
+//		SGDataHelper.getLog().print("-----------refund---------------");
+//		SGDataHelper.getLog().print(refundUrl);
+//		SGDataHelper.getLog().print("-----------refund body---------------");
+//		SGDataHelper.getLog().print(body);
+//		}
+//		SGRequestResult r= SGHttpHelper.HttpPost(refundUrl, 
+////				"{\"out_trade_no\":\""+orderId+"\"}"//这格式可以
+//				body
+//				);
+//		if(isTest) {
+//		SGDataHelper.getLog().print(r.content);
+//		if(null!=r.error) {
+//		SGDataHelper.getLog().print(r.error);
+//		}
+//		}
+//		return r;
+//	}
+
 //	/**
 //	 * 退款
 //	 * https://zpayz.cn/api.php?act=refund

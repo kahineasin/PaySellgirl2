@@ -11,12 +11,15 @@ import com.sellgirl.sellgirlPayWeb.pay.service.ZPayNativeService;
 import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 import com.sellgirl.sgJavaHelper.SGDate;
 import com.sellgirl.sgJavaHelper.SGRef;
+import com.sellgirl.sgJavaHelper.SGRequestResult;
 import com.sellgirl.sgJavaHelper.config.PFAppConfig;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 import com.sellgirl.sgJavaHelper.sql.ISGJdbc;
 import com.sellgirl.sgJavaHelper.sql.ISqlExecute;
 import com.sellgirl.sgJavaHelper.sql.MycatMulitJdbcVersionTest;
 import com.sellgirl.sgJavaHelper.sql.SGSqlExecute;
+
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
 import java.math.BigDecimal;
 import java.sql.DriverManager;
@@ -44,11 +47,15 @@ public class UncheckVipOrder  extends TestCase {
      * 退款
      */
     public void testRefund() {
-    	JdbcHelper.setShop(JdbcHelperTest.GetSgShopJdbc());
+    	JdbcHelper.setShop(JdbcHelperTest.GetSgShop2Jdbc());
     	OrderService orderService = new OrderService();
-    	vipOrder order=orderService.GetOnevipOrder(25);
+    	vipOrder order=orderService.GetOnevipOrder(56);
     	ZPayNativeService zPayService=new ZPayNativeService();
-    	zPayService.refund(order.getVip_order_id(), order.getOrder_no(), order.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    	//failed
+//    	zPayService.refund(order.getVip_order_id(), order.getOrder_no(), order.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    	SGRequestResult r=zPayService.refund3(order.getVip_order_id(), order.getOrder_no(), order.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    	System.out.println("----------------content------------------");
+    	System.out.println(r.content);
 //    	UserService service=new UserService();
 //    	SGDate now=SGDate.Now();
 //    	service.updateUserVip(1, true, now, true, now);
@@ -61,7 +68,7 @@ public class UncheckVipOrder  extends TestCase {
     	ZPayNativeService zPayService=new ZPayNativeService();
 //    	zPayService.getOrder(order.getVip_order_id());
 
-    	zPayService.getOrder(52);
+    	zPayService.getOrder(56);
     	
 //    	UserService service=new UserService();
 //    	SGDate now=SGDate.Now();

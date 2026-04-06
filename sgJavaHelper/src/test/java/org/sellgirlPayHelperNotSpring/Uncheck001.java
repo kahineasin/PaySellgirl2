@@ -3024,28 +3024,28 @@ public class Uncheck001 extends TestCase {
 //	private static String sashaBeingTiedToTheCrossImgPath = "D:\\\\picture\\ps\\princessSashaBeingTiedToTheCross\\princessSashaBeingTiedToTheCross_byBenjamin.jpg";
 	private static String sashaBeingTiedToTheCrossImgPath = "D:\\\\cache\\2\\sashathumbnail_w2000_3.jpg";
 
-	public void testBackgroundImg() {
-		try {
-			int backWidth = 3840; // 1920;
-			int backHeight = 2160;// 1080;
-
-			File infile = new File(sashaImgPath);
-			Image image = ImageIO.read(infile);
-//		int backWidth = w;
-//		int backHeight = h;
-
-			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image, null,
-					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
-			File file = new File(tmpImgPath);
-			FileInputStream inputStream = new FileInputStream(file);
-			byte[] bytes = new byte[inputStream.available()];
-			inputStream.read(bytes, 0, inputStream.available());
-			inputStream.close();
-			// file.delete();
-		} catch (Exception e) {
-		}
-		return;
-	}
+//	public void testBackgroundImg() {
+//		try {
+//			int backWidth = 3840; // 1920;
+//			int backHeight = 2160;// 1080;
+//
+//			File infile = new File(sashaImgPath);
+//			Image image = ImageIO.read(infile);
+////		int backWidth = w;
+////		int backHeight = h;
+//
+//			String tmpImgPath = SGDataHelper.backgroundImg(new Dimension(backWidth, backHeight), image, null,
+//					new SGLine(new PFPoint(0, 0), new PFPoint(100, 100)).IsPercent(), Color.RED, false);
+//			File file = new File(tmpImgPath);
+//			FileInputStream inputStream = new FileInputStream(file);
+//			byte[] bytes = new byte[inputStream.available()];
+//			inputStream.read(bytes, 0, inputStream.available());
+//			inputStream.close();
+//			// file.delete();
+//		} catch (Exception e) {
+//		}
+//		return;
+//	}
 
 	public void testBackgroundImgInBuffer() {
 		try {

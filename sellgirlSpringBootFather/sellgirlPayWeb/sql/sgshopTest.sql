@@ -90,6 +90,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
   update sgshop.sg_user set sign_day=19,last_sign='2026-03-30 17:37:26.0' where user_id=2
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
+    select * from sg_vip_order order by create_time desc limit 20
   
    update sg_user set  `vip1`= 0 ,`vip1_expire`= '2026-03-19 00:07:14' ,`vip2`= 0 ,`vip2_expire`= '2026-03-19 00:07:14'   where  `user_id`=1  limit 1
    update sg_user set point=point+1 where user_id=1

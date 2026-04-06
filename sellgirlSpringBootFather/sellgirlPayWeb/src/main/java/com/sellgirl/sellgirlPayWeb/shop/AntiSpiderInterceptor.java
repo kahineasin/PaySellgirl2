@@ -71,7 +71,11 @@ public class AntiSpiderInterceptor implements HandlerInterceptor {
     		}
     	}
         String ip = getClientIp(request);
-        System.out.println(SGDate.Now()+"-----"+request.getRequestURI());
+        if(null!=ip) {
+            System.out.println(SGDate.Now()+"-ip("+ip+")-----"+request.getRequestURI());
+        }else {
+        	System.out.println(SGDate.Now()+"-----"+request.getRequestURI());
+        }
         
 
 //        // 获取IP封禁缓存
