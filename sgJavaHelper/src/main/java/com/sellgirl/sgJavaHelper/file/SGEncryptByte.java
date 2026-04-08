@@ -121,31 +121,11 @@ public class SGEncryptByte {
 
 	}	
 	public static void doEncFromFolder(File sourceFile,String encFileFolder,int key) throws Exception {
-//		int mb=9;
-//		long size=1024l*1024l*9;
 		if(sourceFile.isFile()) {
 			SGDirectory.EnsureFilePath(encFileFolder);
 			EncFile(sourceFile, new File(encFileFolder),key);
 		}else if(sourceFile.isDirectory()) {
 			for(File f:sourceFile.listFiles()) {
-//				if(f.isFile()) {
-////					SGFileSplit.doFileSplit(f,Paths.get(chunkFileFolder,SGPath.GetFileNameWithoutExtension(f)).toString(),mb);
-//
-//					if(size<f.length()) {
-////						SGFileSplit.doFileSplit(f,Paths.get(chunkFileFolder,SGPath.GetFileNameWithoutExtension(f)).toString(),mb);//这样保存不到扩展名
-//						String fileName=f.getName();
-////						int i=fileName.lastIndexOf(".");
-//						fileName=fileName.replace('.','_');
-//						SGFileSplit.doFileSplit(f,Paths.get(chunkFileFolder,fileName).toString(),mb);	
-//					}else {
-//						SGDirectory.EnsureExists(chunkFileFolder);
-//						File dstFile = new File(Paths.get(chunkFileFolder,f.getName()).toString());
-//						SGPath.copyFile(f, dstFile);
-////						java.nio.file.Files.copy(null, null)
-//					}
-//				}else if(f.isDirectory()) {
-//					SGFileSplit.doSplitFromFolder(f,Paths.get(chunkFileFolder,f.getName()).toString());
-//				}
 				String p=Paths.get(encFileFolder,f.getName()).toString();
 				doEncFromFolder(f,p,key);
 			}
@@ -182,26 +162,7 @@ public class SGEncryptByte {
 
 		FileOutputStream fos = new FileOutputStream(decFile);
 
-//int dataOfFile=0;
 
-//		int b=0;
-//		while ((dataOfFile = fis.read()) > -1) {
-//
-//			fos.write(0==b?dataOfFile ^ numOfEncAndDec:dataOfFile);
-//			b++;
-//			if(b>3) {b=0;}
-//
-//		}
-
-//		byte[] buffer=new byte[DEFAULT_BUFFER_SIZE];
-//		while ((dataOfFile = fis.read(buffer)) != -1) {
-//				//fos.write(buffer, 0, dataOfFile^numOfEncAndDec);
-//			//fos.write(((int)buffer)^numOfEncAndDec, 0, dataOfFile);
-//				//fos.write(buffer, 0, dataOfFile);
-//			for(int i=0;i<buffer.length;i++) {
-//				fos.write(buffer[i]^numOfEncAndDec);
-//			}
-//		}
 		
 		DecryptByte(fis,fos,DEFAULT_BUFFER_SIZE,key);
 
@@ -237,18 +198,6 @@ public class SGEncryptByte {
 		int dataOfFile = 0;
 		while ((dataOfFile = fis.read(buffer)) != -1) {//read 参数是读的数据, 返回值是读的数据的长度
 
-//			if(0==b) {
-//			for(int i=0;i<dataOfFile;i++) {
-//				fos.write(buffer[i]^key);
-//			}
-//			}else {
-//
-//				for(int i=0;i<dataOfFile;i++) {
-//					fos.write(buffer[i]);
-//				}
-//			}
-//			b++;
-//			if(b>3) {b=0;}
 
 //			//太慢 speed:5.26E+000row/s
 //			for(int i=0;i<dataOfFile;i++) {

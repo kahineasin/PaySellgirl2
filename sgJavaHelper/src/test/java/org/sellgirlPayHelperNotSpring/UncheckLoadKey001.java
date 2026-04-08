@@ -188,7 +188,7 @@ AxaPDzg4eaOh9Jwj
 	}
 
 	//明文//秘钥(需要使用长度为16、24或32的字节数组作为AES算法的密钥，否则就会遇到java.security.InvalidKeyException异常)
-	public static String text="";    
+	public static String text="admin:2557667040@qq.com:axDvgYjIlk35!";    
 	//private String key="";
 	//private String key2="";
     public void testAESEncrypt() throws Exception {

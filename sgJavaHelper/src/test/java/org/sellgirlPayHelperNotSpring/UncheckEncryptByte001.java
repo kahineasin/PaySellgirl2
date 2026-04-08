@@ -10,6 +10,7 @@ import com.sellgirl.sgJavaHelper.DirectNode;
 import com.sellgirl.sgJavaHelper.EncryptByte;
 import com.sellgirl.sgJavaHelper.IPFSqlFieldTypeConverter;
 import com.sellgirl.sgJavaHelper.SGAction;
+import com.sellgirl.sgJavaHelper.SGByteHelper;
 import com.sellgirl.sgJavaHelper.PFBatchHelper;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.PFEnumClass;
@@ -375,4 +376,45 @@ public class UncheckEncryptByte001 extends TestCase {
 //		com.sellgirl.sgJavaHelper.SGFileMerge.main(new String[] {splitPath,encPath});
 		com.sellgirl.sgJavaHelper.file.SGDecryptByte.main(new String[] {encPath,k,srcPath});
 	}
+
+	/**
+	 * 测试jpg加密头相同的问题
+	 * @throws NumberFormatException
+	 * @throws Exception
+	 */
+	public void testFileByteInt() throws NumberFormatException, Exception {
+		Uncheck001.initPFHelper();
+		String[] srcPaths=new String[] {
+				"D:\\2\\attack\\dist\\sashaKnight_attack1.png",
+				"D:\\2\\attack\\dist\\sashaKnight_attack2.png",
+				"D:\\2\\attack\\sashaKnight_attack1.png",
+				"D:\\2\\attack\\sashaKnight_attack2.png"
+		};
+		String outPath="D:\\cache\\byte";
+		int i=0;
+		for(String srcPath:srcPaths) {
+			i++;
+		//String srcPath="D:\\2\\attack\\dist\\sashaKnight_attack1.png";
+
+		File srcFile = new File(srcPath); //
+//		FileInputStream fis = new FileInputStream(srcFile);
+		
+		byte[] b=SGByteHelper.readFileToByte(srcFile);
+		String s=SGByteHelper.byteToIntLine(b);
+//		System.out.println( SGByteHelper.byteToIntLine(b));
+		SGDataHelper.SaveStringToFile(s, Paths.get(outPath,""+i+".txt").toString());
+		}
+	}
+
+	public void testIntToTwo() throws NumberFormatException, Exception {
+		int[] is=new int[] {80,6};//80是jpg第一个字节,6是加密后
+		for(int i:is) {
+			String t=Integer.toBinaryString(i);
+			System.out.println(t);
+		}
+		long a=0x123456;
+		String t=Long.toBinaryString(a);
+		System.out.println(t);
+	}
+	
 }

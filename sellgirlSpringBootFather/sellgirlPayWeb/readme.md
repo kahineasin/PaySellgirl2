@@ -150,3 +150,5 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 ## 测试账号
 1. normal aaa:aaaaaa1
 2. resource fff:ffffff1
+## xmpp
+1. 9090页面管理员账号 admin:2557667040@qq.com:axDvgYjIlk35!

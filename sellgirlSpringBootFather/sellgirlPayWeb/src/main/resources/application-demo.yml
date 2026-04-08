@@ -29,6 +29,28 @@ jdbc:
         password: perfect
         url: jdbc:jtds:sqlserver://192.168.0.33:1433/balance
         username: sa
+    xmpp:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        driverVersion: 8.0.23
+        password: axDvgYjIlk35!
+        url: jdbc:mysql://156.224.19.162:3306/sgxmpp?useSSL=false&allowPublicKeyRetrieval=true
+        username: youruser2
+        ip: 156.224.19.162:3306
+        dbName: sgshop
+        dbaMobile: 15907658484
+        dbaName: 吴肖均
+        dbaEmail: sasha@sellgirl.com
+    shop:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        driverVersion: 8.0.23
+        password: axDvgYjIlk25!
+        url: jdbc:mysql://156.224.19.162:3306/sgshop?useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        ip: 156.224.19.162:3306
+        dbName: sgshop
+        dbaMobile: 15907658484
+        dbaName: 吴肖均
+        dbaEmail: sasha@sellgirl.com
 mybatis:
     mapperLocations: classpath*:/com/sellgirl/**/mapper/*.xml
     typeAliasesPackage: com.sellgirl.*.domain
