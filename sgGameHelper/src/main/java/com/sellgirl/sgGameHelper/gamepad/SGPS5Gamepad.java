@@ -24,12 +24,12 @@ import com.sellgirl.sgJavaHelper.sgEnum.ISGFlagEnum;
  */
 public class SGPS5Gamepad implements ISGPS5Gamepad{
 
-	private final int CROSS;
-	private final int ROUND;
-	private final int SQUARE;
-	private final int TRIANGLE;
-	private final int L1;
-	private final int R1;
+	private  int CROSS;
+	private  int ROUND;
+	private  int SQUARE;
+	private  int TRIANGLE;
+	private  int L1;
+	private  int R1;
 	private final int L3;
 	private final int R3;
 	private int L2;
@@ -42,7 +42,7 @@ public class SGPS5Gamepad implements ISGPS5Gamepad{
 	 */
 	private final int BACK;
 
-	private final int START;
+	private  int START;
 	
 	private final int UP;
 	private final int DOWN;
@@ -134,6 +134,14 @@ private AxisSpace axisLeftSpace;
 			) {
 		this.controller=controller;
 
+		CROSS=controller.getMapping().buttonA;
+		ROUND=controller.getMapping().buttonB;
+		SQUARE=controller.getMapping().buttonX;
+		TRIANGLE=controller.getMapping().buttonY;
+
+		L1=controller.getMapping().buttonL1;
+		R1=controller.getMapping().buttonR1;
+		
 		L2=controller.getMapping().buttonL2;
 		R2=controller.getMapping().buttonR2;
 		L3=controller.getMapping().buttonLeftStick;
@@ -148,6 +156,8 @@ private AxisSpace axisLeftSpace;
 		axisLeftY=controller.getMapping().axisLeftY;
 		axisRightX=controller.getMapping().axisRightX;
 		axisRightY=controller.getMapping().axisRightY;
+		
+		START=controller.getMapping().buttonStart;
 		
 		if(com.sellgirl.sgGameHelper.SGControllerName.Switch.equals(controller.getName())) {
 			//com.badlogic.gdx.controllers.desktop.support.JamepadController
@@ -200,22 +210,30 @@ GDX-> A:96 B:97 X:99 Y:100 L1:102 R1:103 L2:104 R2:105 L3:106 R3:107 x1:0 y1:1 x
 	  20        97
 	  			x2:5 y2:4
 				 */			
-				CROSS=controller.getMapping().buttonB;
-				ROUND=0;//98;//controller.getMapping().buttonA;
-				SQUARE=controller.getMapping().buttonA;
-				TRIANGLE=100;//controller.getMapping().buttonX;
-				L1=99;//100;//controller.getMapping().buttonL1;
-				R1=101;//controller.getMapping().buttonR1;
+//				CROSS=controller.getMapping().buttonB;
+//				ROUND=0;//98;//controller.getMapping().buttonA;
+//				SQUARE=controller.getMapping().buttonA;
+//				TRIANGLE=100;//controller.getMapping().buttonX;
+//				L1=99;//100;//controller.getMapping().buttonL1;
+//				R1=101;//controller.getMapping().buttonR1;
 	//			AXISL2=3;
 	//			AXISR2=4;
 //				AXISL2=4;
 //				AXISR2=5;
-				AXISL2=2;
-				AXISR2=3;
-				axisRightX=5;
-				axisRightY=4;
-				BACK=104;
-				START=105;//controller.getMapping().buttonStart;
+//				AXISL2=2;
+//				AXISR2=3;
+//				axisRightX=5;
+//				axisRightY=4;
+//				BACK=104;
+//				START=105;//controller.getMapping().buttonStart;
+				
+				//现在的电视好像又正常了...
+				//Android TV 12
+				//BRAVIA_VH21_M_CN-user 12 STT2.230505.001.S102681621 release-keys
+				AXISL2=5;
+				AXISR2=4;
+				BACK=109;
+//				START=108;
 			}else {
 			/*
 			 * 20251015 OUKITEL手机测试正常
