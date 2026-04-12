@@ -492,6 +492,7 @@
                                <exclude>application-prod.yml</exclude>
                                <exclude>application.yml</exclude>
                                <exclude>static/resourceImg/**</exclude>
+                               <exclude>static/announcement.js</exclude>
                            </excludes>
                        </resource>
                    </resources>

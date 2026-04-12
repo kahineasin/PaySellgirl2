@@ -147,6 +147,7 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 6. 访问 http://www.bdhome.xyz/
 ## 系统参数
 1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt
+2. 公告 static/announcement.js
 ## 测试账号
 1. normal aaa:aaaaaa1
 2. resource fff:ffffff1
