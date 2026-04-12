@@ -76,10 +76,37 @@ public class Pay3Controller extends YJQueryController {
      */
     @GetMapping("/pay3payPage")
 //  @GetMapping("/pay3")
-  public ModelAndView payPage(PayPlan plan,String amount) {
+  public ModelAndView payPage(PayPlan plan//,String amount
+		  ) {
   	//newId=getNewId();
 //  	productName=plan.name();
-  	
+  	String amount=null;
+  	switch(plan) {
+  	case point5:
+  		amount="5";
+  		break;
+  	case point15:
+  		amount="10";
+  		break;
+  	case point50:
+  		amount="30";
+  		break;
+  	case resource_monthly:
+  		amount="30";
+  		break;
+  	case resource_yearly:
+  		amount="300";
+  		break;
+  	case ebook_monthly:
+  		amount="15";
+  		break;
+  	case ebook_yearly:
+  		amount="150";
+  		break;
+  	default:
+  		amount="30";
+  		break;
+  	}
   	vipOrderCreate order=new vipOrderCreate();
   	order.setAmount(new BigDecimal(amount));
   	order.setVip_type(plan.ordinal());
