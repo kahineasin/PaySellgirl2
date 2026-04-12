@@ -36,7 +36,7 @@ jdbc:
         url: jdbc:mysql://156.224.19.162:3306/sgxmpp?useSSL=false&allowPublicKeyRetrieval=true
         username: youruser2
         ip: 156.224.19.162:3306
-        dbName: sgshop
+        dbName: sgxmpp
         dbaMobile: 15907658484
         dbaName: 吴肖均
         dbaEmail: sasha@sellgirl.com
