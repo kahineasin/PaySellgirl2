@@ -65,19 +65,19 @@ private AxisSpace axisLeftSpace;
 	public static class AxisSpace{
 
 	/**
-	 * 左 minX
+	 * 左负数 maxX, 如-0.1
 	 */
 	public float x1;
 	/**
-	 * 右 maxX
+	 * 右正数 minX, 如0.1
 	 */
 	public float x2;
 	/**
-	 * 上 minY
+	 * 上负数 maxY, 如-0.1
 	 */
 	public float y1;
 	/**
-	 * 下 maxY
+	 * 下正数 minY, 如0.1
 	 */
 	public float y2;
 	public AxisSpace(){
@@ -96,12 +96,22 @@ private AxisSpace axisLeftSpace;
 	public float filterX(float x){
 //		if(x1<x&&x<x2){return 0;} //这个版本和对应的isLeft版本不等价
 		if(x1<=x&&x<=x2){return 0;}
-		return x;
+//		return x;//这样会有 刚过阈值 数就比较大的问题
+		if(0<=x) {
+			return (x-x2)/(1f-x2);//减去阈值后要相对放大
+		}else {
+			return (x-x1)/(1f+x1);	
+		}
 	}
 		public float filterY(float y){
 //			if(y1<y&&y<y2){return 0;}
 			if(y1<=y&&y<=y2){return 0;}
-			return y;
+//			return y;
+			if(0<=y) {
+				return (y-y2)/(1f-y2);//减去阈值后要相对放大
+			}else {
+				return (y-y1)/(1f+y1);	
+			}
 		}
 		public boolean isLeft(float x){
 			if(x1<=x){return false;}
@@ -424,13 +434,25 @@ SG->  A:96 B:97 X:99 Y:100 L1:102 R1:103 L2:104 R2:105 L3:106 R3:107 x1:0 y1:1 x
 		if(0>AXISL2){//在android中, switch手柄的L2 R2不是轴
 			return controller.getButton(L2)?1f:-1f;
 		}
-		return controller.getAxis(AXISL2);
+//		return controller.getAxis(AXISL2);
+		float r=controller.getAxis(AXISL2);
+		if(l2Space>r) {
+			return 0;
+		}else {
+			return (r-l2Space)/(1-r);
+		}
 	}
 	public float axisR2() {
 		if(0>AXISR2){
 			return controller.getButton(R2)?1f:-1f;
 		}
-		return controller.getAxis(AXISR2);
+//		return controller.getAxis(AXISR2);
+		float r=controller.getAxis(AXISR2);
+		if(r2Space>r) {
+			return 0;
+		}else {
+			return (r-r2Space)/(1-r);
+		}
 	}
 	public boolean isStick1Up() {
 		return axisLeftSpace.isUp(controller.getAxis(axisLeftY));
