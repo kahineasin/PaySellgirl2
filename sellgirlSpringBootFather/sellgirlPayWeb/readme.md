@@ -145,11 +145,20 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 4. screen -S myapp
 5. java -jar sellgirlPayWeb-0.0.4.jar
 6. 访问 http://www.bdhome.xyz/
+
 ## 系统参数
 1. 邀请码在 SystemLocalData/Txt/shop/inviteCode.txt
 2. 公告 static/announcement.js
+3. 防爬设置 application.yml 的 "antispider"部分, 修改后用 sudo systemctl restart myweb 重启网站
+antispider:
+    ip:
+        window-seconds: 5	#5秒内
+        max-count: 10	#最多10次
+        block-minutes: 60	#封60秒
+        
 ## 测试账号
 1. normal aaa:aaaaaa1
 2. resource fff:ffffff1
+
 ## xmpp
 1. 9090页面管理员账号 admin:2557667040@qq.com:axDvgYjIlk35!
