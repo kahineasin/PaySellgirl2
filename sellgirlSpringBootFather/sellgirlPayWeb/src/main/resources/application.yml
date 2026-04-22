@@ -119,24 +119,6 @@ wechat:
     mch-serial-no: 你的证书序列号       # 商户证书序列号
     private-key-path: /path/to/apiclient_key.pem  # 商户私钥文件绝对路径
     notify-url: https://127.0.0.1:28303/api/pay/notify   # 支付结果回调地址
-# 缓存配置
-caffeine:
-  # IP计数缓存：最大1万条，写入后5秒过期（对应IP窗口）
-  ip:
-    maximum-size: 10000
-    expire-after-write: 5s
-  # IP封禁缓存：最大1万条，写入后60分钟过期
-  ip-block:
-    maximum-size: 10000
-    expire-after-write: 60m
-  # 设备指纹计数缓存：最大2万条，写入后1小时过期
-  device:
-    maximum-size: 20000
-    expire-after-write: 1h
-  # 设备封禁缓存：最大2万条，写入后30分钟过期
-  device-block:
-    maximum-size: 20000
-    expire-after-write: 30m
 zpay:
   notifyUrl: http://home.bdhome.xyz/api/pay3/notify
   returnUrl: http://home.bdhome.xyz/pay3paid.html

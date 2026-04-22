@@ -201,7 +201,9 @@ SG->  A:0 B:1 X:2 Y:3 L1:9 R1:10 L2:-1 R2:-1 L3:7 R3:8 x1:0 y1:1 x2:2 y2:3 x3:4 
 			BACK=controller.getMapping().buttonBack;
 			START=controller.getMapping().buttonStart;
 		}else if("com.badlogic.gdx.controllers.android.AndroidController".equals(controller.getClass().getName())
-				&&SGControllerName.PS5ControllerOnAndroidPhone.equals(controller.getName())) {
+				//&&SGControllerName.PS5ControllerOnAndroidPhone.equals(controller.getName())
+				&&SGControllerName.isPS5Controller(controller.getName())
+				) {
 
 			/*
 GDX-> A:96 B:97 X:99 Y:100 L1:102 R1:103 L2:104 R2:105 L3:106 R3:107 x1:0 y1:1 x2:2 y2:3 x3:- y3:- <:21 >:22 ^:19 v:20 +:108 -:4
