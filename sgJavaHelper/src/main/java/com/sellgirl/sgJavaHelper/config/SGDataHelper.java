@@ -1174,6 +1174,13 @@ pow:-2  100.0
 			return null;
 		}
 	}
+	public static float stringToFloat0(String obj,float def) {
+		try {
+		return Float.valueOf(obj);
+		}catch(Throwable e) {
+			return def;
+		}
+	}
 
 	public static Calendar StringToDateTime(String obj) {
 		return StringToDateTime(obj, SGDataHelper.DateFormat);
