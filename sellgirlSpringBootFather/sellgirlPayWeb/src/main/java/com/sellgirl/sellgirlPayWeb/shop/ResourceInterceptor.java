@@ -121,7 +121,8 @@ public class ResourceInterceptor implements HandlerInterceptor {
     			Object controller = method.getBean();
     //判断是否为登录接口实现类
     			if(controller instanceof ResourceController){
-    				SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
+//    				SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
+    				SystemUser user=FormsAuth.GetUserExData2();
     				if(null!=user&&user.isInvited) {
     					//不拦截
     					return true;

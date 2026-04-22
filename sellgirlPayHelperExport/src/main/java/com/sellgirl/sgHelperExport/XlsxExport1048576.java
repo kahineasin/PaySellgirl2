@@ -221,8 +221,8 @@ public class XlsxExport1048576 implements IExport
             cell.setCellValue(((BigDecimal) object).doubleValue());
         else if (object instanceof String)
             cell.setCellValue((String) object);
-        else if (object instanceof Date)
-            cell.setCellValue((Date) object);
+        else if (object instanceof Date) {
+            cell.setCellValue((Date) object);}
         else
             cell.setCellValue(object.toString());
     }

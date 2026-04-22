@@ -45,13 +45,16 @@ public abstract class YJQueryController extends PFBaseWebController {
     //#endregion
 
 	public String GetUserId() {
-		return FormsAuth.GetUserData().UserCode;		
+//		return FormsAuth.GetUserData().UserCode;
+		return FormsAuth.GetUserExData2().UserCode;		
 	}
 	public long GetUserLongId() {
-		return SGDataHelper.ObjectToLong0(FormsAuth.GetUserData().UserCode) ;		
+//		return SGDataHelper.ObjectToLong0(FormsAuth.GetUserData().UserCode) ;
+		return SGDataHelper.ObjectToLong0(FormsAuth.GetUserExData2().UserCode) ;		
 	}
 	public String GetUserName() {
-		return FormsAuth.GetUserData().UserName;		
+//		return FormsAuth.GetUserData().UserName;	
+		return FormsAuth.GetUserExData2().UserName;		
 	}
 //    public String UserId
 //    {
@@ -73,27 +76,16 @@ public abstract class YJQueryController extends PFBaseWebController {
 //		return FormsAuth.IsLogined();
 //	}
 	public  SystemUser GetSystemUser() {
-		SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
+//		SystemUser user=FormsAuth.GetUserExData(SystemUser.class);
+		SystemUser user=FormsAuth.GetUserExData2();
 		
-//		//benjamin todo
-//		user.OrgList=new ArrayList<UserOrg>();
-//		UserOrg org=new UserOrg();
-//		org.Org="00099";
-//		org.OrgName="电脑部";
-//		user.OrgList.add(org);
-//		
-//		org=new UserOrg();
-//		org.Org="00098";
-//		org.OrgName="设备部";
-//		user.OrgList.add(org);
-//		
-//		user.Org="00098";
 		return user;
 	}
 	public  void SetSystemUser(SystemUser systemUser) {
-      if (!SGDataHelper.StringIsNullOrWhiteSpace(GetUserId())) {
-          SGCaching.Set(GetUserId(), systemUser); 
-          }
+//      if (!SGDataHelper.StringIsNullOrWhiteSpace(GetUserId())) {
+//          SGCaching.Set(GetUserId(), systemUser); 
+//          }
+      FormsAuth.SetUserExData2(systemUser);
 	}
 //    /// <summary>
 //    /// 想对成员赋值时应该这样：
@@ -116,30 +108,30 @@ public abstract class YJQueryController extends PFBaseWebController {
 //                Caching.Set(UserId, value, null); }
 //        }
 //    }
-	  public String GetSf() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.Sf;
-	  }
-	  public String GetSfName() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.SfName;
-	  }
-	  public String GetFgs() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.Fgs;
-	  }
-	  public String GetFgsName() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.FgsName;
-	  }
-	  public String GetOrg() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.Org;
-	  }
-	  public String GetOrgName() {
-		  SystemUser SystemUser=GetSystemUser(); 
-		  return SystemUser == null ? null : SystemUser.OrgName;
-	  }
+//	  public String GetSf() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.Sf;
+//	  }
+//	  public String GetSfName() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.SfName;
+//	  }
+//	  public String GetFgs() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.Fgs;
+//	  }
+//	  public String GetFgsName() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.FgsName;
+//	  }
+//	  public String GetOrg() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.Org;
+//	  }
+//	  public String GetOrgName() {
+//		  SystemUser SystemUser=GetSystemUser(); 
+//		  return SystemUser == null ? null : SystemUser.OrgName;
+//	  }
 //    /// <summary>
 //    /// 省份编码
 //    /// </summary>
@@ -262,9 +254,9 @@ public abstract class YJQueryController extends PFBaseWebController {
 //        }
 //    }
 
-    public Map<String, FuncAuthorityClass> GetFuncAuthorities() {
-    	return FormsAuth.GetFuncAuthorities();
-	}
+//    public Map<String, FuncAuthorityClass> GetFuncAuthorities() {
+//    	return FormsAuth.GetFuncAuthorities();
+//	}
     public void SetFuncAuthorities(Map<String, FuncAuthorityClass> value) {
     	String UserId=GetUserId();
         if (!SGDataHelper.StringIsNullOrWhiteSpace(GetUserId())) {
@@ -273,9 +265,9 @@ public abstract class YJQueryController extends PFBaseWebController {
 	}
 
     
-    public Map<String, List<String>> GetOtherFuncAuthorities() {
-    	return FormsAuth.GetOtherFuncAuthorities();
-	}
+//    public Map<String, List<String>> GetOtherFuncAuthorities() {
+//    	return FormsAuth.GetOtherFuncAuthorities();
+//	}
     public void SetOtherFuncAuthorities(Map<String, List<String>> value) {
     	String UserId=GetUserId();
         if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId))
@@ -311,14 +303,14 @@ public abstract class YJQueryController extends PFBaseWebController {
 //            }
 //        }
 //    }
-    public Boolean HasOtherAuthority(String funcNo, String authority)
-    {
-    	Map<String, List<String>> other = GetOtherFuncAuthorities();
-        return other.containsKey(funcNo) && other.get(funcNo).contains(authority);
-    }
-    public Boolean IsFgs() {    	
-    	return !SGDataHelper.StringIsNullOrWhiteSpace(GetSf());
-    }
+//    public Boolean HasOtherAuthority(String funcNo, String authority)
+//    {
+//    	Map<String, List<String>> other = GetOtherFuncAuthorities();
+//        return other.containsKey(funcNo) && other.get(funcNo).contains(authority);
+//    }
+//    public Boolean IsFgs() {    	
+//    	return !SGDataHelper.StringIsNullOrWhiteSpace(GetSf());
+//    }
 //    /// <summary>
 //    /// 是分公司用户
 //    /// </summary>

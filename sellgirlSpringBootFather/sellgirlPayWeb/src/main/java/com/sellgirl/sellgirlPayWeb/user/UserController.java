@@ -371,12 +371,12 @@ extends YJQueryController
 
         int effectiveHours = 1;//登陆1小时
         //UserAllInfo userAllInfo = FormsAuth.GetUserInfo(userid);
-        UserAllInfoDto userAllInfo = FormsAuth.GetUserInfoWebApi(userid);
+//        UserAllInfoDto userAllInfo = FormsAuth.GetUserInfoWebApi(userid);
         SystemUser sysUser = new SystemUser();
         refSysUser.SetValue(sysUser);
     	sysUser.UserCode=userid;
     	sysUser.UserName=user.getUserName();
-    	sysUser.Email=userAllInfo.getEMail();
+//    	sysUser.Email=userAllInfo.getEMail();
     			
     	List<String> fgsList = new ArrayList<String>();
 
@@ -458,7 +458,8 @@ extends YJQueryController
             error.SetValue("已坏");
             return new ArrayList<String>();
         }
-        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
+//        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
+        FormsAuth.SignIn2(sysUser);
         success.SetValue(true);
         return fgsList;
 
@@ -496,10 +497,10 @@ extends YJQueryController
             		   new PFObject()
             		   .Add("userId", GetUserId())
             		   .Add("userName", GetUserName())
-            		   .Add("sf", GetSf())
-            		   .Add("sfname", GetSfName())
-            		   .Add("fgs", GetFgs())
-            		   .Add("fgsname", GetFgsName())
+//            		   .Add("sf", GetSf())
+//            		   .Add("sfname", GetSfName())
+//            		   .Add("fgs", GetFgs())
+//            		   .Add("fgsname", GetFgsName())
             		   .Add("fgsList", fgsList)            		   
         		   )
 //               .Add("session",PFCookieUtils.getCookieMap()) //benjamin todo
@@ -598,7 +599,8 @@ extends YJQueryController
 	      String UserId=GetUserId();
 	      if (!SGDataHelper.StringIsNullOrWhiteSpace(UserId)) {
 	  		SGCaching.Remove(UserId);
-	  		FormsAuth.SingOut();
+//	  		FormsAuth.SingOut();
+	  		FormsAuth.SingOut2();
 	      }
 	}
 
@@ -875,28 +877,45 @@ extends YJQueryController
   	    	}
 	    	sysUser.isVip=user.isVip1()||user.isVip2();
 	    	
-  	        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);
-	        	ViewData.put("username",username);
-	        	ViewData.put("isInvited",sysUser.isInvited);
+////  	        FormsAuth.SignIn(userData, sysUser, 60 * effectiveHours);//--benjamin todo
+//  	        FormsAuth.SignIn(userData, sysUser, FormsAuth.loginMinute);
+  	      FormsAuth.SignIn2(sysUser);
+
+//	        	ViewData.put("username",username);
+//	        	ViewData.put("isInvited",sysUser.isInvited);
 	        	
 	        if(!SGDataHelper.StringIsNullOrWhiteSpace(return_to)) {
 	        	String urlDecode=SGDataHelper.getURLDecoderString(return_to);
 	        	return this.RedirectToUrl(urlDecode);
 	        }
 
-        	ViewData.put("isVip",sysUser.isVip);
-        	ViewData.put("point",sysUser.point);
-        	ViewData.put("lastSignDate",null==sysUser.lastSign?null:sysUser.lastSign.toString(SGDataHelper.DayFormat));
+            ModelAndView r=View("ProductJump/index");
+//            ModelAndView r=new ModelAndView();
+             r.addObject("username",username); //这样更安全
+             r.addObject("isInvited",sysUser.isInvited); //
+             r.addObject("isVip",sysUser.isVip); //
+             r.addObject("point",sysUser.point); //
+             r.addObject("lastSignDate",null==sysUser.lastSign?null:sysUser.lastSign.toString(SGDataHelper.DayFormat)); //这样更安全
+
+//        	ViewData.put("isVip",sysUser.isVip);
+//        	ViewData.put("point",sysUser.point);
+//        	ViewData.put("lastSignDate",null==sysUser.lastSign?null:sysUser.lastSign.toString(SGDataHelper.DayFormat));
         	
 	        if(sysUser.isInvited) {
 //  	        	ViewData.put("isVip",sysUser.isVip);
-  	        	ViewData.put("role","resource");
-  	        	ViewData.put("url","/resource-index.html");
-	  	    	  return View("ProductJump/index");
+	             r.addObject("role","resource"); //
+	             r.addObject("url","/resource-index.html"); //
+	             return r;
+//  	        	ViewData.put("role","resource");
+//  	        	ViewData.put("url","/resource-index.html");
+//	  	    	  return View("ProductJump/index");
   	        }else {
-  	        	ViewData.put("role","normal");	  	        	
-  	        	ViewData.put("url","/");
-  	    	  return View("ProductJump/index");
+	             r.addObject("role","normal"); //
+	             r.addObject("url","/"); //
+	             return r;
+//  	        	ViewData.put("role","normal");	  	        	
+//  	        	ViewData.put("url","/");
+//  	    	  return View("ProductJump/index");
   	        }
   		}
   		return null;

@@ -92,13 +92,13 @@ public class WebViewPageT<TModel> {
         UserName = controller.GetUserName();
         CurrentYm = controller.GetCurrentYm();
         CurrentMonth = controller.GetCurrentMonth();
-        Fgs = controller.GetFgs();
-        FgsName = controller.GetFgsName();
-        Org = controller.GetOrg();
-        //FuncAuthorities = controller.FuncAuthorities;
-
-//        RequestAuthorities = GetRequestAuthority();
-//        SysAuthorities = GetSysAuthority();
+//        Fgs = controller.GetFgs();
+//        FgsName = controller.GetFgsName();
+//        Org = controller.GetOrg();
+//        //FuncAuthorities = controller.FuncAuthorities;
+//
+////        RequestAuthorities = GetRequestAuthority();
+////        SysAuthorities = GetSysAuthority();
 //        Authorities = RequestAuthorities | SysAuthorities;
         Authorities =  SysAuthorities;
 //

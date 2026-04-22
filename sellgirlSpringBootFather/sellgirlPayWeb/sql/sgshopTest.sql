@@ -78,7 +78,7 @@ update sgshop.sg_user set point=point+1000 where user_id=2
   where a.book_name='今日简史'
   
   show variables like 'character_set%'
-  
+  show VARIABLES like '%time_zone%';
   select * from sgshop.sg_vip_order
   select * from sgshop.sg_user order by user_id desc;
   select * from sgshop.sg_user limit 20;

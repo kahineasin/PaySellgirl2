@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
+import com.sellgirl.sgJavaHelper.Cache;
+import com.sellgirl.sgJavaHelper.CacheManager;
 import com.sellgirl.sgJavaHelper.FuncAuthorityClass;
 import com.sellgirl.sgJavaHelper.SGDataTable;
+import com.sellgirl.sgJavaHelper.SGDate;
 //import com.sellgirl.sgJavaSpringHelper.JwtHelper;
 import com.sellgirl.sgJavaHelper.SGCaching;
 import com.sellgirl.sgJavaHelper.SGRef;
@@ -69,7 +72,7 @@ public class FormsAuth {
 
 ////	 private static PFCookieUtils _cookieUtils;
 //    private static  ActionValidateSoap _service;
-    private static String cookieKey="cookieKey";//相当于FormsAuthentication.FormsCookieName
+    public static String cookieKey="cookieKey";//相当于FormsAuthentication.FormsCookieName
 //
 ////    @Value("${service.auth.apiUrl}")
 //    public String authApiUrl;
@@ -239,27 +242,27 @@ public class FormsAuth {
 //    {
 //        return _service.getUserInfo(userid);
 //    }
-	/**
-	 * 改用checkUser
-	 * @param userno
-	 * @return
-	 */
-	@Deprecated
-    public static UserAllInfoDto GetUserInfoWebApi(String userno) {
-        //
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("idOrNumber", userno);
-        String data = jsonObject.toJSONString();
-        //
-        if(SGDataHelper.UseLocalData()) {
-        	UserAllInfoDto user=new UserAllInfoDto();
-        	user.setEMail("li@sellgirl.com");
-            return user;
-        }else {
-	        UserAllInfoDto user = getApiData("GetUserInfo", data, UserAllInfoDto.class);
-	        return user;
-        }
-    }
+//	/**
+//	 * 改用checkUser
+//	 * @param userno
+//	 * @return
+//	 */
+//	@Deprecated
+//    public static UserAllInfoDto GetUserInfoWebApi(String userno) {
+//        //
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("idOrNumber", userno);
+//        String data = jsonObject.toJSONString();
+//        //
+//        if(SGDataHelper.UseLocalData()) {
+//        	UserAllInfoDto user=new UserAllInfoDto();
+//        	user.setEMail("li@sellgirl.com");
+//            return user;
+//        }else {
+//	        UserAllInfoDto user = getApiData("GetUserInfo", data, UserAllInfoDto.class);
+//	        return user;
+//        }
+//    }
 
 //    public static ActionReturnInfo GetAllAction(String userid)
 //    {
@@ -283,67 +286,97 @@ public class FormsAuth {
         return returnInfo;
     }
 
-    /**
-     * 前面已经验证过密码的话，可以调用此方法写用户信息到cookie
-     * @param userData
-     * @param exData
-     * @param expireMin
-     */
+    public static final int loginSecond=30*60;//30*60
+//    /**
+//     * 前面已经验证过密码的话，可以调用此方法写用户信息到cookie
+//     * @param userData
+//     * @param exData
+//     * @param expireMin
+//     * @deprecated 无加密 前端cookie:{cookieKey:{UserCode}}
+//     */
 //    @Deprecated
-    public static void SignIn(LoginerBase userData, Object exData, int expireMin)
-    {
-        String loginName = userData.UserCode;
-        String data = JSON.toJSONString(userData);
-
-        SGCookieUtils.setCookie( cookieKey, data);//待加密--benjamin todo
-        
-//        //创建一个FormsAuthenticationTicket，它包含登录名以及额外的用户数据。
-//        var ticket = new FormsAuthenticationTicket(2,
-//            loginName, DateTime.Now, DateTime.Now.AddDays(1), true, data);
+//    public static void SignIn(LoginerBase userData, Object exData, int expireMin)
+//    {
+//        String loginName = userData.UserCode;
+//        String data = JSON.toJSONString(userData);
 //
-//        //加密Ticket，变成一个加密的字符串。
-//        var cookieValue = FormsAuthentication.Encrypt(ticket);
-//
-//        //根据加密结果创建登录Cookie
-//        var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, cookieValue)
-//        {
-//            HttpOnly = true,
-//            Secure = FormsAuthentication.RequireSSL,
-//            Domain = FormsAuthentication.CookieDomain,
-//            Path = FormsAuthentication.FormsCookiePath
-//        };
-//        if (expireMin > 0)
-//            cookie.Expires = DateTime.Now.AddMinutes(expireMin);
-//
-//        var context = HttpContext.Current;
-//        if (context == null)
-//            throw new InvalidOperationException();
-//
-//        //写登录Cookie
-//        context.Response.Cookies.Remove(cookie.Name);
-//        context.Response.Cookies.Add(cookie);
-
-        
+////        int second=expireMin*60;
+//        int second=10;
+////        SGCookieUtils.setCookie( cookieKey, data);//待加密--benjamin todo
+//        SGCookieUtils.setCookie( cookieKey, data,second);//待加密--benjamin todo
 //        
-//        //设置actions(注意actions不能放在FormsAuthenticationTicket之中,因为数据太大导致登陆失败 
-//        //var allAction = _service.GetAllAction(loginName, "YJQ", null, null, null, null, null);
-//        ActionReturnInfo allAction = GetAllAction(loginName);
+////        //创建一个FormsAuthenticationTicket，它包含登录名以及额外的用户数据。
+////        var ticket = new FormsAuthenticationTicket(2,
+////            loginName, DateTime.Now, DateTime.Now.AddDays(1), true, data);
+////
+////        //加密Ticket，变成一个加密的字符串。
+////        var cookieValue = FormsAuthentication.Encrypt(ticket);
+////
+////        //根据加密结果创建登录Cookie
+////        var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, cookieValue)
+////        {
+////            HttpOnly = true,
+////            Secure = FormsAuthentication.RequireSSL,
+////            Domain = FormsAuthentication.CookieDomain,
+////            Path = FormsAuthentication.FormsCookiePath
+////        };
+////        if (expireMin > 0)
+////            cookie.Expires = DateTime.Now.AddMinutes(expireMin);
+////
+////        var context = HttpContext.Current;
+////        if (context == null)
+////            throw new InvalidOperationException();
+////
+////        //写登录Cookie
+////        context.Response.Cookies.Remove(cookie.Name);
+////        context.Response.Cookies.Add(cookie);
+//
+//        
+////        
+////        //设置actions(注意actions不能放在FormsAuthenticationTicket之中,因为数据太大导致登陆失败 
+////        //var allAction = _service.GetAllAction(loginName, "YJQ", null, null, null, null, null);
+////        ActionReturnInfo allAction = GetAllAction(loginName);
+//
+////        //GetFuncAuthority还没写好,先注释--benjamin 
+////        if (allAction != null //&&allAction.isIsSuccess()
+////        		&& allAction.getActions() != null  //todo
+////        		)
+////        {
+////        	List<String> actions =SGDataHelper.ListSelect(allAction.getActions().getActionInfo(), a -> a.getNumber());
+////        	Map<String, List<String>> otherAuthority = new HashMap<String, List<String>>();
+////        	SGRef<Map<String, List<String>>> rOtherAuthority=new SGRef<Map<String, List<String>>>();
+////        	Map<String, FuncAuthorityClass> authority = SGDataHelper.GetFuncAuthorityClass(actions,rOtherAuthority);
+////            SGCaching.Set(loginName + "_FuncAuthorities", authority);
+////            SGCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
+////        }
+//
+////        SGCaching.Set(loginName, exData);
+//        SGCaching.Set(loginName, exData,second);
+//
+//    }
 
-//        //GetFuncAuthority还没写好,先注释--benjamin 
-//        if (allAction != null //&&allAction.isIsSuccess()
-//        		&& allAction.getActions() != null  //todo
-//        		)
-//        {
-//        	List<String> actions =SGDataHelper.ListSelect(allAction.getActions().getActionInfo(), a -> a.getNumber());
-//        	Map<String, List<String>> otherAuthority = new HashMap<String, List<String>>();
-//        	SGRef<Map<String, List<String>>> rOtherAuthority=new SGRef<Map<String, List<String>>>();
-//        	Map<String, FuncAuthorityClass> authority = SGDataHelper.GetFuncAuthorityClass(actions,rOtherAuthority);
-//            SGCaching.Set(loginName + "_FuncAuthorities", authority);
-//            SGCaching.Set(loginName + "_OtherFuncAuthorities", otherAuthority);
-//        }
+    public static void SignIn2(SystemUser userData//, int expireMin
+    		)
+    {
+        String userId = userData.UserCode;
+//        String data = JSON.toJSONString(userData);
+//        int second=loginSecond*60;
+//        int second=10;//
 
-        SGCaching.Set(loginName, exData);
+    	HashMap<String, String> payload = new HashMap<String, String>(){/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
+		{
+    		put("SysUser",JSON.toJSONString(userId));
+    	}};
+//    	Calendar c=Calendar.getInstance();
+//    	c.add(Calendar.MINUTE, +60);
+    	SGDate c= SGDate.Now().AddDays(1);
+    	String token=JwtHelper.genToken(payload,c.ToCalendar().getTime(), MetabaseDataHelper.METABASE_JWT_SHARED_SECRET);
+        SGCookieUtils.setCookie( cookieKey, token,loginSecond);//待加密--benjamin todo
+        SGCaching.Set(token, userData,loginSecond);
     }
 
 //    public static void SignIn2(LoginerBase userData,
@@ -404,147 +437,226 @@ public class FormsAuth {
 //    }
     
 //
-    public static void SingOut()
+//    public static void SingOut()
+//    {
+//        String userId = GetUserData().UserCode;
+//        
+//        //FormsAuthentication.SignOut();
+//        if (!SGDataHelper.StringIsNullOrWhiteSpace(userId))
+//        {
+//            SGCookieUtils.removeCookie( cookieKey);//待加密--benjamin todo
+//            //var context = HttpContext.Current;
+//            //context.Session.RemoveAll();
+//            SGCookieUtils.removeCookie(userId + "_FuncAuthorities");
+//            SGCookieUtils.removeCookie(userId + "_OtherFuncAuthorities");
+//            SGCookieUtils.removeCookie(userId);
+//        }
+//        //using (var redisClient = RedisManager.GetClient())
+//        //{
+//        //    redisClient.Dispose();
+//        //}
+//    }
+
+    public static void SingOut2()
     {
-        String userId = GetUserData().UserCode;
-        
-        //FormsAuthentication.SignOut();
-        if (!SGDataHelper.StringIsNullOrWhiteSpace(userId))
-        {
-            SGCookieUtils.removeCookie( cookieKey);//待加密--benjamin todo
-            //var context = HttpContext.Current;
-            //context.Session.RemoveAll();
-            SGCookieUtils.removeCookie(userId + "_FuncAuthorities");
-            SGCookieUtils.removeCookie(userId + "_OtherFuncAuthorities");
-            SGCookieUtils.removeCookie(userId);
-        }
-        //using (var redisClient = RedisManager.GetClient())
-        //{
-        //    redisClient.Dispose();
-        //}
+    	String token=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+    	if(!SGDataHelper.StringIsNullOrWhiteSpace(token)) {
+    		SGCookieUtils.removeCookie(cookieKey);
+    		SGCaching.Remove(token);
+    	}
     }
 //
-    public static LoginerBase GetUserData()
-    {
-//    	LoginerBase ud=new LoginerBase();
-//    	ud.UserCode="1712002";
-//    	ud.UserName="吴肖均";
-//    	return ud;
-        return GetUserDataT(LoginerBase.class);//benjamin todo
-    }
+//    @Deprecated
+//    public static LoginerBase GetUserData()
+//    {
+////    	LoginerBase ud=new LoginerBase();
+////    	ud.UserCode="1712002";
+////    	ud.UserName="吴肖均";
+////    	return ud;
+//        return GetUserDataT(LoginerBase.class);//benjamin todo
+//    }
 
 //    @Autowired
 //    private PFCookieUtils cookieUtils;
-    public static  <T> T GetUserDataT(Class<T> cl) 
-    {
-        T UserData = null;
-        try
-        {
-        	UserData=cl.newInstance();
-        	
-        	//String ticket=_cookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
-        	String ticket=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
-        	if(!SGDataHelper.StringIsNullOrWhiteSpace(ticket)) {
-            	//List<Map> meterList= JSONArray.parseArray(paraMap.get("metersList").toString(),Map.class);
-            	UserData = JSON.parseObject(ticket, cl);
-        	}
-    //        var context = HttpContext.Current;
-        		
-        	//benjamin todo
-            //#region 如果用这种写法，当某Action中有两特性，第一个特性中AutoLogin执行后，第二个特性MvcMenuFilter里的用户名还是旧用户(没有实时更新)
-//            var cookie = context.Request.Cookies[FormsAuthentication.FormsCookieName];
-//            var ticket = FormsAuthentication.Decrypt(cookie.Value);
-//            UserData = JsonConvert.DeserializeObject<T>(ticket.UserData);
-            //#endregion
-  
-        }
-        catch(Exception e)
-        { }
+//    /**
+//     * 
+//     * @param <T>
+//     * @param cl
+//     * @return
+//     * @deprecated cookie无加密
+//     */
+//    @Deprecated
+//    public static  <T> T GetUserDataT(Class<T> cl) 
+//    {
+//        T UserData = null;
+//        try
+//        {
+//        	UserData=cl.newInstance();
+//        	
+//        	//String ticket=_cookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+//        	String ticket=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+//        	if(!SGDataHelper.StringIsNullOrWhiteSpace(ticket)) {
+//            	//List<Map> meterList= JSONArray.parseArray(paraMap.get("metersList").toString(),Map.class);
+//            	UserData = JSON.parseObject(ticket, cl);
+//        	}
+//    //        var context = HttpContext.Current;
+//        		
+//        	//benjamin todo
+//            //#region 如果用这种写法，当某Action中有两特性，第一个特性中AutoLogin执行后，第二个特性MvcMenuFilter里的用户名还是旧用户(没有实时更新)
+////            var cookie = context.Request.Cookies[FormsAuthentication.FormsCookieName];
+////            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+////            UserData = JsonConvert.DeserializeObject<T>(ticket.UserData);
+//            //#endregion
+//  
+//        }
+//        catch(Exception e)
+//        { }
+//
+//        return UserData;
+//    }
+//    @Deprecated
+//    public static <T> T GetUserExData( Class<T> cl) 
+//    {
+//        T UserData =null;
+//        try
+//        {
+//        	UserData=cl.newInstance();
+//            String userCode = GetUserData().UserCode;
+//            if (!SGDataHelper.StringIsNullOrWhiteSpace(userCode))
+//            {
+//                Object data = SGCaching.Get(userCode);//应避免把数据保存在key=null的cache中
+//                if(data!=null) {
+//                    UserData = cl.cast(data) ;	
+//                }
+//            }
+//            //if (data != null) { UserData = JsonConvert.DeserializeObject<T>(data.ToString()); }                
+//        }
+//        catch(Exception e)
+//        { }
+//
+//        return UserData;
+//    }
 
-        return UserData;
-    }
-    public static <T> T GetUserExData( Class<T> cl) 
+    public static SystemUser GetUserExData2() 
     {
-        T UserData =null;
+    	SystemUser UserData =null;
+//    	Class<SystemUser> cl=SystemUser.class;
         try
         {
-        	UserData=cl.newInstance();
-            String userCode = GetUserData().UserCode;
-            if (!SGDataHelper.StringIsNullOrWhiteSpace(userCode))
-            {
-                Object data = SGCaching.Get(userCode);//应避免把数据保存在key=null的cache中
+//        	UserData=cl.newInstance();
+        	UserData=new SystemUser();
+//            String userCode = GetUserData().UserCode;
+
+        	String token=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+        	if(!SGDataHelper.StringIsNullOrWhiteSpace(token)) {
+
+                Object data = SGCaching.Get(token);//应避免把数据保存在key=null的cache中
                 if(data!=null) {
-                    UserData = cl.cast(data) ;	
+//                    UserData = SystemUser.class.cast(data) ;
+                    UserData =(SystemUser) data ;	
                 }
-            }
-            //if (data != null) { UserData = JsonConvert.DeserializeObject<T>(data.ToString()); }                
+        	}
+                       
         }
         catch(Exception e)
         { }
 
         return UserData;
     }
-    /**
-     * 有调用
-     * @return
-     */
-    public static Map<String, FuncAuthorityClass> GetFuncAuthorities() 
-    {
-        String userId = GetUserData().UserCode;
-        
-//        CachingProvider cachingProvider = Caching.getCachingProvider();
-//        
-//        CacheManager cacheManager = cachingProvider.getCacheManager();
-//         
-//        MutableConfiguration<String, String> config = new MutableConfiguration();
-//         
-//        Cache<String, String> cache = cacheManager.createCache("JDKCodeNames",config);
-//         
-//        cache.put("JDK1.5","Tiger");
-//         
-//        cache.put("JDK1.6","Mustang");
-//         
-//        cache.put("JDK1.7","Dolphin");
-//         
-//        String jdk7CodeName = cache.get("JDK1.7");
-        
-        
-        Object funcAuthorities=SGCaching.Get(userId + "_FuncAuthorities");
-        if(funcAuthorities==null) {return null;}
-        //return (Map<String, FuncAuthorityClass>)funcAuthorities;
-        return SGDataHelper.ObjectAs(funcAuthorities);
-    }
-    public static Map<String, List<String>> GetOtherFuncAuthorities()
-    {
-    	String userId = GetUserData().UserCode;
-        Object funcAuthorities =SGCaching.Get(userId + "_OtherFuncAuthorities") ;
-        if(funcAuthorities==null) {return null;}
-        return SGDataHelper.ObjectAs(funcAuthorities);
-    }
-    public static void AddFuncAuthorities(String key, FuncAuthorityClass authority)
-    {
-    	String userId = GetUserData().UserCode;
-        Object funcAuthoritiesObj = SGCaching.Get(userId + "_FuncAuthorities")  ;
-        Map<String, FuncAuthorityClass> funcAuthorities=null;
-        if(funcAuthoritiesObj!=null) {
-        	 //funcAuthorities = (Map<String, FuncAuthorityClass>)funcAuthoritiesObj; 
-        	 funcAuthorities = SGDataHelper.ObjectAs(funcAuthoritiesObj); 
-        }else {
-        	 funcAuthorities = new HashMap<String, FuncAuthorityClass>();
-        }
 
-        //if (funcAuthorities == null) { funcAuthorities = new HashMap<String, FuncAuthority>(); }
-        if (funcAuthorities.containsKey(key))
+    public static void SetUserExData2(SystemUser userData) 
+    {
+//    	SystemUser UserData =null;
+//    	Class<SystemUser> cl=SystemUser.class;
+        try
         {
-        	//Food a=Food.Coffee.BLACK_COFFEE;
-        	FuncAuthorityClass old=funcAuthorities.get(key);
-        	funcAuthorities.replace(key,old.Or( authority));
-            //funcAuthorities[key] |= authority;
-        }else
-        {
-            funcAuthorities.put(key, authority);
+//        	UserData=cl.newInstance();
+//        	UserData=new SystemUser();
+//            String userCode = GetUserData().UserCode;
+
+        	String token=SGCookieUtils.getCookieValue(cookieKey);//虽然断点看到_cookieUtils为空,但实际不报错
+        	if(!SGDataHelper.StringIsNullOrWhiteSpace(token)) {
+
+//                Object data = SGCaching.Get(token);//应避免把数据保存在key=null的cache中
+//                if(data!=null) {
+////                    UserData = SystemUser.class.cast(data) ;
+//                    UserData =(SystemUser) data ;	
+//                }
+
+				 Cache cache=CacheManager.getCacheInfo(token);
+				 if(null!=cache) {
+//					 int second=loginSecond*60;
+					 SGCaching.Set(token, userData,loginSecond*60);
+				 }
+        	}
+        	                
         }
+        catch(Exception e)
+        { }
+
+//        return UserData;
     }
+//    /**
+//     * 有调用
+//     * @return
+//     */
+//    public static Map<String, FuncAuthorityClass> GetFuncAuthorities() 
+//    {
+//        String userId = GetUserData().UserCode;
+//        
+////        CachingProvider cachingProvider = Caching.getCachingProvider();
+////        
+////        CacheManager cacheManager = cachingProvider.getCacheManager();
+////         
+////        MutableConfiguration<String, String> config = new MutableConfiguration();
+////         
+////        Cache<String, String> cache = cacheManager.createCache("JDKCodeNames",config);
+////         
+////        cache.put("JDK1.5","Tiger");
+////         
+////        cache.put("JDK1.6","Mustang");
+////         
+////        cache.put("JDK1.7","Dolphin");
+////         
+////        String jdk7CodeName = cache.get("JDK1.7");
+//        
+//        
+//        Object funcAuthorities=SGCaching.Get(userId + "_FuncAuthorities");
+//        if(funcAuthorities==null) {return null;}
+//        //return (Map<String, FuncAuthorityClass>)funcAuthorities;
+//        return SGDataHelper.ObjectAs(funcAuthorities);
+//    }
+//    public static Map<String, List<String>> GetOtherFuncAuthorities()
+//    {
+//    	String userId = GetUserData().UserCode;
+//        Object funcAuthorities =SGCaching.Get(userId + "_OtherFuncAuthorities") ;
+//        if(funcAuthorities==null) {return null;}
+//        return SGDataHelper.ObjectAs(funcAuthorities);
+//    }
+//    public static void AddFuncAuthorities(String key, FuncAuthorityClass authority)
+//    {
+//    	String userId = GetUserData().UserCode;
+//        Object funcAuthoritiesObj = SGCaching.Get(userId + "_FuncAuthorities")  ;
+//        Map<String, FuncAuthorityClass> funcAuthorities=null;
+//        if(funcAuthoritiesObj!=null) {
+//        	 //funcAuthorities = (Map<String, FuncAuthorityClass>)funcAuthoritiesObj; 
+//        	 funcAuthorities = SGDataHelper.ObjectAs(funcAuthoritiesObj); 
+//        }else {
+//        	 funcAuthorities = new HashMap<String, FuncAuthorityClass>();
+//        }
+//
+//        //if (funcAuthorities == null) { funcAuthorities = new HashMap<String, FuncAuthority>(); }
+//        if (funcAuthorities.containsKey(key))
+//        {
+//        	//Food a=Food.Coffee.BLACK_COFFEE;
+//        	FuncAuthorityClass old=funcAuthorities.get(key);
+//        	funcAuthorities.replace(key,old.Or( authority));
+//            //funcAuthorities[key] |= authority;
+//        }else
+//        {
+//            funcAuthorities.put(key, authority);
+//        }
+//    }
 
     //public static ActionReturnInfo GetUserActions()
     //{
@@ -617,9 +729,10 @@ public class FormsAuth {
     }
     public static Boolean IsUserLogined(SGRef<SystemUser> userData)
     {
-//        //var userData = FormsAuth.GetUserData();
-//    	SystemUser userData = FormsAuth.GetUserExData(SystemUser.class);
-    	userData.SetValue(FormsAuth.GetUserExData(SystemUser.class));
+////        //var userData = FormsAuth.GetUserData();
+////    	SystemUser userData = FormsAuth.GetUserExData(SystemUser.class);
+//    	userData.SetValue(FormsAuth.GetUserExData(SystemUser.class));
+    	userData.SetValue(FormsAuth.GetUserExData2());
         return !(userData == null || SGDataHelper.StringIsNullOrWhiteSpace(userData.GetValue().UserCode));
     }    
     

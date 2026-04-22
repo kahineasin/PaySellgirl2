@@ -16,7 +16,12 @@ import com.sellgirl.sellgirlPayWeb.shop.ResourceInterceptor;
 import com.sellgirl.sellgirlPayWeb.user.UserApiController;
 import com.sellgirl.sellgirlPayWeb.user.UserController;
 import com.sellgirl.sgJavaHelper.AbstractApiResult;
+import com.sellgirl.sgJavaHelper.Cache;
+import com.sellgirl.sgJavaHelper.CacheManager;
+import com.sellgirl.sgJavaHelper.SGCaching;
+import com.sellgirl.sgJavaHelper.SGRef;
 import com.sellgirl.sgJavaHelper.model.SystemUser;
+import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sgJavaSpringHelper.config.SGDataHelper;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -32,6 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
@@ -75,6 +81,77 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         	if(null!=handler&&handler instanceof HandlerMethod) {
         		HandlerMethod method=(HandlerMethod)handler;
+        		
+        		//续订登录时间
+
+//        		//无加密的情况
+//            	SGRef<SystemUser> userData=new SGRef<SystemUser>();
+////            	boolean logined= FormsAuth.IsUserLogined(userData);
+//            	boolean logined= FormsAuth.IsUserLogined(userData);
+//            	if(logined) {
+////            		SGCookieUtils.getCookie(FormsAuth.cookieKey);
+//
+//					Cookie[] cookies = request.getCookies();
+//					if (cookies != null) {
+//						 for (Cookie cookie : cookies) {
+//							 if (FormsAuth.cookieKey.equals(cookie.getName())) {
+//								 // 1. 重新设置Cookie的有效期
+//								 cookie.setMaxAge(FormsAuth.loginMinute*60);
+//								 // 2. 重要！保持路径与原Cookie一致，避免覆盖失效
+//								 cookie.setPath("/");
+//								 // 3. 更新到响应中
+//								 response.addCookie(cookie);
+//								 break;
+//							 }
+//						 }
+//						 String userId=userData.GetValue().UserCode;
+//					 	Cache cache=CacheManager.getCacheInfo(userId);
+//					 	if(null!=cache) {
+//					 	     long nowDt = System.currentTimeMillis(); //系统当前的毫秒数
+//					 		cache.setTimeOut((FormsAuth.loginMinute*60*1000)+nowDt);
+//					 	}else {
+//					 		//一般不进来这
+//					 		SGCaching.Set(userId, userData,FormsAuth.loginMinute*60);
+//					 	}
+//					 }
+//					return true;
+//            	}
+// 
+
+        		//加密的情况
+
+					Cookie[] cookies = request.getCookies();
+					boolean logined=false;
+					String token=null;
+					if (cookies != null) {
+						 for (Cookie cookie : cookies) {
+							 if (FormsAuth.cookieKey.equals(cookie.getName())) {
+								 token=SGDataHelper.getURLDecoderString(cookie.getValue());
+								 Cache cache=CacheManager.getCacheInfo(token);
+								 if(null!=cache) {
+									 // 1. 重新设置Cookie的有效期
+//									 cookie.setMaxAge(FormsAuth.loginMinute*60);
+									 cookie.setMaxAge(FormsAuth.loginSecond);
+									 // 2. 重要！保持路径与原Cookie一致，避免覆盖失效
+									 cookie.setPath("/");
+									 // 3. 更新到响应中
+									 response.addCookie(cookie);
+
+							 	     long nowDt = System.currentTimeMillis(); //系统当前的毫秒数
+//							 		cache.setTimeOut((FormsAuth.loginMinute*60*1000)+nowDt);
+							 		cache.setTimeOut((FormsAuth.loginSecond*1000)+nowDt);
+									 
+									 logined=true;
+								 }
+								 break;
+							 }
+						 }
+					 }
+					
+				if(logined) {
+        			return true;
+				}
+ 
         		if(ResourceInterceptor.isAllowAll(method)) {
         			return true;
         		}
@@ -87,7 +164,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     				||ResourceApiController.class==controller.getClass()
     				||ResourceController.class==controller.getClass()
     					){
-    				if(FormsAuth.IsLogined()) {
+    				if(logined// FormsAuth.IsLogined()
+    						) {
     					//不拦截
     					return true;
     				}else {
@@ -101,7 +179,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 	//    					log.debug("-----------未登录访问   跳回登录页面----");
 	    					//这样跳转时样式路径不对
 	//    					request.getRequestDispatcher("/login.html").forward(request, response);
-	    					String urlEncode=SGDataHelper.getURLEncoderString( request.getRequestURI()+"?"+request.getQueryString());
+	    					String urlEncode=SGDataHelper.getURLEncoderString(
+	    							null==request.getQueryString()
+	    							?request.getRequestURI()
+	    									:(request.getRequestURI()+"?"+request.getQueryString()));
 	    	            	response.sendRedirect("/login.html?return_to="+urlEncode);
 	
 	    					return false;

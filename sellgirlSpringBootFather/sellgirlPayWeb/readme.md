@@ -142,8 +142,11 @@ mysql(我装的5.1.46-community), 服务器改用mysql  8.0.45-0ubuntu0.22.04.1
 2. ssh root@你的服务器IP
 3. cd ~/myapp/shop
     可能需要修改 sudo nano application.yml
-4. screen -S myapp
-5. java -jar sellgirlPayWeb-0.0.4.jar
+4. 旧方式
+    screen -S myapp 
+    java -jar sellgirlPayWeb-0.0.4.jar
+5. 新方式(取代上面第4步)
+    sudo systemctl restart myweb  //新方式
 6. 访问 http://www.bdhome.xyz/
 
 ## 系统参数
