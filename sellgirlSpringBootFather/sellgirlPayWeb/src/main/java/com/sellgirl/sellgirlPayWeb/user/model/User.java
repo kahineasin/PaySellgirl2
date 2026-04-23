@@ -11,9 +11,9 @@ public class User {
 	private int signDay;
 	private SGDate lastSign;
 	private  boolean vip1;
-	private SGDate vip1_expire;
+	public SGDate vip1_expire;
 	private  boolean vip2;
-	private SGDate vip2_expire;
+	public SGDate vip2_expire;
 	private int point;
 	public long getUserId() {
 		return userId;

@@ -190,10 +190,11 @@
                 signBtn.textContent = '签到 (连续10天得1积分)';
             }
 
-			let signing=false;
+			//let signing=false;
             signBtn.addEventListener('click', function() {
-                if(signing){return;}
-                
+                signBtn.disabled = true;
+                //if(signing){return;}
+                //signing=true;
                     const result = signIn(
                     	//user.username,
                     	user,
@@ -213,7 +214,8 @@
 		                    } else {
 		                        alert(result.message);
 		                    }
-		                    signing=false;
+                			signBtn.disabled = false;
+		                    //signing=false;
                     	}
                     );
                     

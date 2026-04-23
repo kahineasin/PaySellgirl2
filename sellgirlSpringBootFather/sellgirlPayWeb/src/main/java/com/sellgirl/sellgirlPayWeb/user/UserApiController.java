@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,22 @@ public class UserApiController extends  YJQueryController
 
 
 
+	@GetMapping(value = { "/api/time" })
+	@CrossOrigin
+    public AbstractApiResult<?> TestTime(long userId)
+    {
+		UserQuery q=new UserQuery();
+		q.setUserId(userId);
+		User u=userService.getUser(q);
+		if(null!=u) {
+			HashMap<String,String> r=new HashMap<String,String>();
+			r.put("zone", TimeZone.getDefault().toString());
+			r.put("lastSign", u.getLastSign().toString());
+			return AbstractApiResult.success(r);
+		}else {
+			return AbstractApiResult.error("no user");
+		}
+    }
 
 	@GetMapping(value = { "/AddCookie" })
 	@CrossOrigin

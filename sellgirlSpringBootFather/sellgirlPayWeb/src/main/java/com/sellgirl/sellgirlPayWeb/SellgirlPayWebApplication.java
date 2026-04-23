@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.TimeZone;
 
 //import org.apache.catalina.Context;
 //import org.apache.catalina.connector.Connector;
@@ -69,6 +70,10 @@ public class SellgirlPayWebApplication {
 //    @Autowired
 //    private Inject001 inject001;
 	public static void main(String[] args) {
+		
+    	TimeZone timeZone = TimeZone.getTimeZone("GMT+8");
+    	TimeZone.setDefault(timeZone);
+    	
 		initSG();
 		SpringApplication.run(SellgirlPayWebApplication.class, args);
 //		Inject001 inject00101=InjectHelper.inject001;

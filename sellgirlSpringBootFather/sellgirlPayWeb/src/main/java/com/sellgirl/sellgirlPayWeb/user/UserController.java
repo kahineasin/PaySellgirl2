@@ -829,8 +829,11 @@ extends YJQueryController
  		
 	  		
 
-	    	ViewData.put("username", "登陆失败");
-  	  return View("Product/login");
+//	    	ViewData.put("username", "登陆失败");
+	    	ModelAndView v=View("Product/login");
+	    	v.addObject("username", "登陆失败");
+	    	
+  	  return v;
     }
 	
 	private ModelAndView DoLogin(String username,String password,String return_to) {

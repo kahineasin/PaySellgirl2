@@ -34,14 +34,15 @@ callback) {
 		    username:user.username
 		  },
 		  function(data,status){
-		    //alert("Data: " + data + "\nStatus: " + status);		    
-            user.lastSignDate=getTodayStr();
-            user.signDays=data.data.signDay;
-            
-    user.consecutiveDays = data.data.signDay;//新版本改了个名
-    user.points = data.data.point;
+		    //alert("Data: " + data + "\nStatus: " + status);
+		    if(data.success){		    
+	            user.lastSignDate=getTodayStr();
+	            user.signDays=data.data.signDay;
+	    		user.consecutiveDays = data.data.signDay;//新版本改了个名
+    			user.points = data.data.point;
+            	setCurrentUser(user);
+            }            
     
-            setCurrentUser(user);
 			callback({
 			success:data.success,message:data.msg,
 			signDays:data.data.signDay,

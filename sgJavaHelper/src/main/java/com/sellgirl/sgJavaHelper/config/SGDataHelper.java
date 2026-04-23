@@ -1667,8 +1667,11 @@ pow:-2  100.0
 					// typeof(Int64))//mysql中读出来的bigint类型是decimal的?如us_user.id列--benjamin20190730
 		"decimal".equals(srcTypeStr) && ("int".equals(dstTypeStr))) {
 			return ObjectToLong(value);
-		} else if (SGDate.class.equals(dstType)&&"Timestamp".equals(srcTypeStr)) {
-			return new SGDate(ObjectToDateTime(value));
+		} else if (SGDate.class.equals(dstType)
+				//&&"Timestamp".equals(srcTypeStr)
+				) {
+//			return new SGDate(ObjectToDateTime(value));
+			return ObjectToSGDate(value);
 		} else if ("DateTime".equals(dstTypeStr)) {
 			return ObjectToDateTime(value);
 		} else if (// (srcType == typeof(string)|| (srcType == typeof(MySqlDateTime)) &&

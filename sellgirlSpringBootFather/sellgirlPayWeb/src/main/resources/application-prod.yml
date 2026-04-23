@@ -33,7 +33,7 @@ jdbc:
         driverClassName: com.mysql.cj.jdbc.Driver
         driverVersion: 8.0.23
         password: axDvgYjIlk1!
-        url: jdbc:mysql://156.224.19.162:3306/sgshop?useSSL=false&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://156.224.19.162:3306/sgshop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
         username: youruser
         ip: 156.224.19.162:3306
         dbName: sgshop
