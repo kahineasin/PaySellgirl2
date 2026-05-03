@@ -100,3 +100,4 @@ pf:
 zpay:
   notifyUrl: home.bdhome.xyz/api/pay3/notify
   returnUrl: home.bdhome.xyz/pay3paid.html
+freeResource: image,comic

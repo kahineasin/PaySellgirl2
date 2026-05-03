@@ -36,6 +36,7 @@ import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
 import com.sellgirl.sgJavaMvcHelper.MvcPagingParameters;
 import com.sellgirl.sgJavaMvcHelper.PFBaseWebController;
+import com.sellgirl.sellgirlPayWeb.configuration.ProjConfig;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -62,6 +63,7 @@ extends  YJQueryController
 //extends PFBaseWebController
 {
 	@Autowired private ResourceService resourceService;
+	@Autowired private ProjConfig projConfig;
 //    @Autowired
 //    private BalanceService _balanceService;
 
@@ -86,12 +88,6 @@ extends  YJQueryController
 		}
   	  return View(new LoginerBase(),"Product/resource-index");
     }
-//	@GetMapping(value = { "/Product/detail?id={id}" })
-//	@GetMapping(value = { "/Product/detail" })
-//    public ModelAndView Detail(@PathVariable(name = "id")String id)
-//    {
-//  	  return View(new LoginerBase(),"Product/detail");
-//    }
 	@GetMapping(value = { "/resource-detail.html" })
     public ModelAndView Detail(long id,ProductType resourceType)
     {
@@ -102,13 +98,23 @@ extends  YJQueryController
 //		com.sellgirl.sellgirlPayService.product.model.ResourceType type2=
 //				com.sellgirl.sellgirlPayService.product.model.ResourceType.valueOf(type.name());
 //		SGDataTable m2=resourceService.GetResourceById2(id,type2);
+		
+		if((!isResourceUnlocked)&&(null!=projConfig&&SGDataHelper.ArrayAny(projConfig.getFreeResource(), a->a==type) )) {
+			isResourceUnlocked=true;
+		}
+		
 		ModelAndView r=View(m,"Product/resource-detail");
 		r.addObject("resourceType", resourceType);
 		r.addObject("isResourceUnlocked", isResourceUnlocked);
 		r.addObject("netdisk",m.getNetdisk());
-		if(isResourceUnlocked) {
+		if(isResourceUnlocked
+		//||(null!=projConfig&&SGDataHelper.ArrayAny(projConfig.getFreeResource(), a->a==type) )
+		) {
 			r.addObject("resourceLock", resourceService.GetOneResourceLock(id,type));
 		}
+//		else {
+//			r.addObject("isResourceUnlocked", isResourceUnlocked);
+//		}
   	  return r;
     }
 	

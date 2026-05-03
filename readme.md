@@ -176,7 +176,7 @@ dstExec.HugeBulkReader(null, srcDr,"sg_book", null, null, null);
 
 ```
         int insertCnt = list.size();
-        return this.doInsertList( 
+        return sqlExec.doInsertList( 
                 null, tableName,
                 (a, b, c) -> a < insertCnt, (a) -> list.get(a), 
                 rowAction, sqlRowsCopiedAction, stopAction);

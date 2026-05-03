@@ -56,7 +56,7 @@ server:
     port: 8080
 spring:
     profiles:
-        active: prod
+        active: dev
     application:
         name: sellgirlPayWeb
     freemarker:
