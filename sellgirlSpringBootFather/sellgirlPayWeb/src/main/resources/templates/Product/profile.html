@@ -61,7 +61,7 @@
         <div class="points-section" id="pointsDisplay"></div>
         <div class="sign-section">
             <h3>每日签到</h3>
-            <p>连续签到 <span id="consecutiveDays"  th:text="${signDay}">0</span> 天（连续10天可获得1积分）</p>
+            <p>连续签到 <span id="consecutiveDays"  th:text="${signDay}">0</span> 天（连续<span th:text="${sysSignDay}">10</span>天可获得1积分）</p>
             <button id="signBtn" class="btn btn-primary">签到</button>
         </div>
         
@@ -124,10 +124,12 @@
             
             const serverLogged=[[${logged}]];
             
+            let sysSignDay=10;
             if(serverLogged){
 	            const isVip=[[${isVip}]];
 	            const point=[[${point}]];
 	            const signDay=[[${signDay}]];
+	            sysSignDay=[[${sysSignDay}]];
 	            
             	user.signedToday=[[${signedToday}]];
 	            user.isVip=isVip;
@@ -187,7 +189,7 @@
                 signBtn.textContent = '今日已签到';
             } else {
                 signBtn.disabled = false;
-                signBtn.textContent = '签到 (连续10天得1积分)';
+                signBtn.textContent = '签到 (连续'+sysSignDay+'天得1积分)';
             }
 
 			//let signing=false;

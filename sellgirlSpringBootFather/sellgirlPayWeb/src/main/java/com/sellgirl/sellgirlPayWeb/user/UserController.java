@@ -55,6 +55,7 @@ import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
 import com.sellgirl.sellgirlPayWeb.PayShopSwaggerAttr;
 import com.sellgirl.sellgirlPayWeb.PrincessSwaggerAttr;
+import com.sellgirl.sellgirlPayWeb.configuration.ProjConfig;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -81,6 +82,7 @@ extends YJQueryController
 //    @Autowired
 //    private BalanceService _balanceService;
 
+	@Autowired private ProjConfig projConfig;
 /*
  * 所有系统的单点登陆控制，如果用户已在本系统登陆，直接返回token
  * 
@@ -956,6 +958,7 @@ extends YJQueryController
   	
   	result.addObject("logged", logged);
   	result.addObject("signDay", user.signDay);
+  	result.addObject("sysSignDay", projConfig.getSignDay());
   	
   	result.addObject("signedToday", null!=user.lastSign&&user.lastSign.isToday());
   	result.addObject("isVip", user.isVip);

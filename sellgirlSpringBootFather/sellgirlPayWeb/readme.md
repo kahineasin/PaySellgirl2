@@ -158,7 +158,9 @@ antispider:
         window-seconds: 5	#5秒内
         max-count: 10	#最多10次
         block-minutes: 60	#封60秒
-4. 免费的资源类型 application.yml 的 freeResource: image,comic
+4. application.yml 的其它参数
+    freeResource: image,comic    #免费的资源类型
+    signDay: 5    #获得积分需要5天
         
 ## 测试账号
 1. normal aaa:aaaaaa1

@@ -16,6 +16,8 @@ public class ProjConfig {
     @Value("${service.auth.apiUrl}")
     public String authApiUrl;
     public ResourceType[] freeResource;
+    public Integer signDay;
+
 
 	public String getAuthApiUrl() {
 		return authApiUrl;
@@ -34,4 +36,12 @@ public class ProjConfig {
 		this.freeResource = freeResource;
 	}
 
+	public Integer getSignDay() {
+		return signDay;
+	}
+
+    @Value("${signDay:10}")
+	public void setSignDay(Integer signDay) {
+		this.signDay = signDay;
+	}
 }

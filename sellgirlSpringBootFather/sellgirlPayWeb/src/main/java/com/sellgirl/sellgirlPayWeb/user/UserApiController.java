@@ -44,6 +44,7 @@ import com.sellgirl.sgJavaHelper.model.UserOrg;
 import com.sellgirl.sgJavaHelper.model.UserTypeClass;
 import com.sellgirl.sgJavaMvcHelper.config.SGCookieUtils;
 import com.sellgirl.sellgirlPayDao.DayDAO;
+import com.sellgirl.sellgirlPayWeb.configuration.ProjConfig;
 //import pf.springBoot.springBootSSO.controller.shares.YJQueryController;
 import com.sellgirl.sellgirlPayWeb.oAuth.FormsAuth;
 import com.sellgirl.sellgirlPayWeb.oAuth.LoginerBase;
@@ -64,6 +65,7 @@ import com.sellgirl.sellgirlPayWeb.user.service.UserService;
 public class UserApiController extends  YJQueryController
 {
 	@Autowired private UserService userService;
+	@Autowired private ProjConfig projConfig;
 
 
 
@@ -166,8 +168,11 @@ public class UserApiController extends  YJQueryController
 			if(0<user2.getLastSign().compareTo(yesterday)) {//连续签到
 				signDay=-1;
 //				signType=SignType.CONSECUTIVE;
-				if(8<user2.getSignDay()) {
-					signDay=user2.getSignDay()-9;
+				int sysSignDay=projConfig.getSignDay();
+				//if(8<user2.getSignDay()) {//old: 10天1积分
+				if(sysSignDay-2<user2.getSignDay()) {
+//					signDay=user2.getSignDay()-9;
+					signDay=user2.getSignDay()-(sysSignDay-1);
 //					signType=SignType.ZERO;
 					pointsEarned=true;
 				}

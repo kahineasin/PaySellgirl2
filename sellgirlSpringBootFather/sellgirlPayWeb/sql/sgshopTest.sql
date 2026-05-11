@@ -87,7 +87,8 @@ update sgshop.sg_user set point=point+1000 where user_id=2
     -- delete
     from sgshop.sg_user where create_date >'2026-04-01 1:42:44.0'
   delete from sgshop.sg_user where 
-  update sgshop.sg_user set sign_day=19,last_sign='2026-03-30 17:37:26.0' where user_id=2
+  update sgshop.sg_user set sign_day=19,last_sign='2026-05-10 17:37:26.0' where user_id=1
+  update sgshop.sg_user set sign_day=4,last_sign='2026-05-10 17:37:26.0' where user_id=1
   
   select status from sg_vip_order  where  `vip_order_id`=2  limit 1
     select * from sg_vip_order order by create_time desc limit 20
