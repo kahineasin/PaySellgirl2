@@ -10,7 +10,7 @@ import com.sellgirl.sellgirlPayWeb.model.ISwitchPadSetting;
 import com.sellgirl.sellgirlPayWeb.model.IXboxPadSetting;
 
 @Component
-public class HolyKnightRicca implements ISwitchPadSetting{
+public class HollowKnight implements ISwitchPadSetting{
 
 	@Override
 	public HomeGame getGame() {
@@ -19,27 +19,27 @@ public class HolyKnightRicca implements ISwitchPadSetting{
 
 	@Override
 	public String getGameName() {
-		return "圣骑士莉卡";
+		return "空洞骑士";
 	}
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {};
+		return new GamePadCustomAction[] {new GamePadCustomAction("高速冲刺"  )};
 	}
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {};
+		return new GamePadCustomAction[] {new GamePadCustomAction("地图"  )};
 	}
 
 	@Override
 	public GamePadCustomAction[] getZR() {
-		return new GamePadCustomAction[] {};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.ATK含长按  )};
 	}
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.OK  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction("施法"  )};
 	}
 
 	@Override
@@ -49,12 +49,12 @@ public class HolyKnightRicca implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getY() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK)};
+		return new GamePadCustomAction[] {};
 	}
 
 	@Override
 	public GamePadCustomAction[] getA() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Defend)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Dash)};
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class HolyKnightRicca implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getDOWN() {
-		return null;
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.交互)};
 	}
 
 	@Override

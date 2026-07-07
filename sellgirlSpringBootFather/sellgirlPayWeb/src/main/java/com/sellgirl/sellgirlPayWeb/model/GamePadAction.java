@@ -46,6 +46,7 @@ public enum GamePadAction {
 	 * 攻击优先性: LATK->MATK->HATK (这是根据使用频率来的, 轻攻击使用最多)
 	 */
 	LATK,
+	ATK含长按,
 	/**
 	 * 攻击(中攻击)
 	 */

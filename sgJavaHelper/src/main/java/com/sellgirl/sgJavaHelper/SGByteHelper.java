@@ -88,11 +88,16 @@ public class SGByteHelper {
 	}
 	/**
 	 * byte转为对应int的串(常用于分析File文件的字节内容)
-	 * 注意此方法和直接new String(bytes) 的作用是不一样的
+	 * 注意:
+	 * 1. 此方法和直接new String(bytes) 的作用是不一样的
 	 * 
-	 * 比如转换byte[]{53,90}
-	 * byteToIntLine(b)的结果是53,90
-	 * String(b)的结果是5Z
+	 *   比如转换byte[]{53,90}
+	 *   byteToIntLine(b)的结果是53,90
+	 *   String(b)的结果是5Z
+	 * 
+	 * 2. 此方法和print(byte)的结果可能一致, 比如
+	 *   byte b='0';
+	 *   System.out.println(b);  //48
 	 * 
 	 * @param bytes
 	 * @return
@@ -108,6 +113,14 @@ public class SGByteHelper {
 			sb.append(i2);
 		}
 		return sb.toString();
+	}
+	/**
+	 * 相当于"编码与转码_pf.xlsx"中 列1->列1
+	 * @param b
+	 * @return
+	 */
+	public static String byteToString(byte b) {
+		return new String(new byte[] {b});
 	}
 	/**
 	 * 这方法似乎不能转大于127的int值

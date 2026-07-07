@@ -409,8 +409,20 @@ a
 	 * @throws Exception
 	 */
 	public void testHexadecimal() throws Exception {
-		byte b='3';
+		byte b='0';
+		System.out.println(SGByteHelper.byteToString(b)+"-----" +Integer.toHexString(b));  //0
+		System.out.println(SGByteHelper.byteToIntLine(new byte[] {b})+"-----" +Integer.toHexString(b));  //48
+		System.out.println(b+"-----" +Integer.toHexString(b));  //48-----30
+		System.out.println(b);  //48
+		System.out.println(new String(new byte[] {b})+"-----" +Integer.toHexString(b));  //0-----30
+		b='1';
+		System.out.println(Integer.toHexString(b));  //31
+		b='2';
+		System.out.println(Integer.toHexString(b));  //32
+		 b='3';
 		System.out.println(Integer.toHexString(b));  //33
+		b='8';
+		System.out.println(Integer.toHexString(b));  //
 		byte b2=5;
 		System.out.println(Integer.toHexString(b2));  //5
 		byte b3='5';
