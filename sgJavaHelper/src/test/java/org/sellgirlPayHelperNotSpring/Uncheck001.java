@@ -102,7 +102,7 @@ public class Uncheck001 extends TestCase {
 			appKey = SGYamlHelper.loadType("D:\\gitee\\secretKey\\paySellgirl\\key.yml", AppKey.class);
 			SGEmailSend.EMAIL_OWNER_ADDR_HOST="";
 			SGEmailSend.EMAIL_OWNER_ADDR=AES.AESDecryptDemo(appKey.getEmail(),UncheckLoadKey001.getKey());
-			SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailPwd(),UncheckLoadKey001.getKey());
+			SGEmailSend.EMAIL_OWNER_ADDR_PASS=AES.AESDecryptDemo(appKey.getEmailToken(),UncheckLoadKey001.getKey());
 			SGEmailSend.EMAIL_OWNER_ADDR_HOST_PROPERTY=HostType.SELLGIRL.getProperties();
 		}catch (Exception e){
 			e.printStackTrace();

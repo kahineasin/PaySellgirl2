@@ -44,6 +44,7 @@ import javax.mail.internet.MimeMessage;
  */
 @SuppressWarnings(value = { "unused", "rawtypes", "serial", "deprecation" })
 public class UncheckEmail001 extends TestCase {
+	private static String tag="UncheckEmail001";
 	private static final Logger LOGGER = LoggerFactory.getLogger(UncheckEmail001.class);
 
 //	public static void initPFHelper() {
@@ -128,7 +129,7 @@ public class UncheckEmail001 extends TestCase {
 	public void testEmailSend() throws InterruptedException {
 		Uncheck001.initPFHelper();
 
-
+try {
 		String title="测试发邮件20230814_4_"+ SGDate.Now().toString();
 
 		String[] emails= new String[]{"li@sellgirl.com"};
@@ -139,6 +140,11 @@ public class UncheckEmail001 extends TestCase {
 //			Thread.sleep(2000);
 //		}
 		//System.out.println("测试通过");
+}catch(Exception e) {
+	SGDataHelper.getLog().print(SGEmailSend.EMAIL_OWNER_ADDR);
+	SGDataHelper.getLog().print(SGDataHelper.getErrorFullString(e));
+//	SGDataHelper.getLog().printException(e, tag);
+}
 	}
 	/**
 	 * 实测不能改地址

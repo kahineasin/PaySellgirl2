@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AppKey {
     private String email;
     private String emailPwd;
-    private String san;
+    private String emailToken;
+
+	private String san;
     private String gensin;
 	public String getEmailPwd() {
         return emailPwd;
@@ -16,6 +18,14 @@ public class AppKey {
         this.emailPwd = emailPwd;
     }
 
+    public String getEmailToken() {
+		return emailToken;
+	}
+
+	public void setEmailToken(String emailToken) {
+		this.emailToken = emailToken;
+	}
+	
 	public String getSan() {
 		return san;
 	}
