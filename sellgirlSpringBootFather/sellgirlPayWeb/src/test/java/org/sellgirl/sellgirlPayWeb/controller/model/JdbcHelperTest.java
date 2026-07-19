@@ -376,6 +376,23 @@ public class JdbcHelperTest {
 		return srcJdbc;
 	}
 
+	public static PFJdbcBase GetSgShopLocalJdbc() {
+
+		PFJdbcBase srcJdbc = new SGJdbc();
+		srcJdbc.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		srcJdbc.setPassword("123456");
+		srcJdbc.setUsername("root");
+		srcJdbc.setUrl("jdbc:mysql://localhost:3307/sgshop?useSSL=false");
+		//srcJdbc.setSqlType("Tidb");
+		srcJdbc.setDbaMobile("15907xxx");
+		srcJdbc.setDbaName("吴肖均");
+		srcJdbc.setDbaEmail("sasha@sellgirl.com");
+		 srcJdbc.setDriverVersion("8.0.23");
+		srcJdbc.setIp("localhost:3307");
+		srcJdbc.setDbName("sgshop");
+		return srcJdbc;
+	}
+
 	public static PFJdbcBase GetSgShop2Jdbc() {
 
 		PFJdbcBase srcJdbc = new SGJdbc();

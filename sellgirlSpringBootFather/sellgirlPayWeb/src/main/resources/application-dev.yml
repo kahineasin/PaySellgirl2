@@ -30,12 +30,12 @@ jdbc:
         url: jdbc:jtds:sqlserver://192.168.0.33:1433/balance
         username: sa
     shop:
-        driverClassName: com.mysql.jdbc.Driver
-        driverVersion: 5.1.46
+        driverClassName: com.mysql.cj.jdbc.Driver
+        driverVersion: 8.0.23
         password: 123456
-        url: jdbc:mysql://localhost:3306/sgshop?useSSL=false
+        url: jdbc:mysql://localhost:3307/sgshop?useSSL=false
         username: root
-        ip: localhost:3306
+        ip: localhost:3307
         dbName: sgshop
         dbaMobile: 15907658484
         dbaName: 吴肖均

@@ -214,6 +214,9 @@ a
 		System.out.println(SGByteHelper.stringToByteInt("〖"));//-29,-128,-106
 		System.out.println(SGByteHelper.stringToByteInt("〗"));//-29,-128,-105
 		System.out.println(SGByteHelper.stringToByteInt("‖"));//-30,-128,-106
+		System.out.println(SGByteHelper.stringToByteInt("I"));//73
+		System.out.println(SGByteHelper.stringToByteInt("l"));//108//小写L,
+		System.out.println(SGByteHelper.stringToByteInt("1"));//49//壹,
 		
 	}
 	public void testDataLong(){
