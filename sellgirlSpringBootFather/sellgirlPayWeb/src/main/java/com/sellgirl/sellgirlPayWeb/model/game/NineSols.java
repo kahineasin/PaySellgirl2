@@ -69,7 +69,7 @@ public class NineSols implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getDOWN() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.交互)};
+		return null;
 	}
 
 	@Override
