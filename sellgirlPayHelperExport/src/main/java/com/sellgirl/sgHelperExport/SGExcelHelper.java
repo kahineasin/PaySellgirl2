@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,7 +127,66 @@ public class SGExcelHelper {
         return list;
     }
     
-    
+
+    /**
+     * 固定列顺序LinkedHashMap
+     * @param workbook
+     * @return
+     */
+    public static List<Map<String, Object>> ExcelToDictList2(Workbook workbook)
+    {
+    	ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    	ArrayList<String> cols = new ArrayList<String>();
+
+       // var sheet = workbook.Worksheets[0];
+    	//XSSFSheet sheet = workbook.getSheetAt(0);
+    	Sheet sheet = workbook.getSheetAt(0);
+        //int rowCnt = sheet.Cells.Rows.Count;
+        //int colCnt = sheet.Cells.Columns.Count;
+        int rowCnt = GetExcelRowCount( sheet);
+        int colCnt = GetExcelColumnCount( sheet);
+        for (int j = 0; j < colCnt; j++)
+        {
+        	try {
+            //cols.add(PFDataHelper.ObjectToString(sheet.getRow(0).getCell(j).getRawValue()).trim());
+            cols.add(SGDataHelper.ObjectToString(sheet.getRow(0).getCell(j).getStringCellValue()).trim());
+        	}catch(Exception e) {
+        		int aa=1;
+        	}
+        }
+        //var telephoneIdx = cols.IndexOf("telephone");
+//        if (telephoneIdx < 0)
+//        {
+//            return null;
+//        }
+        for (int i = 1; i < rowCnt; i++)
+        {
+        	HashMap<String, Object> item = new LinkedHashMap<String, Object>();
+            //var telephone = PFDataHelper.ObjectToString(sheet.Cells[i, telephoneIdx].Value);
+//            if (PFDataHelper.StringIsNullOrWhiteSpace(telephone))//只要有一行为空，就返回
+//            {
+//                return list;
+//            }
+            for (int j = 0; j < colCnt; j++)
+            {
+            	try {
+                //item[cols[j]] = sheet.Cells[i, j].Value;
+                //item.put(cols.get(j),sheet.getRow(i).getCell(j).getRawValue());
+//                item.put(cols.get(j),sheet.getRow(i).getCell(j).getStringCellValue());
+            		Cell c=sheet.getRow(i).getCell(j);
+            		if(Cell.CELL_TYPE_NUMERIC==c.getCellType()) {
+            			item.put(cols.get(j),sheet.getRow(i).getCell(j).getNumericCellValue());
+            		}else {
+            			item.put(cols.get(j),sheet.getRow(i).getCell(j).getStringCellValue());
+            		}
+            	}catch(Exception e) {
+            		int aa=1;
+            	}
+            }
+            list.add(item);
+        }
+        return list;
+    }  
     /**
      * table导出excel
      * @param dt

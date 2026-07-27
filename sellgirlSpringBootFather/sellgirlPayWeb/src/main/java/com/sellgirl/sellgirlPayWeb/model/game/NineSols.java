@@ -10,7 +10,7 @@ import com.sellgirl.sellgirlPayWeb.model.ISwitchPadSetting;
 import com.sellgirl.sellgirlPayWeb.model.IXboxPadSetting;
 
 @Component
-public class HollowKnight implements ISwitchPadSetting{
+public class NineSols implements ISwitchPadSetting{
 
 	@Override
 	public HomeGame getGame() {
@@ -19,17 +19,17 @@ public class HollowKnight implements ISwitchPadSetting{
 
 	@Override
 	public String getGameName() {
-		return "空洞骑士";
+		return "九日";
 	}
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("高速冲刺"  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction("玄蝶侦查"  )};
 	}
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("地图"  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Defend  )};
 	}
 
 	@Override
@@ -39,17 +39,17 @@ public class HollowKnight implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("施法"  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.爪钩飞索),new GamePadCustomAction(GamePadAction.交互 )};
 	}
 
 	@Override
 	public GamePadCustomAction[] getX() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.特殊攻击)};
+		return new GamePadCustomAction[] {new GamePadCustomAction("击发弓箭")};
 	}
 
 	@Override
 	public GamePadCustomAction[] getY() {
-		return new GamePadCustomAction[] {};
+		return new GamePadCustomAction[] {new GamePadCustomAction("符咒")};
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class HollowKnight implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getUP() {
-		return null;
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.红药)};
 	}
 
 	@Override
@@ -74,12 +74,12 @@ public class HollowKnight implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getLEFT() {
-		return null;
+		return new GamePadCustomAction[] {new GamePadCustomAction("更换弓箭")};
 	}
 
 	@Override
 	public GamePadCustomAction[] getRIGHT() {
-		return null;
+		return new GamePadCustomAction[] {new GamePadCustomAction("更换弓箭")};
 	}
 
 	@Override

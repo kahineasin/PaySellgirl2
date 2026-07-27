@@ -11,9 +11,11 @@ import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -334,5 +336,77 @@ public class UncheckDe003 extends TestCase{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+    
+    /**
+     * 按batch分割excel, 前提是保证相同订单号的数据在同一个excel内
+     */
+    public void testSplitExcel() {
+		try {
+			Workbook wb1;
+			wb1 = SGExcelHelper.create(new FileInputStream(new File("D:\\download\\invoice_apply.csv")));
+			List<Map<String, Object>> list1=SGExcelHelper.ExcelToDictList2(wb1);
+			List<List<Map<String, Object>>> list2=new ArrayList();
+//			while(0<list1.size()) {
+//				
+//			}
+			int batch=900;
+			String lastOrder="";
+			List<Map<String, Object>> tmpList=new ArrayList();
+			//List<Map<String, Object>> tmpList2=new ArrayList();
+			int prevId=0;
+			//for(int i=list1.size()-1;0<=i;i--) {
+			//for(int i=0;list1.size()>i;i++) {
+			while(0<list1.size()) {
+//				Map<String, Object> item=list1.get(list1.size()-1);
+				Map<String, Object> item=list1.get(0);
+				String order=item.get("*订单编号").toString();
+				if(batch-1<tmpList.size()) {
+					if(lastOrder.equals(order)) {
+						for(int j=tmpList.size()-1;0<=j;j--) {
+							String order2=tmpList.get(j).get("*订单编号").toString();
+							if(order2.equals(order)) {
+//								tmpList2.add(tmpList.get(j));
+								list1.add(0, tmpList.get(j));
+								tmpList.remove(j);
+							}else {
+								break;
+							}
+						}
+					}
+					//if(!lastOrder.equals(order)) {
+//						SGExcelHelper.exportTableToExcel(null, order);
+						export(tmpList,"testExportExcel"+prevId+".xlsx");
+						tmpList.clear();
+						prevId++;
+					//}
+				}else {
+					tmpList.add(item);
+					list1.remove(item);
+					lastOrder=order;
+				}
+			}
+			if(0<tmpList.size()) {
+				export(tmpList,"testExportExcel"+prevId+".xlsx");
+				tmpList.clear();
+			}
+		} catch (InvalidFormatException | IOException e) {
+			throw new RuntimeException(e);
+		}
+    }
+    public void export(List<Map<String, Object>> tmpList,String fileName)
+    {    	
+		String server = SGDataHelper.GetBaseDirectory();// AppDomain.CurrentDomain.BaseDirectory;
+		Path pDirPath = Paths.get(server, "log");
+		String dirPath = pDirPath.toString();
+		String logPath = Paths
+				.get(dirPath, fileName//"testExportExcel.xlsx"
+						)
+				.toString();
+		
+    	SGDataTable dt=SGDataHelper.DictListToDataTable(tmpList);
+    	
+		SGExcelHelper.exportTableToExcel(dt,logPath);
+    	
     }
 }
