@@ -33,32 +33,32 @@ public class Megaman11 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("加速齿轮")};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.ATK含长按)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Slide)};
-	}
-
-	@Override
-	public GamePadCustomAction[] getX() {
 		return new GamePadCustomAction[] {new GamePadCustomAction("连续攻击")};
 	}
 
 	@Override
+	public GamePadCustomAction[] getX() {
+		return new GamePadCustomAction[] {new GamePadCustomAction("加速齿轮")};
+	}
+
+	@Override
 	public GamePadCustomAction[] getY() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK)};
+		return new GamePadCustomAction[] {new GamePadCustomAction("力量齿轮")};
 	}
 
 	@Override
 	public GamePadCustomAction[] getA() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("力量齿轮"),new GamePadCustomAction(GamePadAction.OK)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Slide)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getB() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Jump),new GamePadCustomAction(GamePadAction.Cancel)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Jump)};
 	}
 
 	@Override
