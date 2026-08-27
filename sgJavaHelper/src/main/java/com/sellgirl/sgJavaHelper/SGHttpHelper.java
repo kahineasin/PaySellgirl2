@@ -95,14 +95,15 @@ public class SGHttpHelper {
             } else {
                 result.error = "Invalid response from API, status code: " + result.statusCode;
             }
-        } catch (IOException | ParseException e) {
+            if (httpClient != null) httpClient.close();
+        } catch (Exception e) {
             result.setError(e.getMessage());
             result.refuse = true;
         } finally {
             try {
                 if (response != null) response.close();
-                if (httpClient != null) httpClient.close();
-            } catch (IOException e) {
+//                if (httpClient != null) httpClient.close();//这里好像会抛出runtime的null异常
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

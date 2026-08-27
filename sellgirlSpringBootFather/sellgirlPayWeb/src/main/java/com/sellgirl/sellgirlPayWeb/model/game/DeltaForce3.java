@@ -38,7 +38,7 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.手榴弹),new GamePadCustomAction(GamePadAction.屏住呼吸)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.手榴弹),new GamePadCustomAction("开镜时右探头")};
 	}
 
 	@Override
@@ -53,12 +53,12 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getA() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Crouch),new GamePadCustomAction(GamePadAction.B2)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK),new GamePadCustomAction(GamePadAction.B2)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getB() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.按住挣脱约束陷阱),new GamePadCustomAction(GamePadAction.B1)};
+		return new GamePadCustomAction[] {new GamePadCustomAction("开镜时左探头"),new GamePadCustomAction(GamePadAction.按住挣脱约束陷阱),new GamePadCustomAction(GamePadAction.B1)};
 	}
 
 	@Override
@@ -83,12 +83,12 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getLS() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Dash),new GamePadCustomAction("开镜时左探头")};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Dash),new GamePadCustomAction(GamePadAction.屏住呼吸)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getRS() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK),new GamePadCustomAction("开镜时右探头")};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Crouch),new GamePadCustomAction(GamePadAction.Slide)};
 	}
 
 }
