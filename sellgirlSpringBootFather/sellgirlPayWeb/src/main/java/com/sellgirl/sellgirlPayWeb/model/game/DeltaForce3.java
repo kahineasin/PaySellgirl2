@@ -23,7 +23,7 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.射击)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按切换成开镜)};
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按切换成开镜)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.射击)};
 	}
 
 	@Override
