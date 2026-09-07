@@ -277,33 +277,33 @@ a
 //			printByte((byte)i);
 //		}
 		
-		/**
--128
-0
--128
--128
--127
-127
-		 */
-		byte a=(byte)0x80;//1000...0  111...1	
-		byte b=0x00;		
-		byte c=(byte) 128;
-		byte d=-128;
-		byte e=(byte)0x81;
-		byte f=0x7f;
-		System.out.println(a);
-		System.out.println(b);
-		System.out.println(c);
-		System.out.println(d);
-		System.out.println(e);
-		System.out.println(f);
+//		/**
+//-128
+//0
+//-128
+//-128
+//-127
+//127
+//		 */
+//		byte a=(byte)0x80;//1000...0  111...1	
+//		byte b=0x00;		
+//		byte c=(byte) 128;
+//		byte d=-128;
+//		byte e=(byte)0x81;
+//		byte f=0x7f;
+//		System.out.println(a);
+//		System.out.println(b);
+//		System.out.println(c);
+//		System.out.println(d);
+//		System.out.println(e);
+//		System.out.println(f);
 		
 
-//		for(int i=-129;i<=129;i++) {
-////			byte c=i;
-////			printByte((byte)i);
-//			System.out.println(Integer.toHexString(i));  //30
-//		}
+		for(int i=-128;i<=127;i++) {
+//			byte c=i;
+//			printByte((byte)i);
+			System.out.println(Integer.toHexString(i));  //30
+		}
 		
 	}
 	public void testUtf8Bom() {
@@ -734,13 +734,31 @@ ChineseChar
 //		System.out.println(chfrom);
 //		System.out.println(chend);
 	} 
-//	public void testCharToInt() {
-//		char[] c=new char[] {'’','「','」'};
-//		for(char i:c) {
-//			System.out.println(SGByteHelper.charToInt(i));
-//		}
-//		return;
-//	}
+	public void testCharTo16() {
+		char[] c=new char[] {'a','中'};
+		for(char i:c) {
+			System.out.println(SGByteHelper.charToInt(i));
+			System.out.println(Integer.toHexString(i));
+			System.out.println(Integer.toHexString(SGByteHelper.charToInt(i)));
+			System.out.println("----");
+		}
+		System.out.println("----");
+		System.out.println("----");
+		String[] s=new String[] {"a","中"};
+		for(String i:s) {
+			System.out.println(SGByteHelper.stringToByteInt(i));//-28,-72,-83
+		}
+		System.out.println("----");
+		System.out.println("----");
+		System.out.println(SGByteHelper.stringToByteInt("中"));//-28,-72,-83
+		byte a=(byte)0xe4;
+		byte b=(byte)0xb8;
+		byte d=(byte)0xad;
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(d);
+		return;
+	}
 	public void testIntToChar() {
 		for(int i=8214;8216>=i;i++) {
 			System.out.println(i);

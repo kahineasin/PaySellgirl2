@@ -3,13 +3,17 @@ package org.sellgirlPayHelperNotSpring;
 import junit.framework.TestCase;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
+import com.sellgirl.sgJavaHelper.SGByteHelper;
 import com.sellgirl.sgJavaHelper.SGHttpHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
@@ -73,8 +77,11 @@ public class UncheckUrl001  extends TestCase {
     //ff d8 ff 能看出是jpg格式
     //非常推荐用此方法来分析文件的编码
     public void testStream2() throws Exception{
+    	//ff d8 ff e0 0 10 4a 46 49 46 0 1 1 1 ...
 //        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
-        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");
+//        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");
+    	//内容为"a中"的txt输出61 e4 b8 ad //16即a,e4 b8 ad 即 -28,-72,-83 即 SGByteHelper.stringToByteInt("中")	
+        URL url = new URL("file:/D:/cache/16/1.txt");
 //        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         URLConnection urlConnection = url.openConnection();
         urlConnection.setConnectTimeout(6000);
@@ -101,6 +108,28 @@ public class UncheckUrl001  extends TestCase {
 //        inputStreamReader.close();
         inputStream.close();
         System.out.println("读取成功：\r\n" + builder);
+    }
+
+    public void testStream3() throws Exception{
+    	//ff d8 ff e0 0 10 4a 46 49 46 0 1 1 1 ...
+//        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
+//        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");
+    	//内容为"a中"的txt输出61 e4 b8 ad //16即a,e4 b8 ad 即 -28,-72,-83 即 SGByteHelper.stringToByteInt("中")	
+        URL url = new URL("file:/D:/cache/16/1.txt");
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setConnectTimeout(6000);
+        urlConnection.setReadTimeout(6000);
+        InputStream inputStream = urlConnection.getInputStream();    	
+        URL url2 = new URL("file:/D:/cache/16/2.txt");
+        File file=(new File(url2.toURI()));
+        OutputStream outStream=new FileOutputStream(file);
+//        URLConnection urlConnection2 = url2.openConnection();//不能写        
+        int line;
+        while ((line = inputStream.read()) >-1) {
+            outStream.write(line);
+        }
+        inputStream.close();
+        outStream.close();
     }
     public void testUrl() throws Exception {
         //readFileFromUrl("D:\\\\1.txt");//报错
