@@ -269,13 +269,42 @@ a
 		System.out.println(SGByteHelper.byteToIntLine(SGByteHelper.readFileToByte(new File("D:\\cache\\encode\\utf8_1.txt"))));
 	}
 	public void testPrintByte2() {
-//		byte b='9';
-//		printByte(b);
-		//byte最大128，2的5次方
-		for(int i=127;i<=130;i++) {
-//			byte c=i;
-			printByte((byte)i);
-		}
+////		byte b='9';
+////		printByte(b);
+//		//byte最大128，2的5次方
+//		for(int i=127;i<=130;i++) {
+////			byte c=i;
+//			printByte((byte)i);
+//		}
+		
+		/**
+-128
+0
+-128
+-128
+-127
+127
+		 */
+		byte a=(byte)0x80;//1000...0  111...1	
+		byte b=0x00;		
+		byte c=(byte) 128;
+		byte d=-128;
+		byte e=(byte)0x81;
+		byte f=0x7f;
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+		System.out.println(d);
+		System.out.println(e);
+		System.out.println(f);
+		
+
+//		for(int i=-129;i<=129;i++) {
+////			byte c=i;
+////			printByte((byte)i);
+//			System.out.println(Integer.toHexString(i));  //30
+//		}
+		
 	}
 	public void testUtf8Bom() {
 		//带bom的utf8文件的前几个字符为[-17, -69, -65, 91, 116, 105, 58, -24,

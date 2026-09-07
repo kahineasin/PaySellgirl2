@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
+import com.sellgirl.sgJavaHelper.SGHttpHelper;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 public class UncheckUrl001  extends TestCase {
@@ -31,6 +33,72 @@ public class UncheckUrl001  extends TestCase {
         }
         reader.close();
         inputStreamReader.close();
+        inputStream.close();
+        System.out.println("读取成功：\r\n" + builder);
+    }
+
+    //65533 65533 65533 65533 0 16 74 70 73 70 0 1 1 1 0 96 0 96 0 0 65533 65533 16 65533 69 120 105 ...
+    //注意图片用UTF8编码后再输出,就分辨不出是图片了
+    @Deprecated
+    public void testStream() throws Exception{
+        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setConnectTimeout(6000);
+        urlConnection.setReadTimeout(6000);
+        if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            throw new RuntimeException("文件读取失败");
+        }
+        InputStream inputStream = urlConnection.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuilder builder = new StringBuilder();
+//        String line;
+//        while ((line = reader.readLine()) != null) {
+//            builder.append(line);
+//            builder.append("\r\n");
+//        }
+        int line;
+        while ((line = reader.read()) >-1) {
+            builder.append(line);
+//            builder.append(Integer.toHexString(line));
+            builder.append(" ");
+        }
+//        SGHttpHelper.HttpGet(getName(), getName())
+        inputStreamReader.close();
+        inputStream.close();
+        System.out.println("读取成功：\r\n" + builder);
+    }
+
+    //ff d8 ff e0 0 10 4a 46 49 46 0 1 1 1 ... 
+    //ff d8 ff 能看出是jpg格式
+    //非常推荐用此方法来分析文件的编码
+    public void testStream2() throws Exception{
+//        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
+        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");
+//        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setConnectTimeout(6000);
+        urlConnection.setReadTimeout(6000);
+//        if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//            throw new RuntimeException("文件读取失败");
+//        }
+        InputStream inputStream = urlConnection.getInputStream();
+//        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+//        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuilder builder = new StringBuilder();
+////        String line;
+////        while ((line = reader.readLine()) != null) {
+////            builder.append(line);
+////            builder.append("\r\n");
+////        }
+        int line;
+        while ((line = inputStream.read()) >-1) {
+//            builder.append(line);
+            builder.append(Integer.toHexString(line));
+            builder.append(" ");
+        }
+//        SGHttpHelper.HttpGet(getName(), getName())
+//        inputStreamReader.close();
         inputStream.close();
         System.out.println("读取成功：\r\n" + builder);
     }
