@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 //import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
@@ -34,6 +36,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 //import java.net.URL;
 //import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -9033,6 +9036,7 @@ public static String escapeCsv3(String input) {
 	 * @param url
 	 * @return
 	 */
+	@Deprecated
 	public static File urlToFile(URL url) {
 		InputStream is = null;
 		File file = null;
@@ -9066,6 +9070,77 @@ public static String escapeCsv3(String input) {
 			}
 		}
 	}
+
+	/**
+	 * 使用方法:
+	 * SGDataHelper.streamTo(new URL("http://192.168.10.105:8080/stream.ts"), 
+	 *     new URL("file:/D:/cache/16/stream1.txt"));
+	 * @param url
+	 * @param url2
+	 * @throws Exception
+	 */
+    public static void streamTo(URL url,URL url2) throws Exception{
+    	//ff d8 ff e0 0 10 4a 46 49 46 0 1 1 1 ...
+//        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
+//        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");
+    	//内容为"a中"的txt输出61 e4 b8 ad //16即a,e4 b8 ad 即 -28,-72,-83 即 SGByteHelper.stringToByteInt("中")	
+//        URL url = new URL("file:/D:/cache/16/1.txt");
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setConnectTimeout(6000);
+        urlConnection.setReadTimeout(6000);
+        InputStream inputStream = urlConnection.getInputStream();    	
+//        URL url2 = new URL("file:/D:/cache/16/2.txt");
+        File file=(new File(url2.toURI()));
+        OutputStream outStream=new FileOutputStream(file);
+//        URLConnection urlConnection2 = url2.openConnection();//不能写        
+        int line;
+        while ((line = inputStream.read()) >-1) {
+            outStream.write(line);
+        }
+        inputStream.close();
+        outStream.close();
+    }
+
+    /**
+     * 常用于测试时判断流的编码头,比如:
+     * ff d8 ff ... 图片
+     * @param url
+     * @throws Exception
+     */
+    public static void printStream(URL url,int len) throws Exception{    	
+//        URL url = new URL("file:/D:/cache/16/1.txt");
+////        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setConnectTimeout(6000);
+        urlConnection.setReadTimeout(6000);
+//        if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//            throw new RuntimeException("文件读取失败");
+//        }
+        InputStream inputStream = urlConnection.getInputStream();
+//        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+//        BufferedReader reader = new BufferedReader(inputStreamReader);
+        StringBuilder builder = new StringBuilder();
+////        String line;
+////        while ((line = reader.readLine()) != null) {
+////            builder.append(line);
+////            builder.append("\r\n");
+////        }
+        int line;
+        int cnt=0;
+        while ((line = inputStream.read()) >-1) {
+        	if(cnt>len&&0<len) {
+        		break;
+        	}
+//            builder.append(line);
+            builder.append(Integer.toHexString(line));
+            builder.append(" ");
+            cnt++;
+        }
+//        SGHttpHelper.HttpGet(getName(), getName())
+//        inputStreamReader.close();
+        inputStream.close();
+        System.out.println("读取成功：\r\n" + builder);
+    }
 //   #endregion
 //   //public static object GetSystemUserData(string userId)
 //   //{
