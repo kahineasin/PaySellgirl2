@@ -3,10 +3,13 @@ package org.sellgirlPayHelperNotSpring;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.aliyun.openservices.shade.org.apache.commons.lang3.CharSet;
 import com.sellgirl.sgJavaHelper.DirectNode;
 import com.sellgirl.sgJavaHelper.IPFSqlFieldTypeConverter;
 import com.sellgirl.sgJavaHelper.SGAction;
 import com.sellgirl.sgJavaHelper.SGByteHelper;
+import com.sellgirl.sgJavaHelper.SGByteHelper.SGEncoding;
+import com.sellgirl.sgJavaHelper.SGByteHelper.SGFileHead;
 import com.sellgirl.sgJavaHelper.PFBatchHelper;
 import com.sellgirl.sgJavaHelper.SGDataTable;
 import com.sellgirl.sgJavaHelper.PFEnumClass;
@@ -95,10 +98,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -139,7 +146,7 @@ public class UncheckByte001 extends TestCase {
 		SGDataHelper.SetConfigMapper(new PFConfigTestMapper());
 		new SGDataHelper(new PFAppConfig());
 	}
-	public void testByteIntToString() {
+	public void testByteIntToString() throws UnsupportedEncodingException {
 //		System.out.println(SGByteHelper.byteIntToString(new int[] {101,44}));//e,
 //		System.out.println(SGByteHelper.byteIntToString(new int[] {44}));//,
 //		System.out.println(SGByteHelper.byteIntToString(new int[] {-5, -32, 64, 0, 0, 15, -4, 0, 75, -128, 0, 0, 9, -100, -128, 9, 112, 0, 0,1, 10, -128, 1, 46, 0, 0, 0, 32, 0, 0, 37, -64, 0, 0, 4}));//
@@ -157,6 +164,35 @@ public class UncheckByte001 extends TestCase {
 //		System.out.println(SGByteHelper.byteIntToString3(new int[] {8216}));//乱码
 //		System.out.println(SGByteHelper.byteIntToString4(new int[] {101,44}));//
 //		System.out.println(SGByteHelper.byteIntToString4(new int[] {8216}));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {0x4e,0x2d},SGEncoding.UNICODE));//中
+		System.out.println(SGByteHelper.byteIntToString(new int[] {0x4e,0x2d},SGEncoding.UTF8));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {-28,-72,-83},SGEncoding.UNICODE));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {-28,-72,-83},SGEncoding.UTF8));//
+		if(true) {return;}
+		System.out.println(SGByteHelper.byteIntToString(new int[] {0x4e2d}));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {0x4e,0x2d}));//
+		System.out.println(SGByteHelper.byteIntToString4(new int[] {0x4e,0x2d}));//
+		System.out.println(SGByteHelper.byteIntToString4(new int[] {-28,-72,-83}));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {-28,-72,-83}));//
+		System.out.println(SGByteHelper.stringToByteInt("中"));//
+		System.out.println(new String(new byte[] {-28,-72,-83},"UTF-8"));//中
+		System.out.println(new String(new byte[] {-28,-72,-83},"Unicode"));//乱码
+		System.out.println(new String(new byte[] {0x4e,0x2d},"Unicode"));//中
+		System.out.println(new String(new byte[] {0x2d,0x4e},"Unicode"));//乱码
+		System.out.println(new String(new char[] {0x4e2d }));//
+		System.out.println(Integer.toBinaryString(0x4e));//
+		System.out.println(Integer.toBinaryString(0x2d));//
+		System.out.println(Integer.toBinaryString(-28));//
+		System.out.println(Integer.toBinaryString(-72));//
+		System.out.println(Integer.toBinaryString(-83));//
+		System.out.println(Integer.toBinaryString(0xe4));//
+		System.out.println(Integer.toBinaryString(0xb8));//
+		System.out.println(Integer.toBinaryString(0xad));//
+
+		
+		System.out.println("---------------------------");//
+		
+		if(true) {return;}
 		
 //		System.out.println(new String(SGByteHelper.intToByteArray(8217)));
 //		
@@ -198,25 +234,71 @@ a
 		}
 	}
 	public void testStringToByteInt() {
-		System.out.println(SGByteHelper.stringToByteInt("	"));//9
-		System.out.println(SGByteHelper.stringToByteInt(" "));//32
-		System.out.println(SGByteHelper.stringToByteInt("谢容儿"));//-24,-80,-94,-27,-82,-71,-27,-124,-65
-		System.out.println(SGByteHelper.stringToByteInt("TAG"));//84,65,71
-		System.out.println(SGByteHelper.stringToByteInt("tag"));//116,97,103
-		System.out.println(SGByteHelper.stringToByteInt("谢"));//-24,-80,-94
-		System.out.println(SGByteHelper.stringToByteInt("’"));//-30,-128,-103
-		System.out.println(SGByteHelper.stringToByteInt("'"));//39
-		System.out.println(SGByteHelper.stringToByteInt("△"));//-30,-106,-77
-		System.out.println(SGByteHelper.stringToByteInt("○"));//-30,-105,-117
-		System.out.println(SGByteHelper.stringToByteInt("□"));//-30,-106,-95
-		System.out.println(SGByteHelper.stringToByteInt("✕"));//-30,-100,-107
-		System.out.println(SGByteHelper.stringToByteInt("✖"));//-30,-100,-106
-		System.out.println(SGByteHelper.stringToByteInt("〖"));//-29,-128,-106
-		System.out.println(SGByteHelper.stringToByteInt("〗"));//-29,-128,-105
-		System.out.println(SGByteHelper.stringToByteInt("‖"));//-30,-128,-106
-		System.out.println(SGByteHelper.stringToByteInt("I"));//73
-		System.out.println(SGByteHelper.stringToByteInt("l"));//108//小写L,
-		System.out.println(SGByteHelper.stringToByteInt("1"));//49//壹,
+//		System.out.println(SGByteHelper.stringToByteInt("	"));//9
+//		System.out.println(SGByteHelper.stringToByteInt(" "));//32
+//		System.out.println(SGByteHelper.stringToByteInt("谢容儿"));//-24,-80,-94,-27,-82,-71,-27,-124,-65
+//		System.out.println(SGByteHelper.stringToByteInt("TAG"));//84,65,71
+//		System.out.println(SGByteHelper.stringToByteInt("tag"));//116,97,103
+//		System.out.println(SGByteHelper.stringToByteInt("谢"));//-24,-80,-94
+		System.out.println(SGByteHelper.byteToHexLine(SGByteHelper.stringToByteInt2("我",SGEncoding.UNICODE)));//
+		System.out.println(SGByteHelper.byteToHexLine(SGByteHelper.stringToByteInt2("中",SGEncoding.UNICODE)));//
+		System.out.println(SGByteHelper.byteToHexLine(SGByteHelper.stringToByteInt2("我",SGEncoding.UTF8)));//
+		System.out.println(SGByteHelper.byteToHexLine(SGByteHelper.stringToByteInt2("中",SGEncoding.UTF8)));//
+		
+//		System.out.println(SGByteHelper.stringToByteInt("’"));//-30,-128,-103
+//		System.out.println(SGByteHelper.stringToByteInt("'"));//39
+//		System.out.println(SGByteHelper.stringToByteInt("△"));//-30,-106,-77
+//		System.out.println(SGByteHelper.stringToByteInt("○"));//-30,-105,-117
+//		System.out.println(SGByteHelper.stringToByteInt("□"));//-30,-106,-95
+//		System.out.println(SGByteHelper.stringToByteInt("✕"));//-30,-100,-107
+//		System.out.println(SGByteHelper.stringToByteInt("✖"));//-30,-100,-106
+//		System.out.println(SGByteHelper.stringToByteInt("〖"));//-29,-128,-106
+//		System.out.println(SGByteHelper.stringToByteInt("〗"));//-29,-128,-105
+//		System.out.println(SGByteHelper.stringToByteInt("‖"));//-30,-128,-106
+//		System.out.println(SGByteHelper.stringToByteInt("I"));//73
+//		System.out.println(SGByteHelper.stringToByteInt("l"));//108//小写L,
+//		System.out.println(SGByteHelper.stringToByteInt("1"));//49//壹,
+		
+////		System.out.println(SGByteHelper.stringToByteInt("中"));//-28,-72,-83, 代码中写的实际是utf8串
+//		System.out.println(SGByteHelper.stringToByteInt("😀"));//-16,-97,-104,-128
+////		System.out.println(SGByteHelper.stringToByteInt("中",SGEncoding.UNICODE));//错
+//		System.out.println(SGByteHelper.stringToByteInt("😀",SGEncoding.UNICODE));//错
+////		System.out.println(SGByteHelper.stringToByteInt("中",SGEncoding.UTF8));//-28,-72,-83
+//		System.out.println(SGByteHelper.stringToByteInt("😀",SGEncoding.UTF8));//-16,-97,-104,-128
+
+//		System.out.println(SGByteHelper.stringToByteHex("😀",SGEncoding.UNICODE));//错
+//		System.out.println(s.getBytes(SGEncoding.UNICODE.toString()));
+		//😀 unicode:fe,ff,d8,3d,de,0 即是 -16,-97,-104,-128
+		//😀 utf8:f0 9f 98 80
+		
+		System.out.println("😀".length());
+		try {
+
+			String s="😀";
+			for(byte i:s.getBytes(SGEncoding.UNICODE.toString())) {
+				int i2=0>i?(i+256):i;
+				System.out.println(Integer.toHexString(i2));
+			}
+			System.out.println("---------------");
+			for(byte i:s.getBytes()) {
+				int i2=0>i?(i+256):i;
+				System.out.println(Integer.toHexString(i2));
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//错
+//		System.out.println(SGByteHelper.stringToByteHex("😀",SGEncoding.UTF8));//-16,-97,-104,-128
+//		
+////		SGByteHelper.writeFileFromByte(new File("D:/cache/16/emojiUTF8_1.txt"),new byte[] {-16,-97,-104,-128},null);//对
+////		SGByteHelper.writeFileFromByte(new File("D:/cache/16/emojiUTF8_2.txt"),new byte[] {-16,-97,-104,-128},SGFileHead.TxtUTF8withBom);//对
+////		SGByteHelper.writeFileFromByte(new File("D:/cache/16/emojiUTF8_3.txt"),new byte[] {-16,-97,-104,-128},SGFileHead.TxtUnicodeBE);//错
+//		
+//		byte[] b=SGByteHelper.readFileToByte(new File("D:/cache/16/emojiUnicode.txt"));
+//		String s=SGByteHelper.byteToIntLine(b);
+//		String s2=SGByteHelper.byteToHexLine(b);
+//		System.out.println(s);
+//		System.out.println(s2);
 		
 	}
 	public void testDataLong(){
@@ -267,6 +349,22 @@ a
 		System.out.println(SGByteHelper.byteToIntLine(SGByteHelper.readFileToByte(new File("D:\\cache\\encode\\gbk_1.txt"))));
 		//谢容儿的utf8编码: -24,-80,-94,-27,-82,-71,-27,-124,-65
 		System.out.println(SGByteHelper.byteToIntLine(SGByteHelper.readFileToByte(new File("D:\\cache\\encode\\utf8_1.txt"))));
+	}
+	public void testTxt() throws MalformedURLException, Exception {
+		/**
+		 * 两个txt都是'中'字
+		 * '中'字的unicode编码是 0x4e2d , utf8编码是 -28,-72,-83  e4 b8 ad
+		 */
+		System.out.println(Integer.toHexString(-28));
+		System.out.println(Integer.toHexString(-72));
+		System.out.println(Integer.toHexString(-83));
+		//txt文件的 "UTF-16 LE"
+		SGDataHelper.printStream(new URL("file:/D:/cache/16/unicode.txt"), -1);//ff fe 2d 4e, 这里奇怪的是为何 2d 4e位置反了? "UTF-16 LE"是低位在前
+		//"UTF-16 BE"
+		SGDataHelper.printStream(new URL("file:/D:/cache/16/unicodeBE.txt"), -1);//ff fe 4e 2d
+		
+		//utf8
+		SGDataHelper.printStream(new URL("file:/D:/cache/16/utf8.txt"), -1); //e4 b8 ad , 没有文件头 
 	}
 	public void testPrintByte2() {
 ////		byte b='9';
@@ -766,6 +864,135 @@ ChineseChar
 			System.out.println(SGByteHelper.intToChar(i));
 		}
 	}
+	public void testAllByte() {
+//		char x=0xffff;
+//		char x1=0;//不能负数
+//		char x2=16*16*16*16-1;//不能负数
+//		byte a=-128;
+//		byte b=(byte) 128;
+//		byte c=-127;
+//		byte d=(byte) 129;
+//		byte e=34;
+//		byte f='"';
+//		System.out.println(a==b);//true
+//		System.out.println(c==d);//true
+//		System.out.println(e==f);//true
+		
+//		for(int i=8214;8216>=i;i++) {
+//			System.out.println(i);
+////			System.out.println(new String(new char[] {SGByteHelper.intToChar(i)}));
+//			System.out.println(SGByteHelper.intToChar(i));
+//		}
+//		System.out.println(SGByteHelper.charToInt('\t'));//9
+//		System.out.println(SGByteHelper.charToInt('\n'));//10
+//		System.out.println(SGByteHelper.charToInt('\r'));//13
+//		System.out.println(SGByteHelper.charToInt('\f'));//12
+		System.out.println("---------byte:----------");
+		
+//		int[] c=new int[] {0,34};//这些字符复制到excel做例子时会中途断开(复制不了)
+		for(int i=0x00;0xff>=i;i++) {
+//			boolean is=false;
+//			for(int j=0;c.length>j;j++) {
+//				if(c[j]==i) {
+//					is=true;
+//					break;
+//				}
+//			}
+//			if(is) {
+//				continue;
+//			}
+			
+//			System.out.println(i);
+			System.out.print((byte)i);
+			System.out.print("\t");
+			System.out.print(Integer.toHexString(i));
+//			System.out.print("\t");
+//			System.out.print(new String(new char[] {SGByteHelper.intToChar(i)}));
+			System.out.print("\t");
+			System.out.print(SGByteHelper.intToChar(i));
+			System.out.print("\r");
+		}
+//		System.out.println("---------char:----------");
+//		for(int i=0x00;0xff>=i;i++) {
+////			System.out.println(i);
+////			System.out.println((byte)i);
+////			System.out.println(new String(new char[] {SGByteHelper.intToChar(i)}));
+//			System.out.println(SGByteHelper.intToChar(i));
+//		}
+	}
+
+	public void testAllChar() throws IOException {
+//		char x=0xffff;
+//		char x1=0;//不能负数
+//		char x2=16*16*16*16-1;//不能负数
+//		byte a=-128;
+//		byte b=(byte) 128;
+//		byte c=-127;
+//		byte d=(byte) 129;
+//		byte e=34;
+//		byte f='"';
+//		System.out.println(a==b);//true
+//		System.out.println(c==d);//true
+//		System.out.println(e==f);//true
+		
+//		for(int i=8214;8216>=i;i++) {
+//			System.out.println(i);
+////			System.out.println(new String(new char[] {SGByteHelper.intToChar(i)}));
+//			System.out.println(SGByteHelper.intToChar(i));
+//		}
+//		System.out.println(SGByteHelper.charToInt('\t'));//9
+//		System.out.println(SGByteHelper.charToInt('\n'));//10
+//		System.out.println(SGByteHelper.charToInt('\r'));//13
+//		System.out.println(SGByteHelper.charToInt('\f'));//12
+		System.out.println("---------char:----------");
+		
+//		int[] c=new int[] {0,34};//这些字符复制到excel做例子时会中途断开(复制不了)
+
+        File file=new File("D:/cache/16/char1.txt");
+        OutputStream outStream=new FileOutputStream(file);
+//        URLConnection urlConnection2 = url2.openConnection();//不能写
+		for(int i=0x0000;0xffff>=i;i++) {
+//			boolean is=false;
+//			for(int j=0;c.length>j;j++) {
+//				if(c[j]==i) {
+//					is=true;
+//					break;
+//				}
+//			}
+//			if(is) {
+//				continue;
+//			}
+			
+			System.out.print(i);
+            outStream.write(Integer.toString(i).getBytes());
+//			System.out.print((byte)i);
+            
+			System.out.print("\t");
+			System.out.print(Integer.toHexString(i));
+            outStream.write('\t');
+            outStream.write((Integer.toHexString(i)).getBytes());
+            
+//			System.out.print("\t");
+//			System.out.print(new String(new char[] {SGByteHelper.intToChar(i)}));
+            
+			System.out.print("\t");
+			System.out.print(SGByteHelper.intToChar(i));
+            outStream.write('\t');
+            outStream.write(SGByteHelper.intToUnicodeString(i).getBytes(""));
+//            outStream.write(new String(new char[] { SGByteHelper.intToChar(i)}));
+            
+			System.out.print("\r");
+            outStream.write(new byte[]{'\r','\n'});
+		}
+        outStream.close();
+//		System.out.println("---------char:----------");
+//		for(int i=0x00;0xff>=i;i++) {
+////			System.out.println(i);
+////			System.out.println((byte)i);
+////			System.out.println(new String(new char[] {SGByteHelper.intToChar(i)}));
+//			System.out.println(SGByteHelper.intToChar(i));
+//		}
+	}
 	public void testFirstLetter(){
 		String[] title=new String[] {"奥","北","杀","朱"};
 		for(String i:title) {
@@ -775,5 +1002,31 @@ ChineseChar
 //			String s=new String(new char[] {c});
 //			System.out.println(s);	
 		}
+	}
+
+	public void testConverByte() throws UnsupportedEncodingException{
+		byte[] a=new byte[] {-28,-72,-83};
+		System.out.println(SGByteHelper.byteToHexLine(a));	
+//		String s1=new String(a,SGEncoding.UTF8.toString());
+//		byte[] b=s1.getBytes(SGEncoding.UNICODE.toString());
+		byte[] b=SGByteHelper.convertByte(a, SGEncoding.UTF8, SGEncoding.UNICODE);
+		String r1=SGByteHelper.byteToHexLine(b);
+		System.out.println(r1);	
+
+//		String s2=new String(b,SGEncoding.UNICODE.toString());
+//		byte[] c=s1.getBytes(SGEncoding.UTF8.toString());
+		byte[] c=SGByteHelper.convertByte(b, SGEncoding.UNICODE, SGEncoding.UTF8);
+		String r2=SGByteHelper.byteToHexLine(c);
+		System.out.println(r2);	
+		
+	}
+	public void testCodePoint() {
+		String s="我";
+//		byte[] c=s.getBytes();
+//		
+//		String r2=SGByteHelper.byteToHexLine(c);
+		int[] cp=SGByteHelper.getCodePoint(s);
+		System.out.println(SGByteHelper.intToHexLine(cp));	
+//		System.out.println(SGByteHelper.getCodePoint(s));	
 	}
 }

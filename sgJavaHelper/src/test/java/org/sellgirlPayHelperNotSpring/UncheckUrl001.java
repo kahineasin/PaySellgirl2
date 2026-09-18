@@ -145,8 +145,10 @@ public class UncheckUrl001  extends TestCase {
 
     public void testStream3() throws Exception{
 
+//    	SGDataHelper.streamTo(new URL("http://192.168.10.105:8080/stream.ts"), 
+//    			new URL("file:/D:/cache/16/stream2.txt"));
     	SGDataHelper.streamTo(new URL("http://192.168.10.105:8080/stream.ts"), 
-    			new URL("file:/D:/cache/16/stream2.txt"));
+    			new URL("file:/D:/cache/16/response/response0.txt"));
 //    	//ff d8 ff e0 0 10 4a 46 49 46 0 1 1 1 ...
 ////        URL url = new URL("http://mp3.sellgirl.com/img/web_sasha_thumbnail.jpg");
 ////        URL url = new URL("file:/D:/download/web_sasha_thumbnail.jpg");

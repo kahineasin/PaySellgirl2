@@ -8,13 +8,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
+import com.sellgirl.sgJavaHelper.SGByteHelper.SGEncoding;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper;
 
 /**
  * 所有byte相关的方法都集合到这里，因为byte很重要
  */
 public class SGByteHelper {
+	private static final String TAG="SGByteHelper";
 
 	/**
 	 * 对比
@@ -35,6 +40,20 @@ public class SGByteHelper {
 	            e.printStackTrace();
 	        }
 	        return null;
+	}
+	/**
+	 * 见SGFileHead
+	 * @param file
+	 * @param b
+	 * @param head
+	 */
+	public static void writeFileFromByte(File file, byte[] b,byte[] head){//String path) {
+	        try (FileOutputStream fileInputStream = new FileOutputStream(file)) {
+	            if(null!=head) {fileInputStream.write(head);}
+	            fileInputStream.write(b);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
 	}
 
 	@Deprecated
@@ -71,6 +90,55 @@ public class SGByteHelper {
 			}
 			int i2=i;
 			sb.append(i2);
+		}
+		return sb.toString();
+	}
+	public static byte[] stringToByteInt2(String s,SGEncoding encode) {
+		try {
+			return s.getBytes(encode.toString());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static String stringToByteInt(String s,SGEncoding encode) {
+		StringBuilder sb=new StringBuilder();		
+		int idx=0;
+		try {
+			for(byte i:s.getBytes(encode.toString())) {
+				if(0!=idx++) {
+					sb.append(",");
+				}
+				int i2=i;
+				sb.append(i2);
+			}
+		} catch (UnsupportedEncodingException e) {
+			SGDataHelper.getLog().printException(e, TAG);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 注意返回的String是包含了文件头的,比如unicode串会有 0xfeff
+	 * @param s
+	 * @param encode
+	 * @return
+	 */
+	public static String stringToByteHex(String s,SGEncoding encode) {
+		StringBuilder sb=new StringBuilder();		
+		int idx=0;
+		try {
+			for(byte i:s.getBytes(encode.toString())) {//这里会加文件头
+				if(0!=idx++) {
+					sb.append(",");
+				}
+//				int i2=i;
+				int i2=0>i?(i+256):i;
+				sb.append(Integer.toHexString(i2));
+			}
+		} catch (UnsupportedEncodingException e) {
+			SGDataHelper.getLog().printException(e, TAG);
 		}
 		return sb.toString();
 	}
@@ -114,6 +182,43 @@ public class SGByteHelper {
 		}
 		return sb.toString();
 	}
+	//测试用于显示
+	public static String intToLine(int[] bytes) {
+		StringBuilder sb=new StringBuilder();
+		int idx=0;
+		for(int i:bytes) {
+			if(0!=idx++) {
+				sb.append(",");
+			}
+//			int i2=i;
+			sb.append(i);
+		}
+		return sb.toString();
+	}
+	public static String intToHexLine(int[] bytes) {
+		StringBuilder sb=new StringBuilder();
+		int idx=0;
+		for(int i:bytes) {
+			if(0!=idx++) {
+				sb.append(",");
+			}
+//			int i2=i;
+			sb.append(Integer.toHexString(i));
+		}
+		return sb.toString();
+	}
+	public static String byteToHexLine(byte[] bytes) {
+		StringBuilder sb=new StringBuilder();
+		int idx=0;
+		for(byte i:bytes) {
+			if(0!=idx++) {
+				sb.append(",");
+			}
+			int i2=0>i?(i+256):i;
+			sb.append(Integer.toHexString(i2));
+		}
+		return sb.toString();
+	}
 	/**
 	 * 相当于"编码与转码_pf.xlsx"中 列1->列1
 	 * @param b
@@ -134,6 +239,18 @@ public class SGByteHelper {
 			b[i]=(byte)bytes[i];
 		}
 		return new String(b);
+	}
+	public static String byteIntToString(int[] bytes,SGEncoding encode) {
+		byte[] b=new byte[bytes.length];
+		for(int i=0;i<bytes.length;i++) {
+			b[i]=(byte)bytes[i];
+		}
+		try {
+			return new String(b,encode.toString());
+		} catch (UnsupportedEncodingException e) {
+			SGDataHelper.getLog().print(e);
+			return null;
+		}
 	}
 	/**
 	 * c=Character.forDigit(a, b)  把a转换成b进制的c
@@ -176,7 +293,8 @@ public class SGByteHelper {
 		return new String(b);
 	}
 	/**
-	 * 效果和byteIntToString4差不多，区别未知
+	 * 效果和byteIntToString差不多，区别未知.
+	 * 其实有区别,输入-28,-72,-83,输出不是'中'字
 	 * @param bytes
 	 * @return
 	 * @deprecated 效果和byteIntToString4差不多，感觉应该没什么用
@@ -239,15 +357,100 @@ public class SGByteHelper {
 		       }
 		       return value;
 		 }
+		
+		/**
+		 * 
+		 * @param i
+		 * @return new String(new char[] {0x4e2d }) 可以把结果转为unicode字符串 , 或调用intToUnicodeString(...)
+		 */
 		public static char intToChar(int i) {
 			char c=(char) i;
 			return c;
 		}
+		/**
+		 * 按unicode编码来转换
+		 * 实际上是,把unicode的byte转成了utf8的String(由于后面常常是统一处理utf8,比如txt)
+		 * @param i
+		 * @return
+		 */
+		public static String intToUnicodeString(int i) {
+			return new String(new char[] {intToChar(i) });
+		}
+		/**
+		 * 转换字节
+		 * @throws UnsupportedEncodingException
+		 */
+		public static byte[] convertByte(byte[] a,SGEncoding src,SGEncoding dst) throws UnsupportedEncodingException{
+			String s1=new String(a,src.toString());
+			//String的内部byte转换原理是:以 Unicode 码点（Code Point）作为唯一的“中转站”或“通用语言” 做中转
+			byte[] b=s1.getBytes(dst.toString());
+			return b;
+			
+		}
+
+//		public static String getCodePoint(String str) {
+////			IntStream is=str.codePoints();
+////			is.forEach(new IntConsumer() );
+////			for(i:is) {
+////				
+////			}
+//			int cnt=str.codePointCount(0, str.length()) ;
+//			StringBuilder sb=new StringBuilder(); 
+//			for(int i=0;cnt>i;i++) {
+//				int c=Character.codePointAt(str, i); 
+//				sb.append(c);
+//			}
+//			return sb.toString();
+//		}
+		public static int[] getCodePoint(String str) {
+//			IntStream is=str.codePoints();
+//			is.forEach(new IntConsumer() );
+//			for(i:is) {
+//				
+//			}
+			int cnt=str.codePointCount(0, str.length()) ;
+			int[] r=new int[cnt];
+			StringBuilder sb=new StringBuilder(); 
+			for(int i=0;cnt>i;i++) {
+				int c=Character.codePointAt(str, i); 
+//				sb.append(c);
+				r[i]=c;
+			}
+//			return sb.toString();
+			return r;
+		}
+		
+		public enum SGEncoding{
+			/**
+			 * 即windows的txt文件的 UTF-16 LE 格式
+			 */
+			UNICODE,
+			UNICODE_BE,
+			/**
+			 * no bom
+			 */
+			UTF8,
+			/**
+			 * EF BB BF
+			 */
+			UTF8_withBom
+		}
+		/**
+		 * 文件字节码的头部
+		 */
+		public static class SGFileHead{
+			public static byte[] JPG=new byte[] {(byte) 0xff, (byte) 0xd8,(byte) 0xff};
+			public static byte[] TxtUnicode=new byte[] {(byte) 0xff, (byte) 0xfe};
+			public static byte[] TxtUnicodeBE=new byte[] {(byte) 0xfe, (byte) 0xff};
+			public static byte[] TxtUTF8withBom=new byte[] {(byte) 0xEF , (byte) 0xBB ,(byte) 0xBF};
+		}
     public static void main(String[] args)
     {
 //    	System.out.println(stringToByteInt("\r\n"));
-    	System.out.println(new String(new byte[] {'e',-17,-65,-67,'e'}));
-    	System.out.println(new String(new byte[] {'e','e','e','e','e'}));
+//    	System.out.println(new String(new byte[] {'e',-17,-65,-67,'e'}));
+//    	System.out.println(new String(new byte[] {'e','e','e','e','e'}));
+		System.out.println(SGByteHelper.byteIntToString(new int[] {-17,-65,-67},SGEncoding.UNICODE));//
+		System.out.println(SGByteHelper.byteIntToString(new int[] {-17,-65,-67},SGEncoding.UTF8));//
     	
     }
 }
