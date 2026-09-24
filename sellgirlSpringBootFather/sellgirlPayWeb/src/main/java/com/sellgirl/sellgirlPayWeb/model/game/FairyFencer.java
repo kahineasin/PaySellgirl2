@@ -43,7 +43,7 @@ public class FairyFencer implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getX() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.菜单),new GamePadCustomAction(GamePadAction.自动对话  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单),new GamePadCustomAction(GamePadAction.自动对话  )};
 	}
 
 	@Override

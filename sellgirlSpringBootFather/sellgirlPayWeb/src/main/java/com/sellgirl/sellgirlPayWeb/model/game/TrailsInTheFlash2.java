@@ -44,7 +44,7 @@ public class TrailsInTheFlash2 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getX() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单)};
 	}
 
 	@Override

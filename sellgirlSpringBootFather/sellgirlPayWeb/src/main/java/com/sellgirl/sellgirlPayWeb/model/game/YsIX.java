@@ -37,7 +37,7 @@ public class YsIX implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return GamePadCustomAction.Init(GamePadAction.技能快捷菜单);
+		return GamePadCustomAction.Init(GamePadAction.技能长按菜单);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class WhereWindsMeet implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单),new GamePadCustomAction(GamePadAction.射击)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单),new GamePadCustomAction(GamePadAction.射击)};
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class WhereWindsMeet implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单),new GamePadCustomAction(GamePadAction.显示准星),new GamePadCustomAction(GamePadAction.交互)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单),new GamePadCustomAction(GamePadAction.显示准星),new GamePadCustomAction(GamePadAction.交互)};
 	}
 
 	@Override

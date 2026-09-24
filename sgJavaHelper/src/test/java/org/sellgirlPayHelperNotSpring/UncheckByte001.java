@@ -1021,7 +1021,7 @@ ChineseChar
 		
 	}
 	public void testCodePoint() {
-		String s="我";
+		String s="{";//"我";
 //		byte[] c=s.getBytes();
 //		
 //		String r2=SGByteHelper.byteToHexLine(c);

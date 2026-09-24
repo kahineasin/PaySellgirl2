@@ -28,7 +28,7 @@ public class Warframe implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单)};
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class Warframe implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getUP() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单)};
 	}
 
 	@Override

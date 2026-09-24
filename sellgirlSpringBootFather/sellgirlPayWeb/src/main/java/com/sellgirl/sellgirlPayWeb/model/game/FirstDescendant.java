@@ -28,7 +28,7 @@ public class FirstDescendant implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单)};
 	}
 
 	@Override

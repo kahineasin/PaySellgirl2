@@ -28,7 +28,7 @@ public class MonsterHunterRise implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单),new GamePadCustomAction(GamePadAction.重置视角)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单),new GamePadCustomAction(GamePadAction.重置视角)};
 	}
 
 	@Override

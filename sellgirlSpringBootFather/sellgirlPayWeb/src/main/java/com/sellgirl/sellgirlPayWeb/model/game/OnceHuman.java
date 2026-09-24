@@ -9,7 +9,7 @@ import com.sellgirl.sellgirlPayWeb.model.HomeGame;
 import com.sellgirl.sellgirlPayWeb.model.ISwitchPadSetting;
 
 @Component
-public class DeltaForce3 implements ISwitchPadSetting{
+public class OnceHuman implements ISwitchPadSetting{
 
 	@Override
 	public HomeGame getGame() {
@@ -18,7 +18,7 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public String getGameName() {
-		return "三角洲行动(全面战场)(进阶配置)";
+		return "七日世界";
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单),new GamePadCustomAction(GamePadAction.Jump)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.长按菜单),new GamePadCustomAction(GamePadAction.使用道具)};
 	}
 
 	@Override
@@ -38,47 +38,47 @@ public class DeltaForce3 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getR() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.手榴弹),new GamePadCustomAction("开镜时右探头")};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getX() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.ChangeWeapon),new GamePadCustomAction(GamePadAction.B4)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.ChangeWeapon)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getY() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.补充弹药),new GamePadCustomAction(GamePadAction.交互),new GamePadCustomAction(GamePadAction.B3)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.补充弹药),new GamePadCustomAction(GamePadAction.交互)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getA() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK),new GamePadCustomAction(GamePadAction.B2)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Dodge),new GamePadCustomAction(GamePadAction.Crouch)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getB() {
-		return new GamePadCustomAction[] {new GamePadCustomAction("开镜时左探头"),new GamePadCustomAction(GamePadAction.按住挣脱约束陷阱),new GamePadCustomAction(GamePadAction.B1)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Jump)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getUP() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单),new GamePadCustomAction("开镜时测距仪"),new GamePadCustomAction(GamePadAction.B8)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.放置标记)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getDOWN() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.切换瞄准镜),new GamePadCustomAction(GamePadAction.B5)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.长按菜单)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getLEFT() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.切换连射模式),new GamePadCustomAction(GamePadAction.B7)};
+		return new GamePadCustomAction[] {};
 	}
 
 	@Override
 	public GamePadCustomAction[] getRIGHT() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.放置标记),new GamePadCustomAction(GamePadAction.B6) };
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.长按菜单)};
 	}
 
 	@Override

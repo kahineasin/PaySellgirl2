@@ -28,7 +28,7 @@ public class DeltaForce2 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单),new GamePadCustomAction(GamePadAction.左探头)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单),new GamePadCustomAction(GamePadAction.左探头)};
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class DeltaForce2 implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getUP() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.菜单),new GamePadCustomAction(GamePadAction.B8)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单),new GamePadCustomAction(GamePadAction.B8)};
 	}
 
 	@Override

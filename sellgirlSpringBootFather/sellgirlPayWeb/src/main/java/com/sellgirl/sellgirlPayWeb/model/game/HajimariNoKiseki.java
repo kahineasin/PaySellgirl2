@@ -23,7 +23,7 @@ public class HajimariNoKiseki implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单)};
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class HajimariNoKiseki implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getX() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.菜单),new GamePadCustomAction(GamePadAction.锁定目标  )};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按菜单),new GamePadCustomAction(GamePadAction.锁定目标  )};
 	}
 
 	@Override

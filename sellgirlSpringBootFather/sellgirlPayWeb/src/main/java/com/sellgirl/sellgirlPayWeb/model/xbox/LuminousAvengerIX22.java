@@ -49,7 +49,7 @@ public class LuminousAvengerIX22 implements IXboxPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getY() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能快捷菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.技能长按菜单)};
 	}
 
 	@Override
