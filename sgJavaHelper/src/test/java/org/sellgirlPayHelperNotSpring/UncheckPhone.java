@@ -61,6 +61,7 @@ import com.sellgirl.sgJavaHelper.*;
 import com.sellgirl.sgJavaHelper.config.*;
 import com.sellgirl.sgJavaHelper.config.SGDataHelper.LocalDataType;
 import com.sellgirl.sgJavaHelper.file.SGDirectory;
+import com.sellgirl.sgJavaHelper.file.SGDirectorySplit;
 import com.sellgirl.sgJavaHelper.model.FileSizeUnitType;
 import com.sellgirl.sgJavaHelper.model.SysType;
 import com.sellgirl.sgJavaHelper.model.UserOrg;
@@ -150,8 +151,10 @@ public class UncheckPhone extends TestCase {
 				HuaweiFileFetcher.main(new String[] {huaweiPath[i],path[i]});
 				if(0==HuaweiFileFetcher.exitCode) {
 					File tmp=new File(path[i]);
-					SGDirectory.deleteOldFile(tmp,new SGDate(2025,9,24,1,0,0));//不处理旧文件					
+					SGDirectory.deleteOldFile(tmp,new SGDate(2025,9,24,1,0,0));//不处理旧文件				
+					//传一刻相册是这样;
 //					com.sellgirl.sgJavaHelper.file.SGFileSplit.main(new String[] {path[i],dstPath[i]});
+					//如果上传百度云盘,还要用SGDirectorySplit(注意分割文件数后,上一步文件切分的结果可能会被分开
 					
 					//如果前面按时间只读新文件，下句没有也行了
 					//HuaweiFileFetcherAndDelete.deleteHuaweiFile(huaweiPath[i],"*.*");
@@ -169,6 +172,9 @@ public class UncheckPhone extends TestCase {
 	}
 //	private SGDate oldTime=new SGDate(2025,9,6,1,0,0);//今天20250925
 	private SGDate oldTime=new SGDate(2025,9,25,1,0,0);//今天20251027
+	/**
+	 * 如果用此方法, 执行完后要调用testAutoSplitForBaiduYun()才能上传baiduyun
+	 */
 	public void testAutoBackupPhoneNewFile() {
 		try {
 //			String[] path=new String[] {
@@ -188,7 +194,9 @@ public class UncheckPhone extends TestCase {
 ////					"sdcard/Sounds/"//华为录音
 ////					"sdcard/Music/SoundRecording"
 //			};
-			String[] huaweiPath=getHuaweiImportmantFilePath();
+			
+//			String[] huaweiPath=getHuaweiImportmantFilePath();
+			String[] huaweiPath=getAndroidImportmantFilePath();
 
 //			String[] path=new String[] {
 ////					"D:\\3\\src"
@@ -219,7 +227,36 @@ public class UncheckPhone extends TestCase {
 //					com.sellgirl.sgJavaHelper.file.SGFileSplit.main(new String[] {path[i],dstPath[i]});
 //				}
 			}
-			System.out.println("split success");
+			System.out.println("backup success");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	//未测试
+	public void testAutoSplitForBaiduYun() {
+		try {
+			int fileMax=199;//最大上传文件数
+			int sizeMax=2400;//MB.最大上传单文件大小9MB?实测baiduyun单文件上传2.4GB都可以,11.15GB就超出
+			String[] path=new String[] {
+					"D:\\3\\src"
+			};
+			String[] dstPath=new String[] {
+					"D:\\3\\split"
+			};
+			String[] dstPath2=new String[] {
+					"D:\\3\\split2"
+			};
+			for(int i=0;path.length>i;i++) {
+//				com.sellgirl.sgJavaHelper.file.SGFileSplit.main(new String[] {path[i],dstPath[i],String.valueOf(sizeMax)});	
+				for(File j:new File(dstPath[i]).listFiles()) {
+					if(j.isDirectory()) {
+//						//SGDirectorySplit.main(new String[] {"D:\\3\\src\\sdcard","D:\\3\\split","199"});
+						SGDirectorySplit.main(new String[] {j.getAbsolutePath(),dstPath2[i],String.valueOf(fileMax)});
+					}
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -297,6 +334,15 @@ public class UncheckPhone extends TestCase {
 				"sdcard/Documents/NotePad/",
 				//-------原生安卓-----------//
 				"sdcard/Music/SoundRecording"
+		};
+	}
+
+	private String[] getAndroidImportmantFilePath() {//
+		return new String[] {
+				//-------原生安卓-----------//
+				"sdcard/Pictures/WeiXin",
+				"sdcard/DCIM/Camera/",//录屏
+				"sdcard/Music/SoundRecording",//录音
 		};
 	}
 }

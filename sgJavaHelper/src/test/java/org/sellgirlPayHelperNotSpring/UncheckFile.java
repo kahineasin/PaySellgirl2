@@ -204,11 +204,13 @@ public class UncheckFile extends TestCase {
         writeFile.close();
 	}
 	public void testFileMerge2() throws Exception {
-		SGFileMerge.main(new String[]{"D:\\3\\zip\\split", "D:\\3\\zip\\file_merger.psd"});
-//		SGFileMerge.main(new String[]{"D:\\3\\split", "D:\\3\\merge"});
+//		SGFileMerge.main(new String[]{"D:\\3\\zip\\split", "D:\\3\\zip\\file_merger.psd"});
+		SGFileMerge.main(new String[]{"D:\\3\\split", "D:\\3\\merge"});
 	}
 
 	public void testDirectorySplit() throws NumberFormatException, Exception {
-		SGDirectorySplit.main(new String[] {"D:\\3\\src\\Screenshots2","D:\\3\\split","199"});
+//		SGDirectorySplit.main(new String[] {"D:\\3\\src\\Screenshots2","D:\\3\\split","199"});
+		//拆成D:\\3\\split\\sdcard0,sdcard1...
+		SGDirectorySplit.main(new String[] {"D:\\3\\src\\sdcard","D:\\3\\split","199"});
 	}
 }

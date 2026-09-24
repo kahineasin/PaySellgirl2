@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SGFileSplit {
+	private static int mb=9;
 
 	   public static void main (String[] arg) throws NumberFormatException, Exception {
 		   //命令行用法 
@@ -16,6 +17,9 @@ public class SGFileSplit {
 		   //1次分多个
 		   //java -cp sgJavaHelper-0.0.42.jar com.sellgirl.sgJavaHelper.SGFileSplit "D:\\3\\src" "D:\\3\\split"
 			SGDirectory.EnsureExists(arg[1]);
+			if(2<arg.length) {
+				mb=Integer.valueOf(arg[2]);
+			}
 		   fileSplit(arg[0],arg[1]);
 
            System.out.println("s finish");
@@ -27,8 +31,8 @@ public class SGFileSplit {
 		doSplitFromFolder(sourceFile,chunkFileFolder);
 	}
 	private static void doSplitFromFolder(File sourceFile,String chunkFileFolder) throws IOException {
-		int mb=9;
-		long size=1024l*1024l*9;
+//		int mb=9;
+		long size=1024l*1024l*mb;
 		if(sourceFile.isFile()) {
 			SGFileSplit.doFileSplit(sourceFile, chunkFileFolder,mb);
 		}else if(sourceFile.isDirectory()) {
@@ -98,7 +102,7 @@ public class SGFileSplit {
 	 * @param mb
 	 * @throws IOException
 	 */
-	public static void doFileSplit(File sourceFile,String chunkFileFolder,int mb) throws IOException {		
+	public static void doFileSplit(File sourceFile,String chunkFileFolder,long mb) throws IOException {		
 		
 		SGDirectory.EnsureExists(chunkFileFolder);
 //		//块文件目录
@@ -106,13 +110,16 @@ public class SGFileSplit {
 		//块文件大小
 		//int chunkFileSize = 1 * 1024 * 1024;
 //		int chunkFileSize = 9 * 1024 * 1024;//9MB
-		int chunkFileSize = mb * 1024 * 1024;//9MB
+//		int chunkFileSize = mb * 1024 * 1024;//2400MB就溢出了
+		long chunkFileSize = mb * 1024 * 1024;//9MB
 		//块文件数量
-		int chunkFileNum = (int) Math.ceil(sourceFile.length() * 1.0 / chunkFileSize);
+//		int chunkFileNum = (int) Math.ceil(sourceFile.length() * 1.0 / chunkFileSize);
+		long chunkFileNum =  (long) Math.ceil(sourceFile.length() * 1.0 / chunkFileSize);
 		//
 		RandomAccessFile readFile = new RandomAccessFile(sourceFile, "r");
 		byte[] bytes = new byte[1024];
-		for(int i = 0; i < chunkFileNum; i++) {
+//		for(int i = 0; i < chunkFileNum; i++) {
+		for(long i = 0; i < chunkFileNum; i++) {
 			File chunkFile = new File(chunkFileFolder  + "\\" + i);
 			int len = -1;
 			//创建块文件
@@ -191,6 +198,8 @@ public class SGFileSplit {
 				}
 			}
 			if(isAllFile&&has0&&hasMax) {
+//				SGDirectory.EnsureExists(mergerFilePath);
+				SGDirectory.EnsureFilePath(mergerFilePath);
 				SGFileSplit.doFileMerge(chunkFile.listFiles(), mergerFilePath);
 			}else {
 				for(File f:chunkFile.listFiles()) {

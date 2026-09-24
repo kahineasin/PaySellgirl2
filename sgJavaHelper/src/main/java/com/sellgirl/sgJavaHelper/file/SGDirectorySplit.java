@@ -16,6 +16,7 @@ public class SGDirectorySplit {
 	 * 
 	 * SGDirectorySplit.main(new String[] {"D:\\3\\src\\Screenshots","D:\\3\\split","199"});
 	 * 注意这里会根据src胡第一层目录名来计算分割的子文件名，所以要注意参数习惯
+	 * 拆成D:\\3\\split\\Screenshots0,Screenshots1...
 	 * 
 	 * @param arg
 	 * @throws NumberFormatException
