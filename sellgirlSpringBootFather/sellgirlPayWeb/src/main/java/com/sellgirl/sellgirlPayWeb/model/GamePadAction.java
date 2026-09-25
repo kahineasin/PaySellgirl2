@@ -52,7 +52,7 @@ public enum GamePadAction {
 	 * 攻击优先性: LATK->MATK->HATK (这是根据使用频率来的, 轻攻击使用最多)
 	 */
 	LATK,
-	ATK含长按,
+	ATK含长按(PressType.长按),
 	/**
 	 * 攻击(中攻击)
 	 */
@@ -76,14 +76,14 @@ public enum GamePadAction {
 	 * 
 	 * 属于"长按菜单"
 	 */
-	技能长按菜单,
+	技能长按菜单(PressType.长按),
 	/**
 	 * 功能性菜单，混合菜单，常在十字键上
 	 * 
 	 * 属于"短按菜单"
 	 */
 	短按菜单,
-	长按菜单,
+	长按菜单(PressType.长按),
 	@Deprecated
 	道具快捷菜单,
 	/**
@@ -111,7 +111,13 @@ public enum GamePadAction {
 	 */
 	变更领队,
 	//--------------------------fps部分--------------------------//
-	补充弹药,爪钩飞索,救助同伴,输入聊天,手榴弹,切换连射模式,按住挣脱约束陷阱,短按切换成开镜,
+	补充弹药,爪钩飞索,救助同伴,输入聊天,手榴弹,切换连射模式,按住挣脱约束陷阱,
+	/**
+	 * 
+	 * @deprecated 以前想用L2射击时的想法,现在还是统一用 显示准星 吧
+	 */
+	@Deprecated
+	短按切换成开镜,
 	/**
 	 * 轻拳(如果只有轻重,用LP和MP)
 	 * LPunch
@@ -157,4 +163,23 @@ public enum GamePadAction {
 	Skill4,
 	Skill5,
 	Skill6
+	;
+
+	private GamePadAction() {
+		this.pressType=PressType.短按;
+	}	
+	private GamePadAction(PressType pressType) {
+		this.pressType=pressType;
+	}	
+	//暂无使用
+	private PressType pressType;
+	public PressType getPressType() {
+		return pressType;
 	}
+	/**
+	 * 点击方式
+	 */
+	public enum PressType{
+		长按,短按,
+	}
+}
