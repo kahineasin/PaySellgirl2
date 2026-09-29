@@ -83,6 +83,9 @@ public enum GamePadAction {
 	 * 属于"短按菜单"
 	 */
 	短按菜单,
+	/**
+	 * 常与"使用道具"放在同一键位使用(比如游戏 七日世界)
+	 */
 	长按菜单(PressType.长按),
 	@Deprecated
 	道具快捷菜单,

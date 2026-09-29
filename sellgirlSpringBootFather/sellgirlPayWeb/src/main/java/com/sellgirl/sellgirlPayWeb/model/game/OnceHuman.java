@@ -23,7 +23,7 @@ public class OnceHuman implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getZL() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.短按切换成开镜)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.显示准星)};
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class OnceHuman implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getUP() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.放置标记)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.长按菜单),new GamePadCustomAction(GamePadAction.使用道具)};
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class OnceHuman implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getLEFT() {
-		return new GamePadCustomAction[] {};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.敌人位置脉冲)};
 	}
 
 	@Override
 	public GamePadCustomAction[] getRIGHT() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.长按菜单)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.放置标记),new GamePadCustomAction("换边站")};
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class OnceHuman implements ISwitchPadSetting{
 
 	@Override
 	public GamePadCustomAction[] getRS() {
-		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.Crouch),new GamePadCustomAction(GamePadAction.Slide)};
+		return new GamePadCustomAction[] {new GamePadCustomAction(GamePadAction.LATK)};
 	}
 
 }
