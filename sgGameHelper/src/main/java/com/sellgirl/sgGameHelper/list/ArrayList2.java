@@ -12,9 +12,23 @@ import java.util.ArrayList;
 @Deprecated
 public class ArrayList2<T> extends ArrayList<T> implements ISGList<T> {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6085669720561852497L;
+
+	@Override
     public T first() {
         return get(0);
+    }
+
+	@Override
+	public T removeIndex(int index) {		
+		return super.remove(index);
+	}
+@Override
+    public void add2(T a) {
+    	super.add(a);
     }
 
 //    @Override

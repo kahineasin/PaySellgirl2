@@ -37,4 +37,8 @@ public class Array2<T> extends Array<T> implements ISGList<T> {
     public int size(){
         return super.size;
     }
+    @Override
+    public void add2(T a) {
+    	super.add(a);
+    }
 }

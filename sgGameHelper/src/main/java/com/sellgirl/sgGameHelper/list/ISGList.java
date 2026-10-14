@@ -9,7 +9,8 @@ public interface ISGList<T> extends Iterable<T> {
     T get(int i);
     int size();
 //    public void clear();
-//    public void add(T a);
+    public void add2(T a);
+    public T removeIndex (int index);
 //    public boolean addAll(Iterable<T> c);
 //    public void addAllSG(Iterable<? extends T> c);
 //    public boolean addAll(Iterable<? extends T> c);
