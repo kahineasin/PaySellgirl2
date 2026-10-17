@@ -15,6 +15,25 @@ import com.sellgirl.sgGameHelper.tabUi.TabUi;
  * 
  * 暂停不可以用弹窗,因为弹窗是和stage绑一起的,如果stage要显示,角色也会动
  * Created by Benjamin Schulte on 26.11.2018.
+ * 
+ * 使用方式:
+					if(null==confirmDeletePopups) {
+						confirmDeletePopups = new SGConfirmPopups(TXT.g("confirm delete?"),
+								new Consumer<Object>() {
+									@Override
+									public void accept(Object o) {
+										file.delete();
+										goToMainPage();
+									}
+								},
+								skin
+						);
+					}
+					confirmDeletePopups.show(stage);
+//                // 将对话框右下
+					confirmDeletePopups.setPosition(
+								(stage.getWidth() - confirmDeletePopups.getWidth()) *7f/ 8f,
+								(stage.getHeight() - confirmDeletePopups.getHeight()) / 8f);
  */
 
 public class SGConfirmPopups extends Dialog {
