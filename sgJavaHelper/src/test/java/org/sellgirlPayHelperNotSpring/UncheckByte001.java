@@ -81,6 +81,8 @@ import org.sellgirlPayHelperNotSpring.model.TestSerialModel4;
 import org.sellgirlPayHelperNotSpring.model.TestSerialModel5;
 import org.sellgirlPayHelperNotSpring.model.TransferTaskTest001;
 import org.sellgirlPayHelperNotSpring.model.TransferTaskTest002;
+import org.sellgirlPayHelperNotSpring.model.mp4.MediaCodec;
+import org.sellgirlPayHelperNotSpring.model.mp4.TSMuxer5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,10 +94,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -106,6 +111,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -833,7 +839,7 @@ ChineseChar
 //		System.out.println(chend);
 	} 
 	public void testCharTo16() {
-		char[] c=new char[] {'a','中'};
+		char[] c=new char[] {'a','中',','};
 		for(char i:c) {
 			System.out.println(SGByteHelper.charToInt(i));
 			System.out.println(Integer.toHexString(i));
@@ -842,7 +848,7 @@ ChineseChar
 		}
 		System.out.println("----");
 		System.out.println("----");
-		String[] s=new String[] {"a","中"};
+		String[] s=new String[] {"a","中",","};
 		for(String i:s) {
 			System.out.println(SGByteHelper.stringToByteInt(i));//-28,-72,-83
 		}
@@ -1020,13 +1026,108 @@ ChineseChar
 		System.out.println(r2);	
 		
 	}
+	public void testMath() throws Exception {
+		System.out.println(0);
+		System.out.println(1);
+		System.out.println(2&1);
+		System.out.println(1&1);
+		System.out.println(0&1);
+	}
+    private static final int TS_PACKET_SIZE = 188;
+    private static final int PAT_PID = 0x0000;
+    private static final int PMT_PID = 0x0100;
+    private static final int VIDEO_PID = 0x0101;
+    private static final int PCR_PID = VIDEO_PID;
+	public void testWriteShort() throws Exception {
+		doWriteByte("1",0x47);
+		doWriteShort("2",0x47);
+		doWriteByte("3",(PAT_PID) | 0x4000);
+		doWriteShort("4",(PAT_PID) | 0x4000);
+	}
+
+	public void doWriteShort(String name,int data) throws Exception {
+      URL url1 = new URL("file:/D:/download/1/"+name+".txt");
+      File file=(new File(url1.toURI()));
+      OutputStream outStream=new FileOutputStream(file);
+      DataOutputStream dOutStream=new DataOutputStream(outStream);
+      dOutStream.writeShort(data);
+      dOutStream.close();
+      
+      SGDataHelper.printStream(url1, 1000);
+	}
+	public void doWriteByte(String name,int data) throws Exception {
+	      URL url1 = new URL("file:/D:/download/1/"+name+".txt");
+	      File file=(new File(url1.toURI()));
+	      OutputStream outStream=new FileOutputStream(file);
+	      DataOutputStream dOutStream=new DataOutputStream(outStream);
+	      dOutStream.writeByte(data);
+	      dOutStream.close();
+	      
+	      SGDataHelper.printStream(url1, 1000);
+		}
 	public void testCodePoint() {
-		String s="{";//"我";
+		String s=",";//"{";//"我";
 //		byte[] c=s.getBytes();
 //		
 //		String r2=SGByteHelper.byteToHexLine(c);
 		int[] cp=SGByteHelper.getCodePoint(s);
 		System.out.println(SGByteHelper.intToHexLine(cp));	
 //		System.out.println(SGByteHelper.getCodePoint(s));	
+	}
+
+	public void testFileByte() throws MalformedURLException, Exception {
+////第一步,保存流
+//    	SGDataHelper.streamTo(new URL("http://192.168.10.104:8080/stream.ts"), 
+//    			new URL("file:/D:/cache/16/response/response0.txt"));
+    	//第二步,打印流为16进制
+////        SGDataHelper.printStream(new URL("file:/D:/cache/16/stream1.txt"),1000);
+//        SGDataHelper.printStream(new URL("file:/D:/BaiduNetdiskDownload/01.ts"),2000);
+//      SGDataHelper.printStream(new URL("file:/D:/BaiduNetdiskDownload/20.ts"),3000);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/response/response0.txt"),5000);
+		SGDataHelper.printStream(new URL("file:/D:/cache/16/response/response1.ts"),5000);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/buffer/buffer0.txt"),1000);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/buffer/buffer1.txt"),1000);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/buffer/buffer8.txt"),1080);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/buffer/buffer9.txt"),1000);
+//		SGDataHelper.printStream(new URL("file:/D:/cache/16/buffer/bufferInt0.txt"),1000);
+	}
+	public void testFileMuxer() throws MalformedURLException, Exception {
+		int idx=0;
+		MediaCodec.BufferInfo info=new MediaCodec.BufferInfo();
+		URL out=new URL("file:/D:/cache/16/response/response2.ts");
+        File file=(new File(out.toURI()));
+        OutputStream outStream=new FileOutputStream(file);
+		TSMuxer5 muxer=new TSMuxer5(outStream);
+		byte[] buffer=new byte[1000];
+		int bufferCnt=0;
+		while(true) {
+			if(0==idx) {
+				info.flags=2;
+			}else if(0==(idx-1)%30) {
+				info.flags=1;
+			}else {
+				info.flags=0;
+			}
+			URL url=new URL("file:/D:/cache/16/buffer/buffer"+idx+".txt");
+			File file2=(new File(url.toURI()));
+			if(!file2.exists()) {
+				break;
+			}
+	        URLConnection urlConnection = url.openConnection();
+	        urlConnection.setConnectTimeout(6000);
+	        urlConnection.setReadTimeout(6000);
+//	        InputStream inStream=new InputStream(file);
+	        InputStream inputStream = urlConnection.getInputStream();
+
+	        ByteArrayOutputStream psiStream = new ByteArrayOutputStream();
+	        DataOutputStream psiOut = new DataOutputStream(psiStream);
+	        while(0<(bufferCnt=inputStream.read(buffer))) {
+	        	psiOut.write(buffer,0,bufferCnt);
+	        }
+	        byte[] psiData = psiStream.toByteArray();
+			muxer.writeFrame(psiData, info);
+			idx++;
+		}
+		outStream.close();
 	}
 }
